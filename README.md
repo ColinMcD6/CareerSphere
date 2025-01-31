@@ -1,1 +1,4 @@
-# TeamTen
+# CareerSphere
+
+Project proposal
+Architecture Diagram
