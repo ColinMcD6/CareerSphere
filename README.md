@@ -18,5 +18,5 @@ User Friendly Career Platform that connects job seekers and employers through fe
 
 ### Architecture Diagram
 
-* [Architecture_Diagram](https://github.com/ColinMcD6/CareerSphere/blob/documentation/documentation/COMP4350_CareerSphere_ArchitechtureDiagram.png)
+* [Architecture_Diagram](https://github.com/ColinMcD6/CareerSphere/blob/main/documentation/COMP4350_CareerSphere_ArchitechtureDiagram.png)
  
