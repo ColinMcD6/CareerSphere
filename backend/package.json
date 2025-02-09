@@ -1,21 +1,26 @@
 {
-  "name": "mern-stack-app",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "Backend for the MERN stack application",
-  "main": "src/app.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --files src/index.ts"
   },
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "dependencies": {
-    "express": "^4.17.1",
-    "mongoose": "^5.10.9",
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0"
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.10.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
-  },
-  "author": "Your Name",
-  "license": "ISC"
+    "@types/cors": "^2.8.17",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.0",
+    "@types/mongoose": "^5.11.96",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.3"
+  }
 }
