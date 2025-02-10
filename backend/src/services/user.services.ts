@@ -24,3 +24,8 @@ export const createUser = async (data: CreateUserParams) => {
         user: user
     };
 }
+
+export const getRandomUser = async () => {
+    const users = await UserModel.aggregate([{ $sample: {size: 1}}]);
+    return users[0];
+}
