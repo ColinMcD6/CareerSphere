@@ -6,6 +6,7 @@ import { NODE_ENV, PORT, APP_ORIGIN } from "./constants/env";
 import errorHandler from "./middleware/errorHandler";
 import catchErrors from "./utils/catchErrors";
 import { OK } from "./constants/http";
+import userRoutes from "./routes/user.route";
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.get("/", (req, res, next) => {
         status: "healthy", 
     });
 });
+
+app.use("/user", userRoutes);
 
 app.use(errorHandler);
 
