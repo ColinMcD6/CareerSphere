@@ -10,4 +10,8 @@ export const createUser = async (data: CreateUserParams) => {
         firstName: data.firstName,
         lastName: data.lastName,
     })
+
+    return {
+        user: user
+    };
 }
