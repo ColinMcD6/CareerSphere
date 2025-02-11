@@ -20,3 +20,23 @@ User Friendly Career Platform that connects job seekers and employers through fe
 
 * [Architecture_Diagram](https://github.com/ColinMcD6/CareerSphere/blob/main/documentation/COMP4350_CareerSphere_ArchitechtureDiagram.png)
  
+### Running Application
+
+##### Backend
+1. Add ```.env``` file to backend folder with the following values populated:
+```
+NODE_ENV=development
+# frontend url
+APP_ORIGIN=http://localhost:{FRONTEND PORT}
+# example: mongodb://localhost:27017/{DB_NAME}
+MONGO_URI=mongodb://localhost:27017/{DB_NAME}
+PORT={BACKEND PORT}
+```
+2. From ```backend``` directory run ```npm install```
+3. To run application in development mode (every change to file will update server): ```npm run dev```
+4. To run application in production mode: ```npm build; npm run start```
+
+##### Frontend
+1. Add ```.env``` file to frontend folder with the following values populated: ```VITE_API_URL=http://localhost:{BACKEND PORT}```
+2. From ```backend``` directory run ```npm install```
+3. To run application: ```npm run dev```
