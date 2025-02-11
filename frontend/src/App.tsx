@@ -1,14 +1,12 @@
 import { Route, Routes } from "react-router-dom"
-
-
-export const Home = () => {
-    return <div>Home</div>;
-}
+import Home from "./pages/Home"
+import Welcome from "./pages/Welcome"
 
 function App() {
     return (
         <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/welcome" element={<Welcome />} />
         </Routes>
     )
 }
