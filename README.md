@@ -40,3 +40,9 @@ PORT={BACKEND PORT}
 1. Add ```.env``` file to frontend folder with the following values populated: ```VITE_API_URL=http://localhost:{BACKEND PORT}```
 2. From ```backend``` directory run ```npm install```
 3. To run application: ```npm run dev```
+
+### MongoDB 
+1. Install MongoDB and start the service before running the app.
+    1. Refer to this https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/ for steps. 
+    2. I used the command: brew services stop mongodb-community@8.0 to start on Mac
+2. Can also install MongoDB Compass to visualize the database created.
