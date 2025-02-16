@@ -5,10 +5,10 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleLogIn = async () => {
-    navigate("/welcome");
+    navigate("/login");
   };
   const handleSignUp = async () => {
-    navigate("/welcome");
+    navigate("/signup");
   };
   //would be good to wrap the buttons in something to position them nicely
   let out = (
