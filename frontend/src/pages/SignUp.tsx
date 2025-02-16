@@ -1,7 +1,7 @@
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-const Account = () => {
+const SignUp = () => {
   const navigate = useNavigate();
   const handleBack = async () => {
     navigate("/");
@@ -15,4 +15,4 @@ const Account = () => {
   return out;
 };
 
-export default Account;
+export default SignUp;

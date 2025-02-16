@@ -14,10 +14,10 @@ const Home = () => {
   let out = (
     <>
       <h1>Welcome to CareerSphere</h1>
-      <Button className="log" onClick={handleLogIn}>
+      <Button className="logButton" onClick={handleLogIn}>
         Log In
       </Button>
-      <Button className="sign" onClick={handleSignUp}>
+      <Button className="signButton" onClick={handleSignUp}>
         Sign up
       </Button>
     </>

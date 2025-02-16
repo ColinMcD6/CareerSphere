@@ -18,6 +18,7 @@ const Welcome = () => {
         Welcome {user?.firstName} {user?.lastName}!
       </h1>
       <Button onClick={handleBack}>Log Out</Button>
+      <Button onClick={handleProfile}>Edit Profile</Button>
     </>
   );
   return out;
