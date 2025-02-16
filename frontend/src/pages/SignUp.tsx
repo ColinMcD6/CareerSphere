@@ -7,6 +7,7 @@ const SignUp = () => {
     navigate("/");
   };
   //TODO, make the radios actually swap
+  //TODO, change labe
   let out = (
     <>
       <form>
@@ -32,11 +33,11 @@ const SignUp = () => {
           <input
             className="form-check-input"
             type="radio"
-            name="flexRadioDefault"
-            id="flexRadioDefault1"
+            name="candidateRadio"
+            id="radio1"
             checked
           />
-          <label className="form-check-label" htmlFor="flexRadioDefault1">
+          <label className="form-check-label" htmlFor="radio1">
             Candidate
           </label>
         </div>
@@ -44,10 +45,10 @@ const SignUp = () => {
           <input
             className="form-check-input"
             type="radio"
-            name="flexRadioDefault"
-            id="flexRadioDefault2"
+            name="employerRadio"
+            id="radio2"
           />
-          <label className="form-check-label" htmlFor="flexRadioDefault2">
+          <label className="form-check-label" htmlFor="radio2">
             Employer
           </label>
         </div>
