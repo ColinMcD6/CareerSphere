@@ -6,6 +6,13 @@ const LogIn = () => {
   const handleBack = async () => {
     navigate("/");
   };
+  const handleSubmit = () => {
+    let email = document.getElementById("inputEmail") as HTMLInputElement;
+    let password = document.getElementById("inputPassword") as HTMLInputElement;
+    //need a function that takes these and fetches profile
+    //REMEMBER to take email.value not just email||||||||||||||||||||||||||||||||||||||||||||||||
+    //navigate("/menu");?
+  };
   let out = (
     <>
       <form>
@@ -29,7 +36,11 @@ const LogIn = () => {
             id="exampleInputPassword1"
           />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button
+          type="submit"
+          className="btn btn-primary"
+          onClick={handleSubmit}
+        >
           Submit
         </button>
       </form>
