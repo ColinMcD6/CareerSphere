@@ -4,8 +4,15 @@ import { useNavigate } from "react-router-dom";
 const SignUp = () => {
   const navigate = useNavigate();
   let candidate = true;
-  const handleBack = async () => {
+  const handleSubmit = () => {
+    let email = document.getElementById("inputEmail") as HTMLInputElement;
+    let name = document.getElementById("inputName") as HTMLInputElement;
+    let password = document.getElementById("inputPassword") as HTMLInputElement;
+    //need a function that takes these + candidate and makes a profile -> from backend layer
+    //REMEMBER to take email.value not just email||||||||||||||||||||||||||||||||||||||||||||||||
+    //should this then send you back to home page or automatically log you in? -> ask group
     navigate("/");
+    //navigate("/menu");?
   };
   const handleClick1 = () => {
     candidate = true;
@@ -63,7 +70,7 @@ const SignUp = () => {
           Submit
         </button>
       </form>
-      <Button onClick={handleBack}>Back</Button>
+      <Button onClick={handleSubmit}>Back</Button>
     </>
   );
   return out;
