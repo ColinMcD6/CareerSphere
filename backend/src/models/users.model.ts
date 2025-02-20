@@ -1,14 +1,67 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
+import { comparePass, hashPass } from "../utils/auth_helpers/bcrypt";
 
 export interface UserDocument extends mongoose.Document {
-    firstName: string,
-    lastName: string
+    username: string;
+    email: string;
+    password: string;
+    userRole: "Employer" | "Candidate";
+    verified: boolean;
+    education: string[];
+    skills: string[];
+    experience: string[];
+    hiringDetails?: string[];
+    createdAt: Date;
+    updatedAt: Date;
+    checkPassword(val: string): Promise<boolean>;
+    removePassword(): Pick<UserDocument, "_id" | "email" | "verified" | "createdAt" | "updatedAt">;
 }
 
 const userSchema = new mongoose.Schema<UserDocument>({
-    firstName: {type: String, required: true},
-    lastName: {type: String, required: true}
-})
+    username: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    verified: { type: Boolean, required: true, default: false },
+    userRole: { 
+        type: String, 
+        required: true, 
+        enum: ["Employer", "Candidate"], 
+        default: "Candidate" 
+    },
+    education: { type: [String], default: [] },
+    skills: { type: [String], default: [] },
+    experience: { type: [String], default: [] },
+    hiringDetails: { 
+        type: [String], 
+        default: undefined, 
+        validate: {
+            validator: function (this: UserDocument) {
+                return this.userRole === "Employer" || this.hiringDetails === undefined;
+            },
+            message: "Only Employers can have hiringDetails."
+        }
+    }
+}, {
+    timestamps: true,
+});
+
+userSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) {
+        return next();
+    }
+    this.password = await hashPass(this.password);
+    next();
+});
+
+userSchema.methods.checkPassword = async function (val: string) {
+    return comparePass(val, this.password);
+};
+
+userSchema.methods.removePassword = function () {
+    const user = this.toObject();
+    delete user.password;
+    return user;
+};
 
 const UserModel = mongoose.model<UserDocument>("User", userSchema);
 export default UserModel;
