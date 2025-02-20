@@ -2,6 +2,7 @@ import useUser from "../hooks/user";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
+//at some point this will request user details and put up either the candidate or employer portal
 const Welcome = () => {
   const { user } = useUser();
   const navigate = useNavigate();
@@ -14,9 +15,7 @@ const Welcome = () => {
 
   let out = (
     <>
-      <h1>
-        Welcome {user?.firstName} {user?.lastName}!
-      </h1>
+      <h1>Welcome {user?.name}!</h1>
       <Button onClick={handleBack}>Log Out</Button>
       <Button onClick={handleProfile}>Edit Profile</Button>
     </>

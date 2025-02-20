@@ -1,6 +1,8 @@
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
+// TODO add a forgot password button that takes you to home page and sends an email to change password
+//I will not implement the email thing, that is sukhmeet
 const LogIn = () => {
   const navigate = useNavigate();
   const handleBack = async () => {
@@ -10,8 +12,8 @@ const LogIn = () => {
     let email = document.getElementById("inputEmail") as HTMLInputElement;
     let password = document.getElementById("inputPassword") as HTMLInputElement;
     //need a function that takes these and fetches profile
-    //REMEMBER to take email.value not just email||||||||||||||||||||||||||||||||||||||||||||||||
-    //navigate("/menu");?
+    //take variable.value not just the variable||||||||||||||||||||||
+    navigate("/welcome");
   };
   let out = (
     <>

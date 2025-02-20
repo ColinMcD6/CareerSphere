@@ -1,6 +1,9 @@
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
+//TODO make a page where the portals will go
+//TODO make a page for edit profiles: experience, educations, Candidate only(skills, projects), Employer only(company details, hiring details)
+//edit profiles will fetch user details to determine which forms to place up
 const Home = () => {
   const navigate = useNavigate();
 

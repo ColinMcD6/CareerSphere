@@ -9,10 +9,8 @@ const SignUp = () => {
     let name = document.getElementById("inputName") as HTMLInputElement;
     let password = document.getElementById("inputPassword") as HTMLInputElement;
     //need a function that takes these + candidate and makes a profile -> from backend layer
-    //REMEMBER to take email.value not just email||||||||||||||||||||||||||||||||||||||||||||||||
-    //should this then send you back to home page or automatically log you in? -> ask group
+    //take variable.value not just the variable||||||||||||||||||||||
     navigate("/");
-    //navigate("/menu");?
   };
   const handleClick1 = () => {
     candidate = true;
