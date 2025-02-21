@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: us-central1-docker.pkg.dev/GOOGLE_PROJECT/docker-career-sphere/backend:latest
+        ports:
+        - containerPort: BACKEND_PORT
+        env:
+        - name: MONGO_URI
+          value: "mongodb+srv://MONGODB_USER:MONGODB_PASS@careersphere.ldhzb.mongodb.net/?retryWrites=true&w=majority&appName=CareerSphere"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: BACKEND_PORT
+      targetPort: BACKEND_PORT
+  type: ClusterIP
