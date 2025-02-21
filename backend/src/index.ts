@@ -7,6 +7,7 @@ import errorHandler from "./middleware/errorHandler";
 import catchErrors from "./utils/catchErrors";
 import { OK } from "./constants/http";
 import userRoutes from "./routes/user.route";
+import jobPostingRoutes from "./routes/jobPostings.route";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.get("/", (req, res, next) => {
 });
 
 app.use("/user", userRoutes);
+app.use("/job", jobPostingRoutes);
 
 app.use(errorHandler);
 
