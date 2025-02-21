@@ -60,6 +60,6 @@ jobs:
     - name: deploy frontend to gke
       run: |
         sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" ./frontend/frontend-deployment.yml
-        sed -i "s/frontend_PORT/$frontend_PORT/g" ./frontend/frontend-deployment.yml
+        sed -i "s/FRONTEND_PORT/$FRONTEND_PORT/g" ./frontend/frontend-deployment.yml
         kubectl apply -f ./frontend/frontend-deployment.yml
 
