@@ -25,7 +25,7 @@ jobs:
     - name: build and push the docker image
       env:
         GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
-      run:
+      run: |
         gcloud auth configure-docker us-central1-docker.pkg.dev
-        docker build -t us-central1-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend ./backend
-        docker push us-central1-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend
+        docker build -t us-central1-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend:latest ./backend
+        docker push us-central1-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend:latest
