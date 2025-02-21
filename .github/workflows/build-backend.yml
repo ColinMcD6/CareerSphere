@@ -37,14 +37,14 @@ jobs:
         docker build -t $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend:latest ./backend
         docker push $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend:latest
 
-    # - id: 'get-credentials'
-    #   uses: 'google-github-actions/get-gke-credentials@v2'
-    #   with:
-    #     cluster_name: '$GKE_CLUSTER'
-    #     location: '$GKE_REGION'
+    - id: 'get-credentials'
+      uses: 'google-github-actions/get-gke-credentials@v2'
+      with:
+        cluster_name: '$GKE_CLUSTER'
+        location: '$GKE_REGION'
 
-    - name: Get GKE credentials
-      run: gcloud container clusters get-credentials $GKE_CLUSTER --region $GKE_REGION --project $GOOGLE_PROJECT
+    # - name: Get GKE credentials
+    #   run: gcloud container clusters get-credentials $GKE_CLUSTER --region $GKE_REGION --project $GOOGLE_PROJECT
 
     - name: deploy backend to gke
       run: |
