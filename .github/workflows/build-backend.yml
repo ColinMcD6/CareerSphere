@@ -43,13 +43,16 @@ jobs:
     #     cluster_name: '$GKE_CLUSTER'
     #     location: '$GKE_REGION'
 
-    - name: install gke-gcloud-auth-plugin
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
+    # # - name: install gke-gcloud-auth-plugin
+    # #   run: |
+    # #     sudo apt-get update
+    # #     sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
 
     - name: Get GKE credentials
       run: gcloud container clusters get-credentials $GKE_CLUSTER --region $GKE_REGION --project $GOOGLE_PROJECT
+
+    - name: verify backend-deployment.yml exists
+      run: ls -la ./backend
 
     - name: deploy backend to gke
       run: |
