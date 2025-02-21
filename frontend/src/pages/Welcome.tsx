@@ -15,7 +15,7 @@ const Welcome = () => {
 
   let out = (
     <>
-      <h1>Welcome {user?.name}!</h1>
+      <h1>Welcome {user?.username}!</h1>
       <Button onClick={handleBack}>Log Out</Button>
       <Button onClick={handleProfile}>Edit Profile</Button>
     </>

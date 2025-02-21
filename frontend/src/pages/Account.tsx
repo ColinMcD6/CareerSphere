@@ -1,12 +1,13 @@
 import useUser from "../hooks/user";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { getUser } from "../lib/api";
 
-const Account = () => {
-  const { user } = useUser();
+const Account = async () => {
+  const user = await getUser();
   const navigate = useNavigate();
   let initEmail = user?.email;
-  let initName = user?.name;
+  let initName = user?.username;
   let initPassword = user?.password;
   const handleBack = async () => {
     navigate("/welcome");
