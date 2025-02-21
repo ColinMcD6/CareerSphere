@@ -34,7 +34,7 @@ jobs:
       uses: 'google-github-actions/get-gke-credentials@v2'
       with:
         cluster_name: 'autopilot-cluster-careersphere--1'
-        location: 'us-central1-a'
+        location: 'us-central1'
 
     - name: deploy backend to gke
       env:
