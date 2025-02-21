@@ -5,6 +5,15 @@ on:
     branches:
     - '43-continous-integration'
 
+env:
+  GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+  BACKEND_PORT: ${{ secrets.BACKEND_PORT }}
+  MONGODB_USER: ${{ secrets.MONGODB_USER }}
+  MONGODB_PASS: ${{ secrets.MONGODB_PASS }}
+  GKE_CLUSTER: autopilot-cluster-careersphere--1
+  GKE_REGION: us-central1
+  GAR_REGION: us-central1
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -23,27 +32,22 @@ jobs:
         version: '>= 363.0.0'
 
     - name: build and push the docker image
-      env:
-        GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
       run: |
-        gcloud auth configure-docker us-central1-docker.pkg.dev
-        docker build -t us-central1-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend:latest ./backend
-        docker push us-central1-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend:latest
+        gcloud auth configure-docker $GAR_REGION-docker.pkg.dev
+        docker build -t $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend:latest ./backend
+        docker push $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend:latest
 
-    - id: 'get-credentials'
-      uses: 'google-github-actions/get-gke-credentials@v2'
-      with:
-        cluster_name: 'autopilot-cluster-careersphere--1'
-        location: 'us-central1'
+    # - id: 'get-credentials'
+    #   uses: 'google-github-actions/get-gke-credentials@v2'
+    #   with:
+    #     cluster_name: '$GKE_CLUSTER'
+    #     location: '$GKE_REGION'
+
+    - name: Get GKE credentials
+      run: gcloud container clusters get-credentials $GKE_CLUSTER --region $GKE_REGION --project $GOOGLE_PROJECT
 
     - name: deploy backend to gke
-      env:
-        GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
-        BACKEND_PORT: ${{ secrets.BACKEND_PORT }}
-        MONGODB_USER: ${{ secrets.MONGODB_USER }}
-        MONGODB_PASS: ${{ secrets.MONGODB_PASS }}
       run: |
-        gcloud container clusters get-credentials autopilot-cluster-careersphere--1 --region us-central1
         sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" ./backend/backend-deployment.yml
         sed -i "s/BACKEND_PORT/$BACKEND_PORT/g" ./backend/backend-deployment.yml
         sed -i "s/MONGODB_USER/$MONGODB_USER/g" ./backend/backend-deployment.yml
