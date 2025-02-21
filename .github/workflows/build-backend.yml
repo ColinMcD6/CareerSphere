@@ -3,7 +3,7 @@ name: Build Backend
 on:
   push:
     branches:
-    - '43-continuous-integration'
+    - '43-continous-integration'
 
 jobs:
   deploy:
