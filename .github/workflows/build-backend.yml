@@ -30,6 +30,12 @@ jobs:
         docker build -t us-central1-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend:latest ./backend
         docker push us-central1-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend:latest
 
+    - id: 'get-credentials'
+      uses: 'google-github-actions/get-gke-credentials@v2'
+      with:
+        cluster_name: 'autopilot-cluster-careersphere--1'
+        location: 'us-central1-a'
+
     - name: deploy backend to gke
       env:
         GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
@@ -38,9 +44,9 @@ jobs:
         MONGODB_PASS: ${{ secrets.MONGODB_PASS }}
       run: |
         gcloud container clusters get-credentials autopilot-cluster-careersphere--1 --region us-central1
-        sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" backend-deployment.yml
-        sed -i "s/BACKEND_PORT/$BACKEND_PORT/g" backend-deployment.yml
-        sed -i "s/MONGODB_USER/$MONGODB_USER/g" backend-deployment.yml
-        sed -i "s/MONGODB_PASS/$MONGODB_PASS/g" backend-deployment.yml
+        sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" ./backend/backend-deployment.yml
+        sed -i "s/BACKEND_PORT/$BACKEND_PORT/g" ./backend/backend-deployment.yml
+        sed -i "s/MONGODB_USER/$MONGODB_USER/g" ./backend/backend-deployment.yml
+        sed -i "s/MONGODB_PASS/$MONGODB_PASS/g" ./backend/backend-deployment.yml
         kubectl apply -f ./backend/backend-deployment.yml
 
