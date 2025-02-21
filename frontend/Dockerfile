@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
 # Copy the rest of the application code
 COPY . .
@@ -19,10 +19,8 @@ RUN npm run build
 # Install serve to serve the static files
 RUN npm install -g serve
 
+# Include this line for deployement in GKE
 ENV VITE_API_URL=http://backend-service:5000
-
-# Expose the port the app runs on
-EXPOSE 80
 
 # Start the application
 CMD ["serve", "-s", "dist"]
