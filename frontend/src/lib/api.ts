@@ -7,10 +7,21 @@ interface UserResponse {
   experience: string[];
   education: string[];
   skills: string[];
+  hiringDetails: string[];
+  companyDetails: string;
 }
 
 export const getUser = async (): Promise<UserResponse> =>
   API.get("/user");
+
+export const updateUser = async(data: {
+  experience: string[],
+  education: string[],
+  skills: string[],
+  hiringDetails: string[],
+  companyDetails: string
+}) => 
+  API.put("/user/update", data);
 
 export const checklogIn = async (data: { email: string, password: string }) => 
   API.post("/auth/login", data)
@@ -18,7 +29,7 @@ export const checklogIn = async (data: { email: string, password: string }) =>
 export const registerUser = async (data: {
   email: string, 
   username: string, 
-  userRole: string, 
+  user_role: string, 
   password: string,
   confirm_password: string
 }) => {

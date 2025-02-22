@@ -23,7 +23,7 @@ const SignUp = () => {
     const userRole = candidate ? "Candidate" : "Employer";
 
     try {
-      await registerUser({ ...formData, userRole });
+      await registerUser({ ...formData, user_role: userRole });
       navigate("/login");
     } catch (error) {
       console.error("Error registering user:", error);

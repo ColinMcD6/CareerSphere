@@ -1,114 +1,168 @@
-import { useState } from 'react';
-import { Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import useUser from '../hooks/user'; // Assuming you're using a custom hook to get user data
+import { useState } from "react";
+import { Button, Card, Container, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import useUser from "../hooks/user";
+import { updateUser } from "../lib/api";
+import { IoAddCircle, IoTrashBin } from "react-icons/io5";
 
 const Account = () => {
   const navigate = useNavigate();
   const { user } = useUser();
-  
-  const [experience, setExperience] = useState(user?.experience || []);
-  const [education, setEducation] = useState(user?.education || []);
-  const [skills, setSkills] = useState(user?.skills || []);
 
-  const handleBack = async () => {
-    navigate('/');
+  // State for role-based fields
+  const [exp, setexp] = useState(user?.experience || []);
+  const [educ, seteduc] = useState(user?.education || []);
+  const [userSkills, setuserSkills] = useState(user?.skills || []);
+  const [compDetails, setcompDetails] = useState(user?.companyDetails || "");
+  const [hireDetails, sethireDetails] = useState(user?.hiringDetails || []); 
+
+  const handleBack = () => navigate("/");
+
+  const handleSubmit = async () => {
+    try {
+      console.log("Updating user with data:", {
+        experience: exp,
+        education: educ,
+        skills: userSkills,
+        hiringDetails: hireDetails,
+        companyDetails: compDetails
+      });
+      await updateUser({
+        experience: exp,
+        education: educ,
+        skills: userSkills,
+        hiringDetails: hireDetails,
+        companyDetails: compDetails
+      });
+
+      navigate("/");
+    } catch (error) {
+      console.error("Error updating user:", error);
+      alert("Failed to update user. Please try again.");
+    }
   };
 
-  const handleSubmit = () => {
-    //let updatedExperience = [...experience];
-    //let updatedEducation = [...education];
-    //let updatedSkills = [...skills];
-
-    // You would need to implement a function here to handle updating the profile in your system
-
-    navigate('/');
+  // Generic function to handle array updates (exp, educ, userSkills, Hiring Details)
+  const handleArrayChange = (index: number, value: string, setter: Function) => {
+    setter((prev: string[]) => {
+      const updated = [...prev];
+      updated[index] = value;
+      return updated;
+    });
   };
 
-  const addExperience = () => {
-    setExperience([...experience, '']); // Add an empty string to start editing new experience
-  };
-
-  const addEducation = () => {
-    setEducation([...education, '']); // Add an empty string to start editing new education
-  };
-
-  const addSkill = () => {
-    setSkills([...skills, '']); // Add an empty string to start editing new skill
-  };
+  const handleAddItem = (setter: Function) => setter((prev: string[]) => [...prev, ""]);
+  const handleRemoveItem = (index: number, setter: Function) =>
+    setter((prev: string[]) => prev.filter((_, i) => i !== index));
 
   return (
-    <div>
-      {/* Displaying user information in a box */}
-      <div style={{ border: '1px solid #ccc', padding: '20px', marginBottom: '20px', borderRadius: '5px' }}>
-        <h3>User Info</h3>
+    <Container className="mt-4 p-4 border rounded shadow bg-light">
+      <Card className="p-3 mb-4 shadow-sm">
+        <h3>User Account Info</h3>
         <p><strong>Username:</strong> {user?.username}</p>
         <p><strong>Email Address:</strong> {user?.email}</p>
         <p><strong>Role:</strong> {user?.userRole}</p>
+      </Card>
+      {user?.userRole === "Candidate" && (
+        <>
+          <Card className="p-3 mb-4 shadow-sm">
+            <h4>User Experience</h4>
+            {exp.map((exp, index) => (
+              <div key={index} className="d-flex align-items-center mb-2">
+                <Form.Control
+                  type="text"
+                  value={exp}
+                  onChange={(e) => handleArrayChange(index, e.target.value, setexp)}
+                  className="me-2"
+                />
+                <Button variant="danger" size="sm" onClick={() => handleRemoveItem(index, setexp)}>
+                  <IoTrashBin size={16} />
+                </Button>
+              </div>
+            ))}
+            <Button variant="outline-primary" onClick={() => handleAddItem(setexp)}>
+              <IoAddCircle size={16} /> Add Experience
+            </Button>
+          </Card>
+          
+          <Card className="p-3 mb-4 shadow-sm">
+            <h4>User Education</h4>
+            {educ.map((edu, index) => (
+              <div key={index} className="d-flex align-items-center mb-2">
+                <Form.Control
+                  type="text"
+                  value={edu}
+                  onChange={(e) => handleArrayChange(index, e.target.value, seteduc)}
+                  className="me-2"
+                />
+                <Button variant="danger" size="sm" onClick={() => handleRemoveItem(index, seteduc)}>
+                  <IoTrashBin size={16} />
+                </Button>
+              </div>
+            ))}
+            <Button variant="outline-primary" onClick={() => handleAddItem(seteduc)}>
+              <IoAddCircle size={16} /> Add Education
+            </Button>
+          </Card>
+
+          <Card className="p-3 mb-4 shadow-sm">
+            <h4>User Skills</h4>
+            {userSkills.map((skill, index) => (
+              <div key={index} className="d-flex align-items-center mb-2">
+                <Form.Control
+                  type="text"
+                  value={skill}
+                  onChange={(e) => handleArrayChange(index, e.target.value, setuserSkills)}
+                  className="me-2"
+                />
+                <Button variant="danger" size="sm" onClick={() => handleRemoveItem(index, setuserSkills)}>
+                  <IoTrashBin size={16} />
+                </Button>
+              </div>
+            ))}
+            <Button variant="outline-primary" onClick={() => handleAddItem(setuserSkills)}>
+              <IoAddCircle size={16} /> Add Skill
+            </Button>
+          </Card>
+        </>
+      )}
+      {user?.userRole === "Employer" && (
+        <>
+          <Card className="p-3 mb-4 shadow-sm">
+            <h4>Company Details</h4>
+            <Form.Control
+              type="text"
+              value={compDetails}
+              onChange={(e) => setcompDetails(e.target.value)}
+            />
+          </Card>
+          
+          <Card className="p-3 mb-4 shadow-sm">
+            <h4>Job Hiring Details</h4>
+            {hireDetails.map((detail, index) => (
+              <div key={index} className="d-flex align-items-center mb-2">
+                <Form.Control
+                  type="text"
+                  value={detail}
+                  onChange={(e) => handleArrayChange(index, e.target.value, sethireDetails)}
+                  className="me-2"
+                />
+                <Button variant="danger" size="sm" onClick={() => handleRemoveItem(index, sethireDetails)}>
+                  <IoTrashBin size={16} />
+                </Button>
+              </div>
+            ))}
+            <Button variant="outline-primary" onClick={() => handleAddItem(sethireDetails)}>
+              <IoAddCircle size={16} /> Add Another Hiring
+            </Button>
+          </Card>
+        </>
+      )}
+      <div className="mt-4 d-flex justify-content-end">
+        <Button onClick={handleSubmit} className="me-2">Confirm</Button>
+        <Button onClick={handleBack} variant="secondary">Cancel</Button>
       </div>
-
-      {/* Experience Input Section */}
-      <h4>Experience</h4>
-      {experience.map((exp, index) => (
-        <div key={index} className="input-container">
-          <input
-            type="text"
-            className="form-control"
-            defaultValue={exp}
-            onChange={(e) => {
-              const updatedExperience = [...experience];
-              updatedExperience[index] = e.target.value;
-              setExperience(updatedExperience);
-            }}
-          />
-        </div>
-      ))}
-      <Button variant="outline-primary" onClick={addExperience}>Add More Experience</Button>
-
-      {/* Education Input Section */}
-      <h4>Education</h4>
-      {education.map((edu, index) => (
-        <div key={index} className="input-container">
-          <input
-            type="text"
-            className="form-control"
-            defaultValue={edu}
-            onChange={(e) => {
-              const updatedEducation = [...education];
-              updatedEducation[index] = e.target.value;
-              setEducation(updatedEducation);
-            }}
-          />
-        </div>
-      ))}
-      <Button variant="outline-primary" onClick={addEducation}>Add More Education</Button>
-
-      {/* Skills Input Section */}
-      <h4>Skills</h4>
-      {skills.map((skill, index) => (
-        <div key={index} className="input-container">
-          <input
-            type="text"
-            className="form-control"
-            defaultValue={skill}
-            onChange={(e) => {
-              const updatedSkills = [...skills];
-              updatedSkills[index] = e.target.value;
-              setSkills(updatedSkills);
-            }}
-          />
-        </div>
-      ))}
-      <Button variant="outline-primary" onClick={addSkill}>Add More Skills</Button>
-
-      {/* Form Submission */}
-      <div style={{ marginTop: '20px' }}>
-        <Button onClick={handleSubmit}>Confirm</Button>
-        <Button onClick={handleBack} variant="secondary" style={{ marginLeft: '10px' }}>
-          Cancel
-        </Button>
-      </div>
-    </div>
+    </Container>
   );
 };
 

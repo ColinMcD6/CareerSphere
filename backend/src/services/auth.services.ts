@@ -40,8 +40,14 @@ export const signup_account = async (data: signupAccountFields) => {
         username: data.username, 
         email: data.email, 
         password: data.password, 
-        user_role: data.user_role,
-    })
+        userRole: data.user_role,
+        education: data.user_role === "Candidate" ? [] : undefined,
+        skills: data.user_role === "Candidate" ? [] : undefined,
+        experience: data.user_role === "Candidate" ? [] : undefined,
+        companyDetails: data.user_role === "Employer" ? "" : undefined,
+        hiringDetails: data.user_role === "Employer" ? [] : undefined,
+    });
+    
     // create and send verification code to email
     const verificaion_codes = await verificationModel.create({
         userId: newuser._id, 

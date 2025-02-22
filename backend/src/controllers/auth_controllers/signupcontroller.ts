@@ -9,7 +9,7 @@ const signupSchema = z.object({
     email: z.string().email().min(1).max(225),
     password: z.string().min(8).max(225),
     confirm_password: z.string().min(8).max(225),
-    userRole: z.string(),
+    user_role: z.string(),
     userAgent: z.string().optional(),
 }).refine(
     (data) => data.password === data.confirm_password, {
