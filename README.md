@@ -21,6 +21,7 @@ User Friendly Career Platform that connects job seekers and employers through fe
 * [Architecture_Diagram](https://github.com/ColinMcD6/CareerSphere/blob/main/documentation/COMP4350_CareerSphere_ArchitechtureDiagram.png)
  
 ### Running Application
+1. Run the command npm install on the root of the project and then follow the backend and frontend instructions below.
 
 ##### Backend
 1. Add ```.env``` file to backend folder with the following values populated:
