@@ -1,122 +1,115 @@
-import useUser from "../hooks/user";
-import { Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { getUser } from "../lib/api";
+import { useState } from 'react';
+import { Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import useUser from '../hooks/user'; // Assuming you're using a custom hook to get user data
 
-const Account = async () => {
-  const user = await getUser();
+const Account = () => {
   const navigate = useNavigate();
-  let initEmail = user?.email;
-  let initName = user?.username;
-  let initPassword = user?.password;
+  const { user } = useUser();
+  
+  const [experience, setExperience] = useState(user?.experience || []);
+  const [education, setEducation] = useState(user?.education || []);
+  const [skills, setSkills] = useState(user?.skills || []);
+
   const handleBack = async () => {
-    navigate("/welcome");
+    navigate('/');
   };
+
   const handleSubmit = () => {
-    let email = document.getElementById("inputEmail") as HTMLInputElement;
-    let name = document.getElementById("inputName") as HTMLInputElement;
-    let password = document.getElementById("inputPassword") as HTMLInputElement;
-    let experience = document.getElementById(
-      "inputExperience"
-    ) as HTMLInputElement;
-    let education = document.getElementById(
-      "inputEducation"
-    ) as HTMLInputElement;
-    let skills = document.getElementById("inputSkills") as HTMLInputElement;
-    let projects = document.getElementById("inputProjects") as HTMLInputElement;
-    let companyDetails = document.getElementById(
-      "inputCompanyDetails"
-    ) as HTMLInputElement;
-    let hiringDetails = document.getElementById(
-      "inputHiringDetails"
-    ) as HTMLInputElement;
-    //need a function that takes info and edits existing profile
-    //take variable.value not just the variable||||||||||||||||||||||
-    navigate("/welcome");
+    //let updatedExperience = [...experience];
+    //let updatedEducation = [...education];
+    //let updatedSkills = [...skills];
+
+    // You would need to implement a function here to handle updating the profile in your system
+
+    navigate('/');
   };
-  let out = (
-    <>
-      <h1>Edit Account Details</h1>
-      <form>
-        <div className="emailDiv">
-          <label htmlFor="inputEmail" className="form-label">
-            Email address
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="inputEmail"
-            defaultValue={initEmail}
-          />
-        </div>
-        <div className="nameDiv">
-          <label htmlFor="inputName" className="form-label">
-            Name
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="inputName"
-            defaultValue={initName}
-          />
-        </div>
-        <div className="passwordDiv">
-          <label htmlFor="inputPassword" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="inputPassword"
-            defaultValue={initPassword}
-          />
-        </div>
-        <div className="experienceDiv">
-          <label htmlFor="inputExperience" className="form-label">
-            Experience
-          </label>
-          <input type="text" className="form-control" id="inputExperience" />
-        </div>
-        <div className="educationDiv">
-          <label htmlFor="inputEducation" className="form-label">
-            Education
-          </label>
-          <input type="text" className="form-control" id="inputEducation" />
-        </div>
-        <div className="skillDiv">
-          <label htmlFor="inputSkills" className="form-label">
-            Skills
-          </label>
-          <input type="text" className="form-control" id="inputSkills" />
-        </div>
-        <div className="projectDiv">
-          <label htmlFor="inputProjects" className="form-label">
-            Projects
-          </label>
-          <input type="text" className="form-control" id="inputProjects" />
-        </div>
-        <div className="companyDetailDiv">
-          <label htmlFor="inputCompanyDetails" className="form-label">
-            Company Details
-          </label>
+
+  const addExperience = () => {
+    setExperience([...experience, '']); // Add an empty string to start editing new experience
+  };
+
+  const addEducation = () => {
+    setEducation([...education, '']); // Add an empty string to start editing new education
+  };
+
+  const addSkill = () => {
+    setSkills([...skills, '']); // Add an empty string to start editing new skill
+  };
+
+  return (
+    <div>
+      {/* Displaying user information in a box */}
+      <div style={{ border: '1px solid #ccc', padding: '20px', marginBottom: '20px', borderRadius: '5px' }}>
+        <h3>User Info</h3>
+        <p><strong>Username:</strong> {user?.username}</p>
+        <p><strong>Email Address:</strong> {user?.email}</p>
+        <p><strong>Role:</strong> {user?.userRole}</p>
+      </div>
+
+      {/* Experience Input Section */}
+      <h4>Experience</h4>
+      {experience.map((exp, index) => (
+        <div key={index} className="input-container">
           <input
             type="text"
             className="form-control"
-            id="inputCompanyDetails"
+            defaultValue={exp}
+            onChange={(e) => {
+              const updatedExperience = [...experience];
+              updatedExperience[index] = e.target.value;
+              setExperience(updatedExperience);
+            }}
           />
         </div>
-        <div className="hiringDetailDiv">
-          <label htmlFor="inputHiringDetails" className="form-label">
-            Hiring Details
-          </label>
-          <input type="text" className="form-control" id="inputHiringDetails" />
+      ))}
+      <Button variant="outline-primary" onClick={addExperience}>Add More Experience</Button>
+
+      {/* Education Input Section */}
+      <h4>Education</h4>
+      {education.map((edu, index) => (
+        <div key={index} className="input-container">
+          <input
+            type="text"
+            className="form-control"
+            defaultValue={edu}
+            onChange={(e) => {
+              const updatedEducation = [...education];
+              updatedEducation[index] = e.target.value;
+              setEducation(updatedEducation);
+            }}
+          />
         </div>
-      </form>
-      <Button onClick={handleSubmit}>Confirm</Button>
-      <Button onClick={handleBack}>Cancel</Button>
-    </>
+      ))}
+      <Button variant="outline-primary" onClick={addEducation}>Add More Education</Button>
+
+      {/* Skills Input Section */}
+      <h4>Skills</h4>
+      {skills.map((skill, index) => (
+        <div key={index} className="input-container">
+          <input
+            type="text"
+            className="form-control"
+            defaultValue={skill}
+            onChange={(e) => {
+              const updatedSkills = [...skills];
+              updatedSkills[index] = e.target.value;
+              setSkills(updatedSkills);
+            }}
+          />
+        </div>
+      ))}
+      <Button variant="outline-primary" onClick={addSkill}>Add More Skills</Button>
+
+      {/* Form Submission */}
+      <div style={{ marginTop: '20px' }}>
+        <Button onClick={handleSubmit}>Confirm</Button>
+        <Button onClick={handleBack} variant="secondary" style={{ marginLeft: '10px' }}>
+          Cancel
+        </Button>
+      </div>
+    </div>
   );
-  return out;
 };
 
 export default Account;

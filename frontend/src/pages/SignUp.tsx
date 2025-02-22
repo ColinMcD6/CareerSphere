@@ -7,7 +7,7 @@ const SignUp = () => {
   const navigate = useNavigate();
   const [candidate, setCandidate] = useState(true);
   const [formData, setFormData] = useState({
-    username: "", // Changed order: Username is at the top
+    username: "",
     email: "",
     password: "",
     confirm_password: "",
@@ -18,24 +18,24 @@ const SignUp = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent page reload
+    e.preventDefault();
 
-    if (formData.password !== formData.confirm_password) {
-      alert("Passwords do not match!");
-      return;
-    }
-
-    // Determine user role based on selection
     const userRole = candidate ? "Candidate" : "Employer";
 
     try {
       await registerUser({ ...formData, userRole });
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       console.error("Error registering user:", error);
       alert("Registration failed. Please try again.");
     }
   };
+
+  // Email validation using a basic regex pattern
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+  const isPasswordValid = formData.password.length >= 8;
+  const doPasswordsMatch = formData.password === formData.confirm_password;
+  const isFormValid = isEmailValid && isPasswordValid && doPasswordsMatch;
 
   return (
     <Container
@@ -46,7 +46,6 @@ const SignUp = () => {
         <Col xs={12} md={6} lg={4} className="mx-auto">
           <h3 className="text-center mb-4">Sign Up</h3>
           <Form onSubmit={handleSubmit}>
-            {/* Username Field (Moved to the top) */}
             <Form.Group className="mb-3" controlId="inputUsername">
               <Form.Label>Username</Form.Label>
               <Form.Control
@@ -58,8 +57,6 @@ const SignUp = () => {
                 required
               />
             </Form.Group>
-
-            {/* Email Field */}
             <Form.Group className="mb-3" controlId="inputEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control
@@ -69,11 +66,13 @@ const SignUp = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
+                isInvalid={formData.email.length > 0 && !isEmailValid}
               />
+              <Form.Control.Feedback type="invalid">
+                Please enter a valid email address.
+              </Form.Control.Feedback>
             </Form.Group>
-
-            {/* Password Field */}
-            <Form.Group className="mb-3" controlId="inputPassword">
+            <Form.Group className="mb-2" controlId="inputPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control
                 type="password"
@@ -83,9 +82,8 @@ const SignUp = () => {
                 onChange={handleChange}
                 required
               />
+              <small className="text-muted">Must be at least 8 characters long.</small>
             </Form.Group>
-
-            {/* Confirm Password Field */}
             <Form.Group className="mb-3" controlId="confirm_password">
               <Form.Label>Confirm Password</Form.Label>
               <Form.Control
@@ -95,10 +93,12 @@ const SignUp = () => {
                 value={formData.confirm_password}
                 onChange={handleChange}
                 required
+                isInvalid={formData.confirm_password.length > 0 && !doPasswordsMatch}
               />
+              <Form.Control.Feedback type="invalid">
+                Passwords do not match.
+              </Form.Control.Feedback>
             </Form.Group>
-
-            {/* Role Selection */}
             <Form.Group className="mb-3">
               <Form.Label>Registering As:</Form.Label>
               <div className="d-flex gap-3">
@@ -118,20 +118,15 @@ const SignUp = () => {
                 />
               </div>
             </Form.Group>
-
-            {/* Submit Button */}
-            <Button variant="primary" type="submit" className="w-100">
+            <Button variant="primary" type="submit" className="w-100" disabled={!isFormValid}>
               Sign Up
             </Button>
           </Form>
-
-          {/* Back Button */}
           <Button
             variant="secondary"
-            onClick={() => navigate("/")}
-            className="w-100 mt-3"
-          >
-            Back
+            onClick={() => navigate("/login")}
+            className="w-100 mt-3">
+            Sign In To Existing Account !
           </Button>
         </Col>
       </Row>

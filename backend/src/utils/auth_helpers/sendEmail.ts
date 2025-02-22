@@ -1,4 +1,5 @@
 import resend from "../../config/resend";
+import { NODE_ENV } from "../../constants/env";
 
 type emailParams = {
     to: string;
@@ -7,6 +8,9 @@ type emailParams = {
     html: string;
 }
 
+const getToEmail = (to: string) =>
+    NODE_ENV === "development" ? "delivered@resend.dev" : to;
+
 export const sendEmail = async (
     {
         to, subject, text, html
@@ -14,7 +18,7 @@ export const sendEmail = async (
 ) => 
     await resend.emails.send({
         from: "onboarding@resend.dev",
-        to: to,
+        to: getToEmail(to),
         subject,
         text,
         html
