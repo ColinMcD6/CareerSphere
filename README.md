@@ -28,9 +28,13 @@ User Friendly Career Platform that connects job seekers and employers through fe
 NODE_ENV=development
 # frontend url
 APP_ORIGIN=http://localhost:{FRONTEND PORT}
-# example: mongodb://localhost:27017/{DB_NAME}
 MONGO_URI=mongodb://localhost:27017/{DB_NAME}
 PORT={BACKEND PORT}
+JWT_SECRET=myjwtsecret
+JWTREFRESH_SECRET=myjwtrefrestsecret
+SENDER_EMAIL=aa
+API_RESEND=bb
+RESEND_API_KEY=re_aQLEGtYG_3TXkr9ds9eYB473GMZjgU7Uj
 ```
 2. From ```backend``` directory run ```npm install```
 3. To run application in development mode (every change to file will update server): ```npm run dev```
