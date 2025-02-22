@@ -36,9 +36,10 @@ const Account = () => {
       });
 
       navigate("/");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating user:", error);
-      alert("Failed to update user. Please try again.");
+      const message = error.message
+      alert(`Failed to update user. Please try again. ${message}`);
     }
   };
 

@@ -25,9 +25,10 @@ const SignUp = () => {
     try {
       await registerUser({ ...formData, user_role: userRole });
       navigate("/login");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error registering user:", error);
-      alert("Registration failed. Please try again.");
+      const message = error.message
+      alert(`Registration failed. ${message}`);
     }
   };
 

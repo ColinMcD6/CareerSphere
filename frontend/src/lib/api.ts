@@ -32,27 +32,19 @@ export const registerUser = async (data: {
   user_role: string, 
   password: string,
   confirm_password: string
-}) => {
+}) => 
   API.post("/auth/signup", data)
-}
 
-export const logoutUser = async()=> {
+export const logoutUser = async()=> 
   API.get("/auth/logout")
-}
 
-export const verifyEmail = async(code: string) => {
-  console.log(code)
+export const verifyEmail = async(code: string) => 
   API.get(`/auth/email/verify/${code}`)
-}
 
 export const sendresetPassEmail = async(data: {
   email: string
-}) => {
-  console.log(data)
+}) =>
   API.post("/auth/password/forgot", data)
-}
 
-export const changePassword = async(data: { verifycode: string, password: string }) => {
-  console.log(data)
+export const changePassword = async(data: { verifycode: string, password: string }) =>
   API.post("/auth/password/reset", data)
-}

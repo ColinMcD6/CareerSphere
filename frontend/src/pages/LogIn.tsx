@@ -19,8 +19,9 @@ const LogIn = () => {
     try {
       await checklogIn({ email: formData.email, password: formData.password });
       navigate("/");
-    } catch (error) {
-      alert("Invalid email or password. Please try again.");
+    } catch (error: any) {
+      const message = error.message
+      alert(`Invalid email or password. Please try again. ${message}`);
     }
   };
 

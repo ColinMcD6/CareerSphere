@@ -14,7 +14,7 @@ const ForgotPassword = () => {
       await sendresetPassEmail({email: userInputEmail});
       setSubmitted(true);
     } catch {
-      alert("Error sending reset userInputEmail. Please try again.");
+      alert("Error sending reset email. Please try again.");
     }
     setLoading(false); // Re-enable button after request completes
   };
@@ -24,14 +24,14 @@ const ForgotPassword = () => {
       <div className="w-100" style={{ maxWidth: "400px" }}>
         <h3 className="text-center mb-4">Forgot Password</h3>
         {submitted ? (
-          <Alert variant="success">📩 A password reset link has been sent to your userInputEmail!</Alert>
+          <Alert variant="success">📩 A password reset link has been sent to your email!</Alert>
         ) : (
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="userInputEmail">
               <Form.Label>userInputEmail Address</Form.Label>
               <Form.Control
                 type="userInputEmail"
-                placeholder="Enter your userInputEmail"
+                placeholder="Enter your email"
                 value={userInputEmail}
                 onChange={(e) => setuserInputEmail(e.target.value)}
                 required

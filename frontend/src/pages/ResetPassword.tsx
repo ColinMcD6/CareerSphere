@@ -35,8 +35,9 @@ const ResetPassword = () => {
     try {
       await changePassword({ verifycode: code, password: newPassword });
       setSubmitted(true);
-    } catch {
-      alert("Error resetting password. Please try again.");
+    } catch (error: any){
+      const message = error.message
+      alert(`Error resetting password. Please try again. ${message}`);
     }
     setLoading(false);
   };
