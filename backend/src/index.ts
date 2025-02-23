@@ -6,9 +6,12 @@ import { NODE_ENV, PORT, APP_ORIGIN } from "./constants/env";
 import errorHandler from "./middleware/errorHandler";
 import { OK } from "./constants/http";
 import userRoutes from "./routes/user.route";
+
 import jobPostingRoutes from "./routes/jobPostings.route";
 import resumeRoutes from "./routes/resume.routes";
 import multer from "multer";
+import authRoutes from "./routes/auth.route";
+import authenticate from "./middleware/authenticate";
 
 
 const app = express();
@@ -27,13 +30,20 @@ app.get("/", (req, res, next) => {
     });
 });
 
-app.use("/user", userRoutes);
+
+
 app.use("/job", jobPostingRoutes);
 
 
 
 app.use("/resume", resumeRoutes);
 
+
+
+app.use("/auth", authRoutes);
+
+// to get info about user accounts - protected routes
+app.use("/user", authenticate, userRoutes);
 
 
 app.use(errorHandler);
