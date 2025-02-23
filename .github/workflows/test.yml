@@ -16,11 +16,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18  # Use your project's Node.js version
-          cache: 'npm'  # Caches node_modules for faster runs
+          node-version: 18
+          cache: 'npm'
 
       - name: Install Dependencies
-        run: npm install
+        run: npm install --prefix backend
 
       - name: Run Jest Tests
-        run: npm test  # Ensure "test": "jest" is in package.json
+        run: npm test --prefix backend
