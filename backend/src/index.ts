@@ -4,9 +4,10 @@ import cookieParser from "cookie-parser";
 import connectToDatabase from "./config/db";
 import { NODE_ENV, PORT, APP_ORIGIN } from "./constants/env";
 import errorHandler from "./middleware/errorHandler";
-import catchErrors from "./utils/catchErrors";
 import { OK } from "./constants/http";
 import userRoutes from "./routes/user.route";
+import authRoutes from "./routes/auth.route";
+import authenticate from "./middleware/authenticate";
 
 const app = express();
 
@@ -27,7 +28,10 @@ app.get("/", (req, res, next) => {
     });
 });
 
-app.use("/user", userRoutes);
+app.use("/auth", authRoutes);
+
+// to get info about user accounts - protected routes
+app.use("/user", authenticate, userRoutes);
 
 app.use(errorHandler);
 
