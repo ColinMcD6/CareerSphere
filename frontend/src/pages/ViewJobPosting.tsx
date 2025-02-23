@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-const PORT = 5500; // TEMPORARY SOLUTION, NEEDS TO CHANGE LATER
+const PORT = 5050; // TEMPORARY SOLUTION, NEEDS TO CHANGE LATER
 
 const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();

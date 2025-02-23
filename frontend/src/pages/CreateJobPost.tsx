@@ -101,7 +101,7 @@ const CreateJobPost: React.FC = () => {
   return (
     
     <div className="container mt-5">
-      <ToastContainer />
+      <ToastContainer aria-label={undefined} />
       <div className="card shadow">
         <div className="card-header bg-primary text-white">
           <h2 className="card-title">Create Job Posting</h2>
