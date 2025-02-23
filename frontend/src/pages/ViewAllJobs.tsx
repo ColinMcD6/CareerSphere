@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllJobPostings } from "../lib/api";
+import { Navigate } from "react-router-dom";
+import useUser from "../hooks/user";
 
 // Define the type for a job object
 interface Job {
@@ -9,6 +11,7 @@ interface Job {
 }
 
 const ViewAllJobs: React.FC = () => {
+  const { user, isLoading } = useUser();
   const [jobs, setJobs] = useState<Job[]>([]); // State to store the list of jobs
   const [loading, setLoading] = useState<boolean>(true); // State to handle loading state
   const [error, setError] = useState<string | null>(null); // State to handle errors
@@ -37,6 +40,15 @@ const ViewAllJobs: React.FC = () => {
   const viewJobPosting = (id: string) => {
     navigate(`/view-job-posting?ID=${id}`);
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  // If no user, redirect to login page
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
   // Display loading state
   if (loading) {

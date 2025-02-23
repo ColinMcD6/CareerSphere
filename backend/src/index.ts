@@ -34,7 +34,7 @@ app.get("/", (req, res, next) => {
 
 
 
-app.use("/job", jobPostingRoutes);
+app.use("/job", authenticate, jobPostingRoutes); // As of right now this does not differentiate between employee and candidates, as it just uses the authenticate middleware 
 
 
 

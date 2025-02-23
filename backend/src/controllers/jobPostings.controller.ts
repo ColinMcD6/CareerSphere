@@ -38,14 +38,14 @@ const jobPostingsZModel = z.object({
 })
 
 export const addJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
-    
-    console.log("Recieved a request to create a new job posting");
+
+    console.log("Received a request to create a new job posting");
     const job  = {
         title: req.body.title,
         description: req.body.description,
         positionTitle: req.body.positionTitle,
-        employer: req.body.employer,
-        employer_id: req.body.employer_id,
+        employer: req.userId, // This should probably be company name
+        employer_id: req.userId,
         location: req.body.location,
         compensationType: req.body.compensationType,
         salary: req.body.salary,

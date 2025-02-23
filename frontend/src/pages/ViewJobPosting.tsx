@@ -1,10 +1,16 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getIndividualJobPosting } from "../lib/api";
+import useUser from "../hooks/user";
+import { Navigate } from "react-router-dom";
 
 const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();
   const jobId = searchParams.get("ID");
+
+  const {user, isLoading } = useUser();
+  const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
+  const [jobNotFound, setJobNotFound] = useState<boolean>(false); // Define the type for job
 
   interface JobPosting {
     title: string;
@@ -23,25 +29,59 @@ const ViewJobPosting = () => {
     deadline: Date;
     status: string;
   }
-  const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
 
   useEffect(() => {
-    if (jobId) {
+    if (jobId !== undefined && jobId !== null) {
       fetchJobPosting(jobId);
+    }
+    else
+    {
+      setJobNotFound(true);
     }
   }, [jobId]);
 
   const fetchJobPosting = async (id: string) => {
     try {
-      console.log("Contacting Express server to get a job posting with id : " + id );
+      console.log(
+        "Contacting Express server to get a job posting with id : " + id
+      );
       const response = await getIndividualJobPosting(id); // Wait for the promise to resolve
       console.log("successfully received job posting response");
       setJob(response);
-    } catch (error) {
-      console.log("Error getting job from server")
+    } catch (error :any ) 
+    {
+      if ( error.status == 409)
+      {
+        console.log("Job posting could not be found!");
+        setJobNotFound(true);
+      }
+      console.log("Error getting job from server");
       console.error(error);
     }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  // If no user, redirect to login page
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  if (jobNotFound)
+  {
+    return  (
+      <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+        <div className="text-center p-5 bg-white rounded shadow">
+          <h2 className="text-danger mb-4">
+            <i className="bi bi-exclamation-circle-fill"></i> Oops!
+          </h2>
+          <p className="lead mb-4">That job posting could not be found!</p>
+        </div>
+      </div>
+    );;
+
+  }
 
   if (!data) {
     return <div>Loading...</div>;
