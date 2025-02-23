@@ -6,7 +6,6 @@ import { NODE_ENV, PORT, APP_ORIGIN } from "./constants/env";
 import errorHandler from "./middleware/errorHandler";
 import { OK } from "./constants/http";
 import userRoutes from "./routes/user.route";
-
 import jobPostingRoutes from "./routes/jobPostings.route";
 import resumeRoutes from "./routes/resume.routes";
 import multer from "multer";
@@ -18,9 +17,12 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-
-// Enable CORS for all routes
-app.use(cors());
+app.use(
+    cors({
+        origin: APP_ORIGIN,
+        credentials: true,
+    })
+);
 
 app.use(cookieParser());
 
