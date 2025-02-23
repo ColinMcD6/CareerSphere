@@ -1,42 +1,17 @@
 import { CONFLICT } from "../constants/http";
-import JobPostingsModel from "../models/jobPostings.model";
+import JobPostingsModel  from "../models/jobPostings.model";
+import {JobPostingsDocument}  from "../models/jobPostings.model";
 import appAssert from "../utils/appAssert";
 
-export type CreateJobPostingParams = {
-    title: string,
-    description: string,
-    employer: string,
-    employer_id: string,
-    location: string,
-    salary: number,
-    jobType: string,
-    experience: string[],
-    skills: string[],
-    education: string[],
-    deadline: Date,
-    status: string
-};
-
-export const createJobPosting = async (data: CreateJobPostingParams) => {    
-    const jobPosting = await JobPostingsModel.create({
-        title: data.title,
-        description: data.description,
-        employer: data.employer,
-        employer_id: data.employer_id,
-        location: data.location,
-        salary: data.salary,
-        jobType: data.jobType,
-        experience: data.experience,
-        skills: data.skills,
-        education: data.education,
-        deadline: data.deadline,
-        status: data.status
-    })
+export const createJobPosting = async (data: JobPostingsDocument) => {
+    // Pass the entire `data` object to Mongoose's `create` method
+    const jobPosting = await JobPostingsModel.create(data);
 
     return {
         jobPosting: jobPosting
     };
-}
+};
+
 
 export const getJobPosting = async (id: string) => {
     const jobPosting = await JobPostingsModel.findById(id);

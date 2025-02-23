@@ -4,12 +4,14 @@ import cookieParser from "cookie-parser";
 import connectToDatabase from "./config/db";
 import { NODE_ENV, PORT, APP_ORIGIN } from "./constants/env";
 import errorHandler from "./middleware/errorHandler";
-import catchErrors from "./utils/catchErrors";
 import { OK } from "./constants/http";
 import userRoutes from "./routes/user.route";
 import jobPostingRoutes from "./routes/jobPostings.route";
 import resumeRoutes from "./routes/resume.routes";
 import multer from "multer";
+
+
+
 
 const app = express();
 
@@ -21,6 +23,7 @@ app.use(
         credentials: true,
     })
 );
+console.log(APP_ORIGIN)
 
 app.use(cookieParser());
 
@@ -45,6 +48,14 @@ app.listen(
     PORT,
     async () => {
         console.log(`Server is running on port ${PORT} in ${NODE_ENV} environment.`);
-        await connectToDatabase();
+        try {
+            await connectToDatabase();
+        } catch (error) {
+            console.error("Failed to connect to the database:", error);
+            process.exit(1); // Exit the process with a failure code
+        }
     }
-);
+).on("error", (error) => {
+    console.error("Server failed to start:", error);
+    process.exit(1); // Exit the process with a failure code
+});
