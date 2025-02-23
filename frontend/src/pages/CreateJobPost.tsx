@@ -195,8 +195,6 @@ const CreateJobPost: React.FC = () => {
             )}
             </div>
 
-            
-
             <div className="mb-3">
               <label className="form-label">Location:</label>
               <input
@@ -230,7 +228,6 @@ const CreateJobPost: React.FC = () => {
               />
             </div>
             <div className="mb-3">
-
 
   <label className="form-label">What type of Employment is it?</label>
   <div>
@@ -292,7 +289,6 @@ const CreateJobPost: React.FC = () => {
     </div>
   </div>
 </div>
-
             <button type="submit" className="btn btn-primary w-100">
               Create Job Posting
             </button>

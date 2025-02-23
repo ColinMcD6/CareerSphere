@@ -11,19 +11,13 @@ import resumeRoutes from "./routes/resume.routes";
 import multer from "multer";
 
 
-
-
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(
-    cors({
-        origin: APP_ORIGIN,
-        credentials: true,
-    })
-);
-console.log(APP_ORIGIN)
+
+// Enable CORS for all routes
+app.use(cors());
 
 app.use(cookieParser());
 

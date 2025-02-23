@@ -17,8 +17,10 @@ const ViewAllJobs: React.FC = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await fetch("http://localhost:5500/job");
+        const response = await fetch("http://localhost:5500/job"); // CHANGE TO PROPER ENIVORMENT LATER
         if (!response.ok) {
+          console.log("An error has occured");
+          console.log(response);
           throw new Error("Failed to fetch jobs");
         }
         const data = await response.json();
