@@ -3,7 +3,9 @@ import ResumeModel from "../models/resume.model";
 import appAssert from "../utils/appAssert";
 
 export type CreateResumeParams = {
-    pdf: string,
+    pdf_name: string,
+    file_name: string,
+    path: string,
     job_id: string,         // job id itself
     candidate_id: string,   // Person who submitted the resume
     employer_id: string,    // Employer who posted the job
@@ -14,7 +16,9 @@ export const createResume = async (data: CreateResumeParams) => {
     
     
     const resume = await ResumeModel.create({
-        pdf: data.pdf,
+        pdf_name: data.pdf_name,
+        file_name: data.file_name,
+        path: data.path,
         job_id: data.job_id,
         candidate_id: data.candidate_id,
         employer_id: data.employer_id,

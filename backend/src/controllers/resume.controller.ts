@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { NextFunction, Request, Response } from "express";
+import e, { NextFunction, Request, Response } from "express";
 import catchErrors from "../utils/catchErrors";
 import {
     createResume, 
@@ -7,24 +7,51 @@ import {
 } from "../services/resume.services";
 import { CREATED, OK } from "../constants/http";
 import UserModel from "../models/users.model";
+import multer from "multer";
+
 
 const resumeSchema = z.object({
-    pdf: z.string(),
+    pdf_name: z.string(),
+    file_name: z.string(),
+    path: z.string(),
     job_id: z.string(),
     candidate_id: z.string(),
     employer_id: z.string(),
     dateUploaded: z.date(),
 })
 
-export const addUserHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
-    
-    const request = resumeSchema.parse(req.body);    
-    const user = await createResume(request);
-    res.status(CREATED).json(user);
+export const addResumeHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Adding resume");
+    console.log(req.body);
+    console.log(req.file);
+    const resume = {
+        pdf_name: req.file?.originalname,
+        file_name: req.file?.filename,
+        path: req.file?.destination, // Save the file path or any other relevant info
+        job_id: req.body.job_id,
+        candidate_id: req.body.candidate_id,
+        employer_id: req.body.employer_id,
+        dateUploaded: new Date(), // Set the current date
+    };
+    const request = resumeSchema.parse(resume);    
+    const resume_result = await createResume(request);
+    res.status(OK).json(resume_result);
 });
 
-export const getUserHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+export const getResumeHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    const user = await getResume(id);
-    res.status(OK).json(user);
+    const resume = await getResume(id);
+    const directory = 'resume\\uploads\\' + resume.file_name;
+    res.download(directory,resume.file_name, err => {
+        if (err) {
+            console.log(err);
+        }
+    });
 })
+
+
+// export const downloadhandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+//     const id = req.params.id;
+//     const resume = await getResume(id);
+//     res.download(resume.path, resume.pdf_name);
+// })

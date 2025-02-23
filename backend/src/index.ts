@@ -8,6 +8,8 @@ import catchErrors from "./utils/catchErrors";
 import { OK } from "./constants/http";
 import userRoutes from "./routes/user.route";
 import jobPostingRoutes from "./routes/jobPostings.route";
+import resumeRoutes from "./routes/resume.routes";
+import multer from "multer";
 
 const app = express();
 
@@ -30,6 +32,12 @@ app.get("/", (req, res, next) => {
 
 app.use("/user", userRoutes);
 app.use("/job", jobPostingRoutes);
+
+
+
+app.use("/resume", resumeRoutes);
+
+
 
 app.use(errorHandler);
 
