@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-const PORT = 5050; // TEMPORARY SOLUTION, NEEDS TO CHANGE LATER
+import { getIndividualJobPosting } from "../lib/api";
 
 const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();
@@ -22,7 +22,6 @@ const ViewJobPosting = () => {
     datePosted: Date;
     deadline: Date;
     status: string;
-    // Add other fields as needed
   }
   const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
 
@@ -34,13 +33,13 @@ const ViewJobPosting = () => {
 
   const fetchJobPosting = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:${PORT}/job/${id}`);
-      console.log(response);
-      const data = await response.json();
-      console.log(data);
-      setJob(data);
+      console.log("Contacting Express server to get a job posting with id : " + id );
+      const response = await getIndividualJobPosting(id); // Wait for the promise to resolve
+      console.log("successfully received job posting response");
+      setJob(response);
     } catch (error) {
-      console.error("Error fetching job posting:", error);
+      console.log("Error getting job from server")
+      console.error(error);
     }
   };
 
@@ -66,7 +65,6 @@ const ViewJobPosting = () => {
               <p className="card-text">{data.description}</p>
             </div>
           </div>
-
           <div className="row mb-3">
             <div className="col-md-6">
               <p className="card-text">
@@ -79,7 +77,6 @@ const ViewJobPosting = () => {
                 <strong>Job Type:</strong> {data.jobType}
               </p>
             </div>
-
             <div className="col-md-6">
               <p className="card-text">
                 <strong>Location:</strong> {data.location}
@@ -97,7 +94,6 @@ const ViewJobPosting = () => {
               </p>
             </div>
           </div>
-
           <div className="mb-3">
             <h6>Experience:</h6>
             <ul className="list-group">
@@ -108,7 +104,6 @@ const ViewJobPosting = () => {
               ))}
             </ul>
           </div>
-
           <div className="mb-3">
             <h6>Skills:</h6>
             <ul className="list-group">
