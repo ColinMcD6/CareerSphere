@@ -1,0 +1,37 @@
+import { CONFLICT } from "../constants/http";
+import JobPostingsModel  from "../models/jobPostings.model";
+import {JobPostingsDocument}  from "../models/jobPostings.model";
+import appAssert from "../utils/appAssert";
+
+export const createJobPosting = async (data: JobPostingsDocument) => {
+    // Pass the entire `data` object to Mongoose's `create` method
+    const jobPosting = await JobPostingsModel.create(data);
+
+    return {
+        jobPosting: jobPosting
+    };
+};
+
+
+export const getJobPosting = async (id: string) => {
+    const jobPosting = await JobPostingsModel.findById(id);
+    appAssert(jobPosting, CONFLICT, "Job Posting does not exist!");
+    return jobPosting;
+}
+
+//include paging
+export const getAllJobPostings = async (page: number, limit: number) => {
+    const jobPostings = await JobPostingsModel.find()
+        .skip((page - 1) * limit)
+        .limit(limit);
+    
+    const total = await JobPostingsModel.countDocuments();
+
+    return {
+        jobPostings,
+        total,
+        page,
+        pages: Math.ceil(total / limit)
+    };
+
+}
