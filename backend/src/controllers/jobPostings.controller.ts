@@ -1,4 +1,4 @@
-import { number, z } from "zod";
+import { number, record, z } from "zod";
 import { NextFunction, Request, Response } from "express";
 import catchErrors from "../utils/catchErrors";
 import { 
@@ -10,10 +10,11 @@ import { CREATED, OK } from "../constants/http";
 import {v4 as uuidv4} from 'uuid';
 
 
+
 const MIN_TITLE_LENGTH = 10;
 const MAX_TITLE_LENGTH = 250; 
 
-const MAX_DESCRIPTION_LENGTH = 3000;
+const MAX_DESCRIPTION_LENGTH = 20000;
 const MIN_DESCRIPTION_LENGTH = 50;
 
 const MAX_POSITION_LENGTH = 100;
@@ -25,22 +26,21 @@ const jobPostingsZModel = z.object({
     description: z.string().min(MIN_DESCRIPTION_LENGTH, `Description must have a minimum of ${MIN_DESCRIPTION_LENGTH} characters`).max(MAX_DESCRIPTION_LENGTH, `Description can have a maximum of ${MAX_DESCRIPTION_LENGTH} characters` ),
     employer: z.string().min(1).max(225),
     employer_id: z.string().min(1).max(225),
-    location: z.string().min(1).max(225),
+    location: z.string().min(1, "Location must have at least 1 character").max(225),
     compensationType: z.enum(['do-not-disclose', 'hourly', 'salary']),
-    salary: z.number().min(0, "Value must be greater than 0"),
-    jobType: z.string(),
+    salary: z.number().min(0, "Salary value must be greater than 0"),
     experience: z.array(z.string()), 
     skills: z.array(z.string()),
     education: z.array(z.string()),
-    deadline: z.date(), 
     status: z.string().min(1).max(225), // Change to open/close later
+    startingDate: z.string(), // I am not sure what to do about this right now, but this should be a date
+    jobType: z.enum(['Full-time', 'Part-time', 'Temporary', 'Internship'])
 })
 
 export const addJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     
-    console.log("Adding job posting");
-    console.log(req.body);
-    const job = {
+    console.log("Recieved a request to create a new job posting");
+    const job  = {
         title: req.body.title,
         description: req.body.description,
         positionTitle: req.body.positionTitle,
@@ -53,12 +53,11 @@ export const addJobPostingHandler = catchErrors(async (req: Request, res: Respon
         experience: req.body.experience,
         skills: req.body.skills,
         education: req.body.education,
-        deadline: new Date(req.body.deadline),     // Subject to change (Postman was being a weird)
         status: req.body.status,
+        startingDate: req.body.startingDate
     }
     const request = jobPostingsZModel.parse(job);
-    
-    //const user = await createJobPosting(job);
+    const user = await createJobPosting(job);
     res.status(CREATED).json(request);
 });
 

@@ -7,7 +7,7 @@ import "./pages/FrontPage.css";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import EmailVerify from "./pages/emailVerify";
-import CreateJobPositing from "./pages/CreateJobPost.tsx"
+import CreateJobPost from "./pages/CreateJobPost.tsx"
 import ViewJobPosting from "./pages/ViewJobPosting.tsx"
 import ViewAllJobs from "./pages/ViewAllJobs.tsx"
 import { CareerSphereApp } from "./components/careersphereApp";
@@ -24,7 +24,7 @@ function App() {
       <Route path="/email/verify/:code" element={<EmailVerify />} />
       <Route path="/password/forgot" element={<ForgotPassword />} />
       <Route path="/password/reset" element={<ResetPassword />} />
-      <Route path="/create-job-posting" element={<CreateJobPositing />} />
+      <Route path="/create-job-posting" element={<CreateJobPost />} />
       <Route path="/view-all-jobs" element={<ViewAllJobs/>} />
       <Route path="/view-job-posting" element={<ViewJobPosting/>} />
     </Routes>

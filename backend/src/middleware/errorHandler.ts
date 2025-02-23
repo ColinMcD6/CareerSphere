@@ -9,9 +9,17 @@ const sendZodError = (res: Response, error: z.ZodError): void => {
         path: err.path.join("."),
         message: err.message
     }));
+
+    const fieldErrors = error.errors.map((err) => ({
+        field: err.path.join("."), // Convert path array to string (e.g., "title", "deadline")
+        message: err.message, // Error message for the field
+      }));
+    
     res.status(BAD_REQUEST).json({
         message: error.message,
-        errors
+        errors,
+        error: "Validation Error",
+        details: fieldErrors
     });
 };
 

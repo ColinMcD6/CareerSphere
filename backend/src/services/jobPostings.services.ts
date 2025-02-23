@@ -1,12 +1,10 @@
 import { CONFLICT } from "../constants/http";
 import JobPostingsModel  from "../models/jobPostings.model";
-import {JobPostingsDocument}  from "../models/jobPostings.model";
 import appAssert from "../utils/appAssert";
 
-export const createJobPosting = async (data: JobPostingsDocument) => {
+export const createJobPosting = async (data: any) => {
     // Pass the entire `data` object to Mongoose's `create` method
     const jobPosting = await JobPostingsModel.create(data);
-
     return {
         jobPosting: jobPosting
     };

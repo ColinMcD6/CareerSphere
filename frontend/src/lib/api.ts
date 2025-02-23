@@ -48,3 +48,6 @@ export const sendresetPassEmail = async(data: {
 
 export const changePassword = async(data: { verifycode: string, password: string }) =>
   API.post("/auth/password/reset", data)
+
+export const createJobPosting = async (data : any ) => 
+  API.post("/job/add", data)
