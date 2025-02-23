@@ -20,7 +20,7 @@ jobs:
           cache: 'npm'  # Caches node_modules for faster runs
 
       - name: Install Dependencies
-        run: npm install
+        run: npm install --prefix backend
 
       - name: Run Jest Tests
-        run: npm test  # Ensure "test": "jest" is in package.json
+        run: npm test --prefix backend # Ensure "test": "jest" is in package.json
