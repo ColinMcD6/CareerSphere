@@ -28,7 +28,7 @@ const ForgotPassword = () => {
         ) : (
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="userInputEmail">
-              <Form.Label>userInputEmail Address</Form.Label>
+              <Form.Label>Email Address</Form.Label>
               <Form.Control
                 type="userInputEmail"
                 placeholder="Enter your email"
