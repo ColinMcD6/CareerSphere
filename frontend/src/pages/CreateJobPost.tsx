@@ -67,7 +67,7 @@ const CreateJobPost: React.FC = () => {
           setIsSubmitting(true); // Disable inputs and buttons
           await createJobPosting({ ...formData });
 
-          // The job posting was sucessfully create - Let user know, then redirect to home page
+          // The job posting was sucessfully created - Let user know, then redirect to home page
           console.log("Job post sucesfully created and okay response received!");
           resetErrors(); // Reeset validation errors
   
@@ -81,9 +81,10 @@ const CreateJobPost: React.FC = () => {
           setTimeout(() => {
             navigate("/"); // Redirect to the home page
           }, WAIT_TIME)
+
+
         } catch (error: any) {
 
-          console.error("Error registering user:", error);
           setIsSubmitting(false); // Re-enable inputs and buttons
           
           if (error.error === "Validation Error") {
@@ -91,7 +92,7 @@ const CreateJobPost: React.FC = () => {
             console.log("Received Validation error: ");
             console.log(error);
           } else {
-            console.log("Recieved an error when trying submit job posting : " + error)
+            console.log("Recieved an unkown error when trying submit job posting : " + error)
 
           }
         }

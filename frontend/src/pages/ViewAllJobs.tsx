@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getAllJobPostings } from "../lib/api";
 
 // Define the type for a job object
 interface Job {
@@ -15,24 +16,21 @@ const ViewAllJobs: React.FC = () => {
 
   // Fetch jobs from the API
   useEffect(() => {
-    const fetchJobs = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5050/job"); // CHANGE TO PROPER ENIVORMENT LATER
-        if (!response.ok) {
-          console.log("An error has occured");
-          console.log(response);
-          throw new Error("Failed to fetch jobs");
-        }
-        const data = await response.json();
-        setJobs(data.jobPostings);       ;
+        console.log("Contacting Express server to get all jobs")
+        const response = await getAllJobPostings(); // Wait for the promise to resolve
+        console.log("Received response from express server will all jobs")
+        setJobs(response.jobPostings);  
       } catch (error) {
-        setError(error instanceof Error ? error.message : "An unknown error occurred"); // Set error message
-      } finally {
+
+        console.error('Error fetching all jobs posting :', error);
+      }
+      finally {
         setLoading(false); // Set loading to false after fetching
       }
     };
-
-    fetchJobs();
+    fetchData();
   }, []);
 
   // Function to handle viewing a job posting

@@ -51,3 +51,11 @@ export const changePassword = async(data: { verifycode: string, password: string
 
 export const createJobPosting = async (data : any ) => 
   API.post("/job/add", data)
+
+
+interface JobPostingResponse {
+  jobPostings: [];
+}
+
+export const getAllJobPostings = async() : Promise<JobPostingResponse> => 
+  API.get("/job")
