@@ -60,8 +60,8 @@ const CreateJobPost: React.FC = () => {
       description: description,
       location: location,
       experience: [],
-      skills: [],
-      education: [],
+      skills: skills.split(","),
+      education: education.split(","),
       deadline: dueDate,
       startingDate: startDate,
       status: "Open",
@@ -137,7 +137,7 @@ const CreateJobPost: React.FC = () => {
               </div>
             </div>
             <div className="mb-3">
-              <label className="form-label">Position Name:</label>
+              <label className="form-label">Job Position Title:</label>
               <input
                 type="text"
                 className={`form-control ${
@@ -207,7 +207,7 @@ const CreateJobPost: React.FC = () => {
                   disabled={isSubmitting}
                   style={{ textAlign: "center" }}
                 >
-                  <option value="do-not-disclosee">Do Not Disclose</option>
+                  <option value="do-not-disclose">Do Not Disclose</option>
                   <option value="salary">Salary</option>
                   <option value="hourly">Hourly Wage</option>
                 </select>

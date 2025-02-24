@@ -57,7 +57,7 @@ export const addJobPostingHandler = catchErrors(async (req: Request, res: Respon
         startingDate: req.body.startingDate
     }
     const request = jobPostingsZModel.parse(job);
-    const user = await createJobPosting(job);
+    const user = await createJobPosting(request);
     res.status(CREATED).json(request);
 });
 

@@ -14,7 +14,7 @@ const ViewAllJobs: React.FC = () => {
   const { user, isLoading } = useUser();
   const [jobs, setJobs] = useState<Job[]>([]); // State to store the list of jobs
   const [loading, setLoading] = useState<boolean>(true); // State to handle loading state
-  const [error, setError] = useState<string | null>(null); // State to handle errors
+  const [error, setError] = useState<boolean>(false); // State to handle errors
   const navigate = useNavigate(); // Hook for navigation
 
   // Fetch jobs from the API
@@ -26,8 +26,8 @@ const ViewAllJobs: React.FC = () => {
         console.log("Received response from express server will all jobs")
         setJobs(response.jobPostings);  
       } catch (error) {
-
         console.error('Error fetching all jobs posting :', error);
+        setError(true);
       }
       finally {
         setLoading(false); // Set loading to false after fetching
@@ -60,10 +60,12 @@ const ViewAllJobs: React.FC = () => {
     return <div className="text-center mt-4 text-danger">Error: {error}</div>;
   }
 
+  console.log(user)
+
   // Display the list of jobs
   return (
     <div className="container mt-4">
-      <h1 className="text-center mb-4">All Job Postings</h1>
+      <h1 className="text-center mb-4"> { user.userRole == "Employer" ? "My Job Postings" : "All Job Postings" } </h1>
       <div className="list-group">
         {jobs.map((job) => (
           <div key={job._id} className="list-group-item d-flex justify-content-between align-items-center">

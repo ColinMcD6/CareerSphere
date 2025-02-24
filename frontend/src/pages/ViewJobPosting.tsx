@@ -8,7 +8,7 @@ const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();
   const jobId = searchParams.get("ID");
 
-  const {user, isLoading } = useUser();
+  const { user, isLoading } = useUser();
   const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
   const [jobNotFound, setJobNotFound] = useState<boolean>(false); // Define the type for job
 
@@ -33,9 +33,7 @@ const ViewJobPosting = () => {
   useEffect(() => {
     if (jobId !== undefined && jobId !== null) {
       fetchJobPosting(jobId);
-    }
-    else
-    {
+    } else {
       setJobNotFound(true);
     }
   }, [jobId]);
@@ -48,10 +46,8 @@ const ViewJobPosting = () => {
       const response = await getIndividualJobPosting(id); // Wait for the promise to resolve
       console.log("successfully received job posting response");
       setJob(response);
-    } catch (error :any ) 
-    {
-      if ( error.status == 409)
-      {
+    } catch (error: any) {
+      if (error.status == 409) {
         console.log("Job posting could not be found!");
         setJobNotFound(true);
       }
@@ -68,9 +64,8 @@ const ViewJobPosting = () => {
     return <Navigate to="/login" />;
   }
 
-  if (jobNotFound)
-  {
-    return  (
+  if (jobNotFound) {
+    return (
       <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
         <div className="text-center p-5 bg-white rounded shadow">
           <h2 className="text-danger mb-4">
@@ -79,8 +74,7 @@ const ViewJobPosting = () => {
           <p className="lead mb-4">That job posting could not be found!</p>
         </div>
       </div>
-    );;
-
+    );
   }
 
   if (!data) {
@@ -97,7 +91,7 @@ const ViewJobPosting = () => {
         <h2 className="card-header bg-primary text-white ">{data.title}</h2>
         <div className="card-body">
           <h5 className="card-subtitle mb-3 text-muted">
-            Position Title: {data.positionTitle}
+            Job Position: {data.positionTitle}
           </h5>
           <div className="card mb-3">
             <div className="card-body">
@@ -107,20 +101,23 @@ const ViewJobPosting = () => {
           </div>
           <div className="row mb-3">
             <div className="col-md-6">
+            <p className="card-text">
+                <strong>Location:</strong> {data.location}
+              </p>
               <p className="card-text">
                 <strong>Compensation Type:</strong> {data.compensationType}
               </p>
-              <p className="card-text">
-                <strong>Salary:</strong> ${data.salary}
-              </p>
+              {data.compensationType !== "do-not-disclose" && (
+                <p className="card-text">
+                  <strong>Salary:</strong> ${data.salary}
+                </p>
+              )}
               <p className="card-text">
                 <strong>Job Type:</strong> {data.jobType}
               </p>
             </div>
             <div className="col-md-6">
-              <p className="card-text">
-                <strong>Location:</strong> {data.location}
-              </p>
+          
               <p className="card-text">
                 <strong>Status:</strong> {data.status}
               </p>
@@ -134,7 +131,7 @@ const ViewJobPosting = () => {
               </p>
             </div>
           </div>
-          <div className="mb-3">
+          <div className="mb-3 d-none">
             <h6>Experience:</h6>
             <ul className="list-group">
               {data.experience.map((exp, index) => (
@@ -144,26 +141,31 @@ const ViewJobPosting = () => {
               ))}
             </ul>
           </div>
-          <div className="mb-3">
-            <h6>Skills:</h6>
-            <ul className="list-group">
-              {data.skills.map((skill, index) => (
-                <li key={index} className="list-group-item">
-                  {skill}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="mb-3">
-            <h6>Education:</h6>
-            <ul className="list-group">
-              {data.education.map((edu, index) => (
-                <li key={index} className="list-group-item">
-                  {edu}
-                </li>
-              ))}
-            </ul>
-          </div>
+
+          {data.skills.length > 0 && (
+            <div className="mb-3">
+              <h6>Required Skills:</h6>
+              <ul className="list-group border border-secondary">
+                {data.skills.map((skill, index) => (
+                  <li key={index} className="list-group-item">
+                    {skill}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {data.education.length > 0 && (
+            <div className="mb-3 ">
+              <h6 className="">Required Education:</h6>
+              <ul className="list-group border border-secondary ">
+                {data.education.map((edu, index) => (
+                  <li key={index} className="list-group-item">
+                    {edu}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </div>
