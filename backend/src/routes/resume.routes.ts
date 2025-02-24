@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + '.' + file.fieldname);
+        cb(null, uniqueSuffix + '.' + file.originalname);
     }
 });
 
@@ -21,7 +21,7 @@ const upload = multer({ storage: storage });
 const resumeRoutes = Router();
 
 //prefix: /jobs
-resumeRoutes.post("/add", upload.single('pdf'), addResumeHandler);
+resumeRoutes.post("/add", upload.single('resume'), addResumeHandler);
 resumeRoutes.get("/:id", getResumeHandler);
 
 export default resumeRoutes;

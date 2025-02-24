@@ -24,7 +24,7 @@ const ViewAllJobs: React.FC = () => {
         console.log("Contacting Express server to get all jobs")
         const response = await getAllJobPostings(); // Wait for the promise to resolve
         console.log("Received response from express server will all jobs")
-        setJobs(response.jobPostings);  
+        setJobs(response.jobPostings);
       } catch (error) {
         console.error('Error fetching all jobs posting :', error);
         setError(true);

@@ -42,3 +42,6 @@ const jobPostingsSchema = new mongoose.Schema<JobPostingsDocument>({
 const JobPostingsModel = mongoose.model<JobPostingsDocument>("JobPostings", jobPostingsSchema);
 export default JobPostingsModel;
 // END Job Posting Model
+
+
+
