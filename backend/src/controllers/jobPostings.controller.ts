@@ -111,7 +111,7 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
 
 //APPLICATIONS----------------------------------------------
 export const addJobPostingApplicationHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
-    console.log("Recieved a request to create a new job application");
+    console.log("Received a request to create a new job application");
     const jobApplication = {
         job_id: req.body.job_id,
         employer_id: req.body.employer_id,
