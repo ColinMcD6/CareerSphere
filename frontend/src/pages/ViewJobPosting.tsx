@@ -50,9 +50,10 @@ const ViewJobPosting = () => {
       if (error.status == 409) {
         console.log("Job posting could not be found!");
         setJobNotFound(true);
+      } else {
+        console.log("Unknown Error occurred when requesting job from server");
+        console.error(error);
       }
-      console.log("Error getting job from server");
-      console.error(error);
     }
   };
 
@@ -68,15 +69,16 @@ const ViewJobPosting = () => {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
         <div className="text-center p-5 bg-white rounded shadow">
-          <h2 className="text-danger mb-4">
-            <i className="bi bi-exclamation-circle-fill"></i> Oops!
+          <h2 className="text-primary mb-4">
+              Job posting could not be Found
           </h2>
-          <p className="lead mb-4">That job posting could not be found!</p>
+          <p className="text-danger mb-4">A job post with that id could not be found!</p>
         </div>
       </div>
     );
   }
 
+  // This needs to be below and separate from the isLoading div
   if (!data) {
     return <div>Loading...</div>;
   }
@@ -101,7 +103,7 @@ const ViewJobPosting = () => {
           </div>
           <div className="row mb-3">
             <div className="col-md-6">
-            <p className="card-text">
+              <p className="card-text">
                 <strong>Location:</strong> {data.location}
               </p>
               <p className="card-text">
@@ -117,7 +119,6 @@ const ViewJobPosting = () => {
               </p>
             </div>
             <div className="col-md-6">
-          
               <p className="card-text">
                 <strong>Status:</strong> {data.status}
               </p>
