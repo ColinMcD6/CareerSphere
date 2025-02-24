@@ -31,8 +31,9 @@ const ViewJobPosting = () => {
     datePosted: Date;
     deadline: Date;
     status: string;
+  }
 
-  const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
+  // const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
   const [showModal, setShowModal] = useState(false);
   const [application, setApplication] = useState<FormData | null>(null)
 
