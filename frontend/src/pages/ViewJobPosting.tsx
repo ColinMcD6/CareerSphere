@@ -31,14 +31,13 @@ const ViewJobPosting = () => {
   const [showModal, setShowModal] = useState(false);
   const [application, setApplication] = useState<FormData | null>(null)
 
-  //const [resume, setResume] = useState("");
-
   useEffect(() => {
     if (jobId) {
       fetchJobPosting(jobId);
     }
   }, [jobId]);
 
+  //Send Application ----------------------------------------------------
   useEffect(() => {
     try{
       if(data && application){
@@ -82,7 +81,13 @@ const ViewJobPosting = () => {
     
     
   }, [application]);
+  //End Send Application ----------------------------------------------------
 
+  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    setApplication(formData);
+  }
   const fetchJobPosting = async (id: string) => {
     try {
       const response = await fetch(`http://localhost:${PORT}/job/${id}`);
@@ -194,13 +199,7 @@ const ViewJobPosting = () => {
           <FormModalPopupComponent
               show={showModal}
               handleClose={() => setShowModal(false)}
-              handleSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-                event.preventDefault();
-                const formData = new FormData(event.currentTarget);
-                setApplication(formData);
-                
-                
-              }}
+              handleSubmit={submitHandler}
               title="Application Submitted"
               body="Fill out the following "
               submitText="Submit"

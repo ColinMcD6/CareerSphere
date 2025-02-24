@@ -19,10 +19,10 @@ export const getJobPosting = async (id: string) => {
 }
 
 //include paging
-export const getAllJobPostings = async (page: number, limit: number) => {
-    const jobPostings = await JobPostingsModel.find()
+export const getAllJobPostingsQuery = async (query:any, page: number, limit: number) => {
+    const jobPostings = await JobPostingsModel.find(query)
         .skip((page - 1) * limit)
-        .limit(limit);
+        .limit(limit).exec();
     
     const total = await JobPostingsModel.countDocuments();
 
@@ -35,6 +35,22 @@ export const getAllJobPostings = async (page: number, limit: number) => {
 
 }
 
+//include paging
+export const getAllJobPostings = async (page: number, limit: number) => {
+    const jobPostings = await JobPostingsModel.find()
+        .skip((page - 1) * limit)
+        .limit(limit).exec();
+    
+    const total = await JobPostingsModel.countDocuments();
+
+    return {
+        jobPostings,
+        total,
+        page,
+        pages: Math.ceil(total / limit)
+    };
+
+}
 
 //APPLICATIONS----------------------------------------------
 

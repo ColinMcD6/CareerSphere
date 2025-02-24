@@ -3,6 +3,7 @@ import {
     addJobPostingHandler,
     getJobPostingHandler,
     getAllJobPostingsHandler,
+    getAllJobPostingsQueryHandler,
     addJobPostingApplicationHandler,
     deleteJobPostingApplicationHandler,
     getJobPostingApplicationsHandler,
@@ -14,13 +15,13 @@ const jobPostingRoutes = Router();
 //prefix: /jobs
 //Job Posting
 jobPostingRoutes.get("/:id", getJobPostingHandler);
-jobPostingRoutes.get("/", getAllJobPostingsHandler);
+jobPostingRoutes.get("/", getAllJobPostingsQueryHandler);
 
 jobPostingRoutes.post("/add", addJobPostingHandler);
 
 //Applications
 jobPostingRoutes.get("/applications/:id", getJobPostingApplicationsHandler);
-jobPostingRoutes.get("/query/applications", getJobPostingApplicationsQueryHandler);
+jobPostingRoutes.get("/applications/all/query", getJobPostingApplicationsQueryHandler);
 
 jobPostingRoutes.post("/applications/apply/", addJobPostingApplicationHandler);
 
