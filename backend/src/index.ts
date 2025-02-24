@@ -12,7 +12,6 @@ import multer from "multer";
 import authRoutes from "./routes/auth.route";
 import authenticate from "./middleware/authenticate";
 
-
 const app = express();
 
 app.use(express.json());
@@ -32,22 +31,11 @@ app.get("/", (req, res, next) => {
     });
 });
 
-
-
-app.use("/job", jobPostingRoutes);
-
-
-
+app.use("/job", authenticate, jobPostingRoutes); // As of right now this does not differentiate between employee and candidates, as it just uses the authenticate middleware 
 app.use("/resume", resumeRoutes);
-
-
-
 app.use("/auth", authRoutes);
-
 // to get info about user accounts - protected routes
 app.use("/user", authenticate, userRoutes);
-
-
 app.use(errorHandler);
 
 app.listen(

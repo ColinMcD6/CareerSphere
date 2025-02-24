@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 const BACK_END_URL = import.meta.env.VITE_API_URL;
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom"; // Add useNavigate for redirection
 import { createJobPosting } from "../lib/api";
+import useUser from "../hooks/user";
+import { Navigate } from "react-router-dom";
 
 const CreateJobPost: React.FC = () => {
   const [postingTitle, setPostingTitle] = useState<string>("");
@@ -21,7 +23,14 @@ const CreateJobPost: React.FC = () => {
   const [jobType, setJobType] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false); // Track submission state
   const navigate = useNavigate(); // For redirection
+  const { user, isLoading } = useUser();
 
+  // If the user is not logged in, redirect them away from this page
+  useEffect(() => {
+    if (!isLoading && !user) {
+      window.location.href = "/login";
+    }
+  }, [user, isLoading]);
 
   // Feed back errors, allowing user to know what information is invalid
   const [errors, setErrors] = useState<{ field: string; message: string }[]>(
@@ -38,8 +47,8 @@ const CreateJobPost: React.FC = () => {
   };
 
   // Submit job post button clicked
-  const handleSubmit = async (e: React.FormEvent) => {
-
+  const handleSubmit = async (e: React.FormEvent) => 
+  {
     e.preventDefault();
     setIsSubmitting(true); // Disable inputs and buttons
 
@@ -49,57 +58,61 @@ const CreateJobPost: React.FC = () => {
       compensationType: compensationType,
       salary: compensationAmount,
       description: description,
-      employer: "ASDASDSA",
-      employer_id: "ASDASDSA",
       location: location,
       experience: [],
-      skills: [],
-      education: [],
+      skills: skills.split(","),
+      education: education.split(","),
       deadline: dueDate,
       startingDate: startDate,
       status: "Open",
-      jobType: jobType
+      jobType: jobType,
     };
 
     console.log(`Sending a create job post request to ${BACK_END_URL}/job/add`);
 
-        try {
-          setIsSubmitting(true); // Disable inputs and buttons
-          await createJobPosting({ ...formData });
+    try {
 
-          // The job posting was sucessfully create - Let user know, then redirect to home page
-          console.log("Job post sucesfully created and okay response received!");
-          resetErrors(); // Reeset validation errors
-  
-          const WAIT_TIME = 3000;
-          // Show success toast
-          toast.success("Job posting created successfully!", {
-            position: "top-center",
-            autoClose: WAIT_TIME,
-          });
-         
-          setTimeout(() => {
-            navigate("/"); // Redirect to the home page
-          }, WAIT_TIME)
-        } catch (error: any) {
+      setIsSubmitting(true); // Disable inputs and buttons
+      await createJobPosting({ ...formData });
 
-          console.error("Error registering user:", error);
-          setIsSubmitting(false); // Re-enable inputs and buttons
-          
-          if (error.error === "Validation Error") {
-            setErrors(error.details); // Set validation errors
-            console.log("Received Validation error: ");
-            console.log(error);
-          } else {
-            console.log("Recieved an error when trying submit job posting : " + error)
+      // The job posting was successfully created - Let user know, then redirect to home page
+      console.log("Job post successfully created and okay response received!");
+      resetErrors(); // Reset validation errors
 
-          }
-        }
-  
+      const WAIT_TIME = 3000;
+      // Show success toast
+      toast.success("Job posting created successfully!", {
+        position: "top-center",
+        autoClose: WAIT_TIME,
+      });
+
+      setTimeout(() => {
+        navigate("/"); // Redirect to the home page
+      }, WAIT_TIME);
+    } catch (error: any) {
+      setIsSubmitting(false); // Re-enable inputs and buttons
+
+      if (error.error === "Validation Error") {
+        setErrors(error.details); // Set validation errors
+        console.log("Received Validation error: ");
+        console.log(error);
+      } else {
+        console.log(
+          "Received an unknown error when trying to submit job posting : " + error
+        );
+      }
+    }
   }; // End of function that handles submit button
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  // If no user, redirect to login page
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
   return (
-    
     <div className="container mt-5">
       <ToastContainer aria-label={undefined} />
       <div className="card shadow">
@@ -124,7 +137,7 @@ const CreateJobPost: React.FC = () => {
               </div>
             </div>
             <div className="mb-3">
-              <label className="form-label">Position Name:</label>
+              <label className="form-label">Job Position Title:</label>
               <input
                 type="text"
                 className={`form-control ${
@@ -161,7 +174,7 @@ const CreateJobPost: React.FC = () => {
               <label className="form-label">Starting Date For Job:</label>
               <input
                 type="date"
-                style={{ textAlign: 'center' }}
+                style={{ textAlign: "center" }}
                 className="form-control justify-content-center"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
@@ -169,10 +182,10 @@ const CreateJobPost: React.FC = () => {
               />
             </div>
 
-            <div className="mb-3" >
+            <div className="mb-3">
               <label className="form-label">Due Date for Applying:</label>
               <input
-                style={{ textAlign: 'center' }}
+                style={{ textAlign: "center" }}
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
@@ -192,9 +205,9 @@ const CreateJobPost: React.FC = () => {
                     );
                   }}
                   disabled={isSubmitting}
-                  style={{ textAlign: 'center' }}
+                  style={{ textAlign: "center" }}
                 >
-                  <option value="do-not-disclosee">Do Not Disclose</option>
+                  <option value="do-not-disclose">Do Not Disclose</option>
                   <option value="salary">Salary</option>
                   <option value="hourly">Hourly Wage</option>
                 </select>
@@ -207,14 +220,20 @@ const CreateJobPost: React.FC = () => {
                   </label>
                   <input
                     type="number"
-                    className={`form-control ${getErrorForField("salary") === undefined ? "" : "is-invalid"}`}
+                    className={`form-control ${
+                      getErrorForField("salary") === undefined
+                        ? ""
+                        : "is-invalid"
+                    }`}
                     value={compensationAmount == 0 ? "" : compensationAmount}
                     onChange={(e) =>
                       setCompensationAmount(Number(e.target.value))
                     }
                     disabled={isSubmitting}
                   />
-                  <div className="invalid-feedback">{ getErrorForField("salary")  }</div>
+                  <div className="invalid-feedback">
+                    {getErrorForField("salary")}
+                  </div>
                 </div>
               )}
             </div>
@@ -223,7 +242,9 @@ const CreateJobPost: React.FC = () => {
               <label className="form-label">Location:</label>
               <input
                 type="text"
-                className={`form-control ${ getErrorForField("location") === undefined ? "" : "is-invalid"}`}
+                className={`form-control ${
+                  getErrorForField("location") === undefined ? "" : "is-invalid"
+                }`}
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 disabled={isSubmitting}
@@ -234,9 +255,7 @@ const CreateJobPost: React.FC = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">
-                Skills (comma-separated):
-              </label>
+              <label className="form-label">Skills (comma-separated):</label>
               <textarea
                 className="form-control"
                 value={skills}
@@ -254,7 +273,11 @@ const CreateJobPost: React.FC = () => {
               />
             </div>
             <div className="mb-3">
-              <div className={`d-flex justify-content-center align-items-center  ${ getErrorForField("jobType") === undefined ? "" : "is-invalid"}`}>
+              <div
+                className={`d-flex justify-content-center align-items-center  ${
+                  getErrorForField("jobType") === undefined ? "" : "is-invalid"
+                }`}
+              >
                 <div className={`form-label`}>
                   <label className={`form-label`}>
                     What type of Employment is it?
@@ -305,10 +328,16 @@ const CreateJobPost: React.FC = () => {
                 </div>
               </div>
               <div className="invalid-feedback">
-                {getErrorForField("jobType") === undefined ? "" : "Employement type is required!"}
+                {getErrorForField("jobType") === undefined
+                  ? ""
+                  : "Employment type is required!"}
               </div>
             </div>
-            <button type="submit" className="btn btn-primary w-100" disabled={isSubmitting}>
+            <button
+              type="submit"
+              className="btn btn-primary w-100"
+              disabled={isSubmitting}
+            >
               Create Job Posting
             </button>
           </form>

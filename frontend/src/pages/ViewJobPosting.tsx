@@ -2,10 +2,17 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import FormModalPopupComponent from "../components/popup";
 const PORT = 3000; // TEMPORARY SOLUTION, NEEDS TO CHANGE LATER
+import { getIndividualJobPosting } from "../lib/api";
+import useUser from "../hooks/user";
+import { Navigate } from "react-router-dom";
 
 const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();
   const jobId = searchParams.get("ID");
+
+  const { user, isLoading } = useUser();
+  const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
+  const [jobNotFound, setJobNotFound] = useState<boolean>(false); // Define the type for job
 
   interface JobPosting {
     _id: string;
@@ -24,16 +31,16 @@ const ViewJobPosting = () => {
     datePosted: Date;
     deadline: Date;
     status: string;
-    // Add other fields as needed
-  }
 
   const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
   const [showModal, setShowModal] = useState(false);
   const [application, setApplication] = useState<FormData | null>(null)
 
   useEffect(() => {
-    if (jobId) {
+    if (jobId !== undefined && jobId !== null) {
       fetchJobPosting(jobId);
+    } else {
+      setJobNotFound(true);
     }
   }, [jobId]);
 
@@ -90,16 +97,45 @@ const ViewJobPosting = () => {
   }
   const fetchJobPosting = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:${PORT}/job/${id}`);
-      console.log(response);
-      const data = await response.json();
-      console.log(data);
-      setJob(data);
-    } catch (error) {
-      console.error("Error fetching job posting:", error);
+      console.log(
+        "Contacting Express server to get a job posting with id : " + id
+      );
+      const response = await getIndividualJobPosting(id); // Wait for the promise to resolve
+      console.log("successfully received job posting response");
+      setJob(response);
+    } catch (error: any) {
+      if (error.status == 409) {
+        console.log("Job posting could not be found!");
+        setJobNotFound(true);
+      } else {
+        console.log("Unknown Error occurred when requesting job from server");
+        console.error(error);
+      }
     }
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  // If no user, redirect to login page
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  if (jobNotFound) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+        <div className="text-center p-5 bg-white rounded shadow">
+          <h2 className="text-primary mb-4">
+              Job posting could not be Found
+          </h2>
+          <p className="text-danger mb-4">A job post with that id could not be found!</p>
+        </div>
+      </div>
+    );
+  }
+
+  // This needs to be below and separate from the isLoading div
   if (!data) {
     return <div>Loading...</div>;
   }
@@ -114,7 +150,7 @@ const ViewJobPosting = () => {
         <h2 className="card-header bg-primary text-white ">{data.title}</h2>
         <div className="card-body">
           <h5 className="card-subtitle mb-3 text-muted">
-            Position Title: {data.positionTitle}
+            Job Position: {data.positionTitle}
           </h5>
           <div className="card mb-3">
             <div className="card-body">
@@ -122,24 +158,24 @@ const ViewJobPosting = () => {
               <p className="card-text">{data.description}</p>
             </div>
           </div>
-
           <div className="row mb-3">
-            <div className="col-md-6">
-              <p className="card-text">
-                <strong>Compensation Type:</strong> {data.compensationType}
-              </p>
-              <p className="card-text">
-                <strong>Salary:</strong> ${data.salary}
-              </p>
-              <p className="card-text">
-                <strong>Job Type:</strong> {data.jobType}
-              </p>
-            </div>
-
             <div className="col-md-6">
               <p className="card-text">
                 <strong>Location:</strong> {data.location}
               </p>
+              <p className="card-text">
+                <strong>Compensation Type:</strong> {data.compensationType}
+              </p>
+              {data.compensationType !== "do-not-disclose" && (
+                <p className="card-text">
+                  <strong>Salary:</strong> ${data.salary}
+                </p>
+              )}
+              <p className="card-text">
+                <strong>Job Type:</strong> {data.jobType}
+              </p>
+            </div>
+            <div className="col-md-6">
               <p className="card-text">
                 <strong>Status:</strong> {data.status}
               </p>
@@ -153,8 +189,7 @@ const ViewJobPosting = () => {
               </p>
             </div>
           </div>
-
-          <div className="mb-3">
+          <div className="mb-3 d-none">
             <h6>Experience:</h6>
             <ul className="list-group">
               {data.experience.map((exp, index) => (
@@ -164,7 +199,6 @@ const ViewJobPosting = () => {
               ))}
             </ul>
           </div>
-
           <div className="mb-3">
             <h6>Skills:</h6>
             <ul className="list-group">
@@ -216,7 +250,6 @@ const ViewJobPosting = () => {
               />
             </div>
           </FormModalPopupComponent>
-          
         </div>
       </div>
     </div>

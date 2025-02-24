@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getAllJobPostings } from "../lib/api";
+import { Navigate } from "react-router-dom";
+import useUser from "../hooks/user";
 
 // Define the type for a job object
 interface Job {
@@ -8,37 +11,44 @@ interface Job {
 }
 
 const ViewAllJobs: React.FC = () => {
+  const { user, isLoading } = useUser();
   const [jobs, setJobs] = useState<Job[]>([]); // State to store the list of jobs
   const [loading, setLoading] = useState<boolean>(true); // State to handle loading state
-  const [error, setError] = useState<string | null>(null); // State to handle errors
+  const [error, setError] = useState<boolean>(false); // State to handle errors
   const navigate = useNavigate(); // Hook for navigation
 
   // Fetch jobs from the API
   useEffect(() => {
-    const fetchJobs = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/job"); // CHANGE TO PROPER ENIVORMENT LATER
-        if (!response.ok) {
-          console.log("An error has occured");
-          console.log(response);
-          throw new Error("Failed to fetch jobs");
-        }
-        const data = await response.json();
-        setJobs(data.jobPostings);       ;
+        console.log("Contacting Express server to get all jobs")
+        const response = await getAllJobPostings(); // Wait for the promise to resolve
+        console.log("Received response from express server will all jobs")
+        setJobs(response.jobPostings);
       } catch (error) {
-        setError(error instanceof Error ? error.message : "An unknown error occurred"); // Set error message
-      } finally {
+        console.error('Error fetching all jobs posting :', error);
+        setError(true);
+      }
+      finally {
         setLoading(false); // Set loading to false after fetching
       }
     };
-
-    fetchJobs();
+    fetchData();
   }, []);
 
   // Function to handle viewing a job posting
   const viewJobPosting = (id: string) => {
     navigate(`/view-job-posting?ID=${id}`);
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  // If no user, redirect to login page
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
   // Display loading state
   if (loading) {
@@ -50,10 +60,12 @@ const ViewAllJobs: React.FC = () => {
     return <div className="text-center mt-4 text-danger">Error: {error}</div>;
   }
 
+  console.log(user)
+
   // Display the list of jobs
   return (
     <div className="container mt-4">
-      <h1 className="text-center mb-4">All Job Postings</h1>
+      <h1 className="text-center mb-4"> { user.userRole == "Employer" ? "My Job Postings" : "All Job Postings" } </h1>
       <div className="list-group">
         {jobs.map((job) => (
           <div key={job._id} className="list-group-item d-flex justify-content-between align-items-center">

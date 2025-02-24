@@ -24,8 +24,4 @@ const resumeRoutes = Router();
 resumeRoutes.post("/add", upload.single('resume'), addResumeHandler);
 resumeRoutes.get("/:id", getResumeHandler);
 
-
-
-
-
 export default resumeRoutes;
