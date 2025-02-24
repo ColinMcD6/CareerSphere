@@ -14,9 +14,6 @@ const resumeSchema = z.object({
     pdf_name: z.string(),
     file_name: z.string(),
     path: z.string(),
-    job_id: z.string(),
-    candidate_id: z.string(),
-    employer_id: z.string(),
     dateUploaded: z.date(),
 })
 
@@ -28,13 +25,11 @@ export const addResumeHandler = catchErrors(async (req: Request, res: Response, 
         pdf_name: req.file?.originalname,
         file_name: req.file?.filename,
         path: req.file?.destination, // Save the file path or any other relevant info
-        job_id: req.body.job_id,
-        candidate_id: req.body.candidate_id,
-        employer_id: req.body.employer_id,
         dateUploaded: new Date(), // Set the current date
     };
     const request = resumeSchema.parse(resume);    
     const resume_result = await createResume(request);
+    console.log(resume_result);
     res.status(OK).json(resume_result);
 });
 
@@ -48,6 +43,8 @@ export const getResumeHandler = catchErrors(async (req: Request, res: Response, 
         }
     });
 })
+
+
 
 
 // export const downloadhandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {

@@ -6,9 +6,6 @@ export type CreateResumeParams = {
     pdf_name: string,
     file_name: string,
     path: string,
-    job_id: string,         // job id itself
-    candidate_id: string,   // Person who submitted the resume
-    employer_id: string,    // Employer who posted the job
     dateUploaded: Date
 };
 
@@ -19,9 +16,6 @@ export const createResume = async (data: CreateResumeParams) => {
         pdf_name: data.pdf_name,
         file_name: data.file_name,
         path: data.path,
-        job_id: data.job_id,
-        candidate_id: data.candidate_id,
-        employer_id: data.employer_id,
         dateUploaded: data.dateUploaded
     })
 

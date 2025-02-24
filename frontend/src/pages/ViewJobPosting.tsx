@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-const PORT = 5050; // TEMPORARY SOLUTION, NEEDS TO CHANGE LATER
+import FormModalPopupComponent from "../components/popup";
+const PORT = 3000; // TEMPORARY SOLUTION, NEEDS TO CHANGE LATER
 
 const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();
   const jobId = searchParams.get("ID");
 
   interface JobPosting {
+    _id: string;
     title: string;
     positionTitle: string;
     description: string;
@@ -24,13 +26,62 @@ const ViewJobPosting = () => {
     status: string;
     // Add other fields as needed
   }
+
   const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
+  const [showModal, setShowModal] = useState(false);
+  const [application, setApplication] = useState<FormData | null>(null)
+
+  //const [resume, setResume] = useState("");
 
   useEffect(() => {
     if (jobId) {
       fetchJobPosting(jobId);
     }
   }, [jobId]);
+
+  useEffect(() => {
+    try{
+      if(data && application){
+        const submitApplication = async () => {
+          console.log("SENDING FILE");
+
+          application.append("job_id", data._id);
+          application.append("employer_id", data.employer_id);
+          application.append("candidate_id", "wefgwe");
+          const response = await fetch(`http://localhost:${PORT}/resume/add`, {
+            method: "POST",
+            body: application,
+          });
+          const json = await response.json();
+          console.log(json);
+          const applicationResponse = await fetch(`http://localhost:${PORT}/job/applications/apply`, {
+            method: "POST",
+            body: JSON.stringify({
+              job_id: data._id,
+              employer_id: data.employer_id,
+              candidate_id: "wefgwe",
+              resume_id: json.resume._id,
+              status: "Pending",
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          console.log(applicationResponse);
+
+        }
+        submitApplication();
+
+        
+      }
+
+    }
+    catch (error) {
+      console.error("Error fetching job posting:", error);
+    }
+    
+    
+  }, [application]);
 
   const fetchJobPosting = async (id: string) => {
     try {
@@ -129,6 +180,44 @@ const ViewJobPosting = () => {
               ))}
             </ul>
           </div>
+          <div>
+            <button className="btn btn-primary w"
+              onClick={() => {
+                
+                setShowModal(true);
+              }
+              }
+            >
+              Apply
+            </button>
+          </div>
+          <FormModalPopupComponent
+              show={showModal}
+              handleClose={() => setShowModal(false)}
+              handleSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+                event.preventDefault();
+                const formData = new FormData(event.currentTarget);
+                setApplication(formData);
+                
+                
+              }}
+              title="Application Submitted"
+              body="Fill out the following "
+              submitText="Submit"
+          >
+            <div className="form-group">
+              <label htmlFor="resume">Resume</label>
+              <input
+                type="file"
+                className="form-control"
+                id="resume"
+                name="resume"
+                accept=".pdf , .docx"
+                required
+              />
+            </div>
+          </FormModalPopupComponent>
+          
         </div>
       </div>
     </div>
