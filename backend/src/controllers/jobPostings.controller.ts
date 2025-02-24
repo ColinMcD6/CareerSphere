@@ -81,6 +81,7 @@ export const getJobPostingHandler = catchErrors(async (req: Request, res: Respon
     res.status(OK).json(user);
 })
 
+// Is this Defunct now ??
 export const getAllJobPostingsHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     
     const page = req.query.page ? parseInt(req.query.page as string) : 1;

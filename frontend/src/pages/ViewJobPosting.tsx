@@ -10,7 +10,7 @@ const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();
   const jobId = searchParams.get("ID");
 
-  const { user, isLoading } = useUser();
+  const {user, isLoading } = useUser();
   const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
   const [jobNotFound, setJobNotFound] = useState<boolean>(false); // Define the type for job
 

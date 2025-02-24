@@ -17,25 +17,29 @@ const ViewAllJobs: React.FC = () => {
   const [error, setError] = useState<boolean>(false); // State to handle errors
   const navigate = useNavigate(); // Hook for navigation
 
-  // Fetch jobs from the API
   useEffect(() => {
     const fetchData = async () => {
+      // Only proceed if user is defined
+      if (!user) {
+        return;
+      }
       try {
-        console.log("Contacting Express server to get all jobs")
-        const response = await getAllJobPostings(); // Wait for the promise to resolve
-        console.log("Received response from express server will all jobs")
+        console.log("Contacting Express server query jobs");
+        const query = user?.userRole == "Employer" ? `?employer_id=${user._id}` : ""; // If the user is an employer only get the job posting for the employer, else get all jobs posting from everyone
+        const response = await getAllJobPostings(query); // Wait for the promise to resolve
+        console.log("Received response from express server with all jobs");
         setJobs(response.jobPostings);
       } catch (error) {
-        console.error('Error fetching all jobs posting :', error);
+        console.error('Error fetching all job postings : ', error);
         setError(true);
-      }
-      finally {
+      } finally {
         setLoading(false); // Set loading to false after fetching
       }
     };
     fetchData();
-  }, []);
+  }, [user]); // Add user as a dependency
 
+  
   // Function to handle viewing a job posting
   const viewJobPosting = (id: string) => {
     navigate(`/view-job-posting?ID=${id}`);
@@ -59,8 +63,6 @@ const ViewAllJobs: React.FC = () => {
   if (error) {
     return <div className="text-center mt-4 text-danger">Error: {error}</div>;
   }
-
-  console.log(user)
 
   // Display the list of jobs
   return (

@@ -3,6 +3,7 @@ import API from "../config/apiClient";
 interface UserResponse {
   username: string;
   email: string;
+  _id: string;
   userRole: string;
   experience: string[];
   education: string[];
@@ -56,8 +57,8 @@ interface JobPostingResponse {
   jobPostings: [];
 }
 
-export const getAllJobPostings = async() : Promise<JobPostingResponse> => 
-  API.get("/job")
+export const getAllJobPostings = async(query : string) : Promise<JobPostingResponse> => 
+  API.get(`/job${query}`)
 
 
 export const getIndividualJobPosting = async( id : string) : Promise<any> => 
