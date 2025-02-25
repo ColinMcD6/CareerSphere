@@ -87,7 +87,7 @@ const CreateJobPost: React.FC = () => {
       });
 
       setTimeout(() => {
-        navigate("/"); // Redirect to the home page
+        navigate("/view-all-jobs"); // Redirect to the home page
       }, WAIT_TIME);
     } catch (error: any) {
       setIsSubmitting(false); // Re-enable inputs and buttons

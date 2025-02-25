@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import FormModalPopupComponent from "../components/popup";
-const PORT = 3000; // TEMPORARY SOLUTION, NEEDS TO CHANGE LATER
-import { getIndividualJobPosting } from "../lib/api";
+import { addResume, applyforJob, getIndividualJobPosting } from "../lib/api";
 import useUser from "../hooks/user";
 import { Navigate } from "react-router-dom";
 
 const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();
   const jobId = searchParams.get("ID");
-
   const {user, isLoading } = useUser();
   const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
   const [jobNotFound, setJobNotFound] = useState<boolean>(false); // Define the type for job
@@ -50,44 +48,33 @@ const ViewJobPosting = () => {
     try{
       if(data && application){
         const submitApplication = async () => {
-          console.log("SENDING FILE");
-
-          application.append("job_id", data._id);
-          application.append("employer_id", data.employer_id);
-          application.append("candidate_id", "wefgwe");
-          const response = await fetch(`http://localhost:${PORT}/resume/add`, {
-            method: "POST",
-            body: application,
-          });
-          const json = await response.json();
-          console.log(json);
-          const applicationResponse = await fetch(`http://localhost:${PORT}/job/applications/apply`, {
-            method: "POST",
-            body: JSON.stringify({
+          if (!application || !data) return;
+          try {
+            console.log("SENDING FILE");
+            application.append("job_id", data._id);
+            application.append("employer_id", data.employer_id);
+            application.append("candidate_id", user?._id || "unknown_candidate");
+            // Upload resume
+            const resumeResponse = await addResume(application);
+            console.log(resumeResponse.resume._id);
+            // Apply for the job
+            const applicationResponse = await applyforJob({
               job_id: data._id,
               employer_id: data.employer_id,
-              candidate_id: "wefgwe",
-              resume_id: json.resume._id,
+              candidate_id: user?._id || "unknown_candidate",
+              resume_id: resumeResponse.resume._id,
               status: "Pending",
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          console.log(applicationResponse);
-
+            });
+            console.log(applicationResponse.data);
+          } catch (error) {
+            console.error("Error submitting application:", error);
+          }
         }
         submitApplication();
-
-        
       }
-
+    } catch (error) {
+        console.error("Error fetching job posting:", error);
     }
-    catch (error) {
-      console.error("Error fetching job posting:", error);
-    }
-    
-    
   }, [application]);
   //End Send Application ----------------------------------------------------
 
@@ -95,6 +82,7 @@ const ViewJobPosting = () => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     setApplication(formData);
+    setShowModal(false);
   }
   const fetchJobPosting = async (id: string) => {
     try {
@@ -142,7 +130,7 @@ const ViewJobPosting = () => {
   }
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-5">
       {" "}
       {/* Add a container with margin-top */}
       <div className="card mb-4 shadow">
@@ -220,35 +208,21 @@ const ViewJobPosting = () => {
               ))}
             </ul>
           </div>
-          <div>
-            <button className="btn btn-primary w"
-              onClick={() => {
-                
-                setShowModal(true);
-              }
-              }
-            >
-              Apply
-            </button>
-          </div>
+          {user.userRole === "Candidate" && (
+            <div>
+              <button className="btn btn-primary" onClick={() => setShowModal(true)}>Apply</button>
+            </div>
+          )}
           <FormModalPopupComponent
-              show={showModal}
-              handleClose={() => setShowModal(false)}
-              handleSubmit={submitHandler}
-              title="Application Submitted"
-              body="Fill out the following "
-              submitText="Submit"
-          >
+            show={showModal}
+            handleClose={() => setShowModal(false)}
+            handleSubmit={submitHandler}
+            title="Application Submitted"
+            body="Fill out the following "
+            submitText="Submit">
             <div className="form-group">
               <label htmlFor="resume">Resume</label>
-              <input
-                type="file"
-                className="form-control"
-                id="resume"
-                name="resume"
-                accept=".pdf , .docx"
-                required
-              />
+              <input type="file" className="form-control" id="resume" name="resume" accept=".pdf , .docx" required />
             </div>
           </FormModalPopupComponent>
         </div>

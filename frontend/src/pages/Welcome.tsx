@@ -2,8 +2,7 @@ import { Dropdown, DropdownButton } from "react-bootstrap";
 import { logoutUser } from "../lib/api";
 import queryClient from "../config/queryClient";
 import { useNavigate } from "react-router-dom";
-import { FaUserCircle, FaBriefcase } from "react-icons/fa";
-import { Button } from "react-bootstrap";
+import { FaUserCircle } from "react-icons/fa";
 import image from "../assets/Logo.png";
 
 const Welcome = () => {
@@ -19,39 +18,12 @@ const Welcome = () => {
     navigate("/account");
   };
 
-  const handleJobs = () => {
-    navigate("/view-all-jobs");
-  };
 
   return (
     <>
       <div
-        style={{
-          position: "absolute",
-          top: "10px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "100px",
-          height: "100px",
-          borderRadius: "50%",
-          overflow: "hidden",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#f0f0f0",
-        }}>
+        style={{ position: "absolute", top: "200px", left: "50%", transform: "translateX(-50%)", width: "300px", height: "300px", borderRadius: "100%", overflow: "hidden", display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "#f0f0f0"}}>
         <img src={image} alt="Career Sphere" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-      </div>
-      <div
-        style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-        }}>
-        <Button variant="primary" onClick={handleJobs}>
-          <FaBriefcase size= "20px" /> Jobs
-        </Button>
       </div>
       <div
         style={{
@@ -66,8 +38,7 @@ const Welcome = () => {
           variant="outline-secondary"
           title={<FaUserCircle size={30} />}
           align="end"
-          drop="down"
-        >
+          drop="down">
           <Dropdown.Item onClick={handleProfile}>Edit Profile</Dropdown.Item>
           <Dropdown.Item onClick={handleBack}>Log Out</Dropdown.Item>
         </DropdownButton>

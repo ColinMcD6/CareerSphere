@@ -8,7 +8,6 @@ import { OK } from "./constants/http";
 import userRoutes from "./routes/user.route";
 import jobPostingRoutes from "./routes/jobPostings.route";
 import resumeRoutes from "./routes/resume.routes";
-import multer from "multer";
 import authRoutes from "./routes/auth.route";
 import authenticate from "./middleware/authenticate";
 
