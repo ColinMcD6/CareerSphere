@@ -1,20 +1,30 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import FormModalPopupComponent from "../components/popup";
-import { addResume, applyforJob, getIndividualJobPosting } from "../lib/api";
+import {
+  addResume,
+  applyforJob,
+  getIndividualJobPosting,
+  checkwhoApplied,
+} from "../lib/api";
 import useUser from "../hooks/user";
 import { Navigate } from "react-router-dom";
+import { DiJava } from "react-icons/di";
 
 const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();
   const jobId = searchParams.get("ID");
   const { user, isLoading } = useUser();
-  const [data, setJob] = useState<JobPosting | null>(null);
-  const [jobNotFound, setJobNotFound] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [application, setApplication] = useState<FormData | null>(null);
   const [isApplied, setIsApplied] = useState<boolean>(false); // New state for tracking application submission
+  const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
+  const [jobNotFound, setJobNotFound] = useState<boolean>(false); // Define the type for job
+  const [appliedApplications, setAppliedApplications] = useState<SingleApplication[]>([]);
 
+  interface SingleApplication {
+    username: string;
+  }
   interface JobPosting {
     _id: string;
     title: string;
@@ -34,13 +44,36 @@ const ViewJobPosting = () => {
     status: string;
   }
 
+  // Query to get job posting ----------------------------------------------------
   useEffect(() => {
     if (jobId !== undefined && jobId !== null) {
+      console.log("Fetching the job post");
       fetchJobPosting(jobId);
     } else {
       setJobNotFound(true);
     }
   }, [jobId]);
+
+  // Query to get applications if Employer is viewing page ----------------------------------------------------
+  useEffect(() => {
+    const queryForApplications = async () => {
+      if (user?.userRole == "Employer" && jobId !== null) {
+        try {
+          console.log("Fetching job applications for employer");
+          const response = await checkwhoApplied({
+            emp_id: user._id,
+            job_id: jobId,
+          });
+          setAppliedApplications(response.applications);
+          console.log("Received applications for job posting");
+        } catch (error) {
+          console.log("Error trying to get applications");
+          console.log(error);
+        }
+      }
+    };
+    queryForApplications();
+  }, [user, jobId, data]);
 
   // Send Application ----------------------------------------------------
   useEffect(() => {
@@ -52,7 +85,10 @@ const ViewJobPosting = () => {
             console.log("SENDING FILE");
             application.append("job_id", data._id);
             application.append("employer_id", data.employer_id);
-            application.append("candidate_id", user?._id || "unknown_candidate");
+            application.append(
+              "candidate_id",
+              user?._id || "unknown_candidate"
+            );
 
             // Upload resume
             const resumeResponse = await addResume(application);
@@ -88,6 +124,7 @@ const ViewJobPosting = () => {
     setShowModal(false);
   };
 
+  // Function to call when fetching jobs
   const fetchJobPosting = async (id: string) => {
     try {
       console.log(
@@ -120,10 +157,10 @@ const ViewJobPosting = () => {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
         <div className="text-center p-5 bg-white rounded shadow">
-          <h2 className="text-primary mb-4">
-              Job posting could not be Found
-          </h2>
-          <p className="text-danger mb-4">A job post with that id could not be found!</p>
+          <h2 className="text-primary mb-4">Job posting could not be Found</h2>
+          <p className="text-danger mb-4">
+            A job post with that id could not be found!
+          </p>
         </div>
       </div>
     );
@@ -133,7 +170,6 @@ const ViewJobPosting = () => {
   if (!data) {
     return <div>Loading...</div>;
   }
-
   return (
     <div className="container mt-5">
       <div className="card mb-4 shadow">
@@ -242,6 +278,34 @@ const ViewJobPosting = () => {
           </FormModalPopupComponent>
         </div>
       </div>
+      {user?.userRole == "Employer" && (
+        <div className="container mt-4">
+          <h2 className="mb-4">Applications</h2>
+          <p className="text-muted mt-4">
+            You have <strong>{appliedApplications?.length}</strong> Applications
+            to this job post!
+          </p>
+          <ul className="list-group">
+            {appliedApplications?.map((application, index) => (
+              <li key={index} className="list-group-item">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h5 className="mb-1">
+                      User : <strong>{application.username}</strong>
+                    </h5>
+                  </div>
+                  <div>
+                   {"Status:  "}  
+                  <span className={`badge bg-success`} >
+                    Open
+                  </span>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

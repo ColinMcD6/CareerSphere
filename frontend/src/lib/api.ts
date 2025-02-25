@@ -63,6 +63,10 @@ interface ResumeResponse {
   };
 }
 
+interface ApplicationsResponse {
+  applications : [];
+}
+
 export const getAllJobPostings = async(query : string) : Promise<JobPostingResponse> => 
   API.get(`/job${query}`)
 
@@ -75,6 +79,5 @@ export const addResume = async(application: any) : Promise<ResumeResponse> =>
 export const applyforJob = async(data: any) =>
   API.post("/job/applications/apply", data)
 
-export const checkwhoApplied = async(data: { emp_id: string, job_id: string}) => {
+export const checkwhoApplied = async(data: { emp_id: string, job_id: string}) : Promise <ApplicationsResponse>=> 
   API.get(`/job/applications/all/query?employer_id=${data.emp_id}&job_id=${data.job_id}`)
-}

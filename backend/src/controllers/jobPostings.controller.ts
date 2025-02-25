@@ -101,7 +101,7 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
         return acc;
     }, {} as Record<string, any>);
 
-    console.log("QUERYING");
+    console.log("Received a request to get all job posts");
     
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
@@ -150,11 +150,12 @@ export const getJobPostingApplicationsQueryHandler = catchErrors(async (req: Req
         return acc;
     }, {} as Record<string, any>);
 
-    console.log("QUERYING");
+    console.log("Received request to get job applications");
   
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
-    const application = await getJobPostingApplicationsQuery(query, page, limit);
-    res.status(OK).json(application);
+    const applications = await getJobPostingApplicationsQuery(query, page, limit);
+    
+    res.status(OK).json(applications);
 })
 
