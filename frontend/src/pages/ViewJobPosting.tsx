@@ -8,9 +8,12 @@ import { Navigate } from "react-router-dom";
 const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();
   const jobId = searchParams.get("ID");
-  const {user, isLoading } = useUser();
-  const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
-  const [jobNotFound, setJobNotFound] = useState<boolean>(false); // Define the type for job
+  const { user, isLoading } = useUser();
+  const [data, setJob] = useState<JobPosting | null>(null);
+  const [jobNotFound, setJobNotFound] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState(false);
+  const [application, setApplication] = useState<FormData | null>(null);
+  const [isApplied, setIsApplied] = useState<boolean>(false); // New state for tracking application submission
 
   interface JobPosting {
     _id: string;
@@ -31,10 +34,6 @@ const ViewJobPosting = () => {
     status: string;
   }
 
-  // const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
-  const [showModal, setShowModal] = useState(false);
-  const [application, setApplication] = useState<FormData | null>(null)
-
   useEffect(() => {
     if (jobId !== undefined && jobId !== null) {
       fetchJobPosting(jobId);
@@ -43,10 +42,10 @@ const ViewJobPosting = () => {
     }
   }, [jobId]);
 
-  //Send Application ----------------------------------------------------
+  // Send Application ----------------------------------------------------
   useEffect(() => {
-    try{
-      if(data && application){
+    try {
+      if (data && application && !isApplied) {
         const submitApplication = async () => {
           if (!application || !data) return;
           try {
@@ -54,9 +53,11 @@ const ViewJobPosting = () => {
             application.append("job_id", data._id);
             application.append("employer_id", data.employer_id);
             application.append("candidate_id", user?._id || "unknown_candidate");
+
             // Upload resume
             const resumeResponse = await addResume(application);
             console.log(resumeResponse.resume._id);
+
             // Apply for the job
             const applicationResponse = await applyforJob({
               job_id: data._id,
@@ -66,24 +67,27 @@ const ViewJobPosting = () => {
               status: "Pending",
             });
             console.log(applicationResponse.data);
+
+            setIsApplied(true);
           } catch (error) {
             console.error("Error submitting application:", error);
           }
-        }
+        };
         submitApplication();
       }
     } catch (error) {
-        console.error("Error fetching job posting:", error);
+      console.error("Error fetching job posting:", error);
     }
-  }, [application]);
-  //End Send Application ----------------------------------------------------
+  }, [application, isApplied]);
 
+  // Handler to submit form
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     setApplication(formData);
     setShowModal(false);
-  }
+  };
+
   const fetchJobPosting = async (id: string) => {
     try {
       console.log(
@@ -106,6 +110,7 @@ const ViewJobPosting = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
   // If no user, redirect to login page
   if (!user) {
     return <Navigate to="/login" />;
@@ -131,12 +136,8 @@ const ViewJobPosting = () => {
 
   return (
     <div className="container mt-5">
-      {" "}
-      {/* Add a container with margin-top */}
       <div className="card mb-4 shadow">
-        {" "}
-        {/* Add shadow for better visual appeal */}
-        <h2 className="card-header bg-primary text-white ">{data.title}</h2>
+        <h2 className="card-header bg-primary text-white">{data.title}</h2>
         <div className="card-body">
           <h5 className="card-subtitle mb-3 text-muted">
             Job Position: {data.positionTitle}
@@ -210,7 +211,13 @@ const ViewJobPosting = () => {
           </div>
           {user.userRole === "Candidate" && (
             <div>
-              <button className="btn btn-primary" onClick={() => setShowModal(true)}>Apply</button>
+              <button
+                className="btn btn-primary"
+                onClick={() => setShowModal(true)}
+                disabled={isApplied} // Disable the button if already applied
+              >
+                {isApplied ? "Applied" : "Apply"} {/* Change text */}
+              </button>
             </div>
           )}
           <FormModalPopupComponent
@@ -219,10 +226,18 @@ const ViewJobPosting = () => {
             handleSubmit={submitHandler}
             title="Application Submitted"
             body="Fill out the following "
-            submitText="Submit">
+            submitText="Submit"
+          >
             <div className="form-group">
               <label htmlFor="resume">Resume</label>
-              <input type="file" className="form-control" id="resume" name="resume" accept=".pdf , .docx" required />
+              <input
+                type="file"
+                className="form-control"
+                id="resume"
+                name="resume"
+                accept=".pdf , .docx"
+                required
+              />
             </div>
           </FormModalPopupComponent>
         </div>
