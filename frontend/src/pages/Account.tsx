@@ -1,20 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Card, Container, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import useUser from "../hooks/user";
+import useUser, { USER } from "../hooks/user";
 import { updateUser } from "../lib/api";
 import { IoAddCircle, IoTrashBin } from "react-icons/io5";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Account = () => {
+  
   const navigate = useNavigate();
   const { user } = useUser();
+  const queryClient = useQueryClient();
 
   // State for role-based fields
-  const [exp, setexp] = useState(user?.experience || []);
-  const [educ, seteduc] = useState(user?.education || []);
-  const [userSkills, setuserSkills] = useState(user?.skills || []);
-  const [compDetails, setcompDetails] = useState(user?.companyDetails || "");
-  const [hireDetails, sethireDetails] = useState(user?.hiringDetails || []); 
+  const [exp, setexp] = useState<string[]>(user?.experience || []);
+  const [educ, seteduc] = useState<string[]>(user?.education || []);
+  const [userSkills, setuserSkills] = useState<string[]>(user?.skills || []);
+  const [compDetails, setcompDetails] = useState<string>(user?.companyDetails || "");
+  const [hireDetails, sethireDetails] = useState<string[]>(user?.hiringDetails || []); 
+
+  // Sync state when user updates - added to update user fields even on page refresh
+  useEffect(() => {
+    if (user) {
+      setexp(user.experience || []);
+      seteduc(user.education || []);
+      setuserSkills(user.skills || []);
+      setcompDetails(user.companyDetails || "");
+      sethireDetails(user.hiringDetails || []);
+    }
+  }, [user]);
 
   const handleBack = () => navigate("/");
 
@@ -34,16 +48,16 @@ const Account = () => {
         hiringDetails: hireDetails,
         companyDetails: compDetails
       });
+      // clear the cache so that user details are fetched again from database when user press submits and updates db value
+      queryClient.invalidateQueries({ queryKey: [USER] });
 
       navigate("/");
     } catch (error: any) {
       console.error("Error updating user:", error);
-      const message = error.message
-      alert(`Failed to update user. Please try again. ${message}`);
+      alert(`Failed to update user. Please try again. ${error.message}`);
     }
   };
 
-  // Generic function to handle array updates (exp, educ, userSkills, Hiring Details)
   const handleArrayChange = (index: number, value: string, setter: Function) => {
     setter((prev: string[]) => {
       const updated = [...prev];
