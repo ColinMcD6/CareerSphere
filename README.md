@@ -38,9 +38,9 @@ API_RESEND=bb
 RESEND_API_KEY={API_KEY}
 ```
 2. Go to https://resend.com/home -> create an account -> create an API_KEY and copy that api to .env for RESED_API_KEY'
-2. From ```backend``` directory run ```npm install```
-3. To run application in development mode (every change to file will update server): ```npm run dev```
-4. To run application in production mode: ```npm build; npm run start```
+3. From ```backend``` directory run ```npm install```
+4. To run application in development mode (every change to file will update server): ```npm run dev```
+5. To run application in production mode: ```npm build; npm run start```
 
 ##### Frontend
 1. Add ```.env``` file to frontend folder with the following values populated: ```VITE_API_URL=http://localhost:{BACKEND PORT}```
