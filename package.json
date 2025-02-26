@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "cookie-parser": "^1.4.7",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "react-toastify": "^11.0.3"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.8"

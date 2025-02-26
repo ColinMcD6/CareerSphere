@@ -57,6 +57,7 @@ const Account = () => {
     setter((prev: string[]) => prev.filter((_, i) => i !== index));
 
   return (
+    <div className="className= mt-5">
     <Container className="mt-4 p-4 border rounded shadow bg-light">
       <Card className="p-3 mb-4 shadow-sm">
         <h3>User Account Info</h3>
@@ -164,6 +165,7 @@ const Account = () => {
         <Button onClick={handleBack} variant="secondary">Cancel</Button>
       </div>
     </Container>
+    </div>
   );
 };
 

@@ -8,7 +8,7 @@ export const CareerSphereApp = () => {
     if (isLoading) {
       return <div>Loading...</div>;
     }
-  
+    
     // If no user, redirect to login page
     if (!user) {
       return <Navigate to="/login" />;

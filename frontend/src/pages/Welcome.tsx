@@ -3,6 +3,7 @@ import { logoutUser } from "../lib/api";
 import queryClient from "../config/queryClient";
 import { useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
+import image from "../assets/Logo.png";
 
 const Welcome = () => {
   const navigate = useNavigate();
@@ -13,30 +14,36 @@ const Welcome = () => {
     navigate("/login", { replace: true });
   };
 
-  const handleProfile = async () => {
+  const handleProfile = () => {
     navigate("/account");
   };
 
+
   return (
-    <div
-      style={{
-        position: "fixed",   // Fixes the position relative to the viewport
-        bottom: "20px",      // Distance from the bottom of the screen
-        left: "20px",        // Distance from the left of the screen
-        zIndex: "1000",      // Ensures the button stays above other content
-      }}
-    >
-      <DropdownButton
-        id="dropdown-menu-align-right"
-        variant="outline-secondary"
-        title={<FaUserCircle size={30} />}
-        align="end"
-        drop="down"
+    <>
+      <div
+        style={{ position: "absolute", top: "200px", left: "50%", transform: "translateX(-50%)", width: "300px", height: "300px", borderRadius: "100%", overflow: "hidden", display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "#f0f0f0"}}>
+        <img src={image} alt="Career Sphere" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      </div>
+      <div
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          left: "20px",
+          zIndex: "1000",
+        }}
       >
-        <Dropdown.Item onClick={handleProfile}>Edit Profile</Dropdown.Item>
-        <Dropdown.Item onClick={handleBack}>Log Out</Dropdown.Item>
-      </DropdownButton>
-    </div>
+        <DropdownButton
+          id="dropdown-menu-align-right"
+          variant="outline-secondary"
+          title={<FaUserCircle size={30} />}
+          align="end"
+          drop="down">
+          <Dropdown.Item onClick={handleProfile}>Edit Profile</Dropdown.Item>
+          <Dropdown.Item onClick={handleBack}>Log Out</Dropdown.Item>
+        </DropdownButton>
+      </div>
+    </>
   );
 };
 

@@ -82,8 +82,11 @@ const SignUp = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                isInvalid={formData.password.length > 0 && !isPasswordValid}
               />
-              <small className="text-muted">Must be at least 8 characters long.</small>
+              <Form.Control.Feedback type="invalid">
+                Password must be at least 8 characters long.
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3" controlId="confirm_password">
               <Form.Label>Confirm Password</Form.Label>

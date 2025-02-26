@@ -1,6 +1,6 @@
 import { Response } from "express"
 import { CookieOptions } from "express"
-import { fifteenminutes, weekfromnow } from "./calc"
+import { onedaylater, weekfromnow } from "./calc"
 
 const secure = process.env.NODE_ENV !== "development"
 
@@ -12,7 +12,7 @@ const defaults: CookieOptions={
 
 export const getAccessTokenCookieOptions = (): CookieOptions => ({
     ...defaults,
-    expires: fifteenminutes(),
+    expires: onedaylater(),
 })
 
 export const getrefreshTokenCookieOptions = (): CookieOptions => ({
