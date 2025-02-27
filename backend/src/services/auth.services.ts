@@ -27,7 +27,6 @@ export type loginAccountFields = {
 export const signup_account = async (data: signupAccountFields) => {
     // verify exisiting user doesnt exist
     const existUser = await UserModel.exists({
-        username: data.username,
         email: data.email,
     });
     
