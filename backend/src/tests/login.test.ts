@@ -10,7 +10,6 @@ describe("Login Account", () => {
 
     afterEach(async () => {
         await db.clearDatabase();
-        jest.clearAllMocks(); // Reset all mocks after each test
     });
 
     afterAll(async () => {
