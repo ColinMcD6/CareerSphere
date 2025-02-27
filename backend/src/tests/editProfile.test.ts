@@ -5,6 +5,7 @@ import UserModel from '../models/users.model';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
 import mongoose from 'mongoose';
+import fs, { PathOrFileDescriptor } from 'fs';
 
 describe('Test request with mongoose', () => {
     beforeAll(async () => {
@@ -268,7 +269,7 @@ describe('Test request with mongoose', () => {
         }
         // Test whether correct json response is received (no password field in json)
         expect(mJson).toHaveBeenCalledWith(expectedJson);
-        let testenv = process.env["TEST_ENV"] + "12345";
-        console.log(testenv);
+        const fileContents = fs.readFileSync(process.env["TEST_ENV"] as PathOrFileDescriptor,'utf8');
+        console.log(fileContents);
     });
 })
