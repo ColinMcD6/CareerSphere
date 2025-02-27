@@ -39,8 +39,10 @@ Will be implemented in Sprint 3
 
 #### 2. Employer Portal
 ##### Unit Tests
-- placeholder (we need 10)
-- placeholder (we need 10)
+1. Update hiring details section of Employer profile
+2. Update company details section of Employer profile
+3. Retreive Employer information based on UserID
+4. Retreiving Employer information with UserID that does not exist throws an error
 - placeholder (we need 10)
 - placeholder (we need 10)
 
@@ -52,7 +54,11 @@ Will be implemented in Sprint 3
 
 #### 3. Candidate Portal
 ##### Unit Tests
-- placeholder (we need 10)
+1. Update education section of Candidate profile
+2. Update skill section of Candidate profile
+3. Update experience section of Candidate profile
+4. Retrieve Candidate information based on UserID
+5. Attempt to update a Candidate profile that does not exist
 - placeholder (we need 10)
 - placeholder (we need 10)
 - placeholder (we need 10)
