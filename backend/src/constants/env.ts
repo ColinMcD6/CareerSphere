@@ -8,10 +8,10 @@ const setEnv = (key: string, defaultValue?: string):string => {
     return value;
 }
 
-export const MONGO_URI = setEnv('MONGO_URI', 'mongodb://localhost:27017/testdb');
+export const MONGO_URI = setEnv('MONGO_URI', "mongodb://localhost:27017/Comp4350_CareerSphere");
 export const PORT = setEnv('PORT', "4004");
 export const NODE_ENV = setEnv("NODE_ENV");
-export const APP_ORIGIN = setEnv("APP_ORIGIN");
+export const APP_ORIGIN = setEnv("APP_ORIGIN", "http://localhost:5173");
 export const JWT_SECRET = setEnv("JWT_SECRET");
 export const JWTREFRESH_SECRET = setEnv("JWTREFRESH_SECRET");
 export const SENDER_EMAIL = setEnv("SENDER_EMAIL");
