@@ -5,7 +5,6 @@ import UserModel from '../models/users.model';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
 import mongoose from 'mongoose';
-import { NODE_ENV, TEST_ENV } from '../constants/env';
 
 describe('Test request with mongoose', () => {
     beforeAll(async () => {
@@ -269,6 +268,6 @@ describe('Test request with mongoose', () => {
         }
         // Test whether correct json response is received (no password field in json)
         expect(mJson).toHaveBeenCalledWith(expectedJson);
-        console.log(TEST_ENV);
+        console.log(process.env["TEST_ENV"]);
     });
 })
