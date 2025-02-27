@@ -268,6 +268,6 @@ describe('Test request with mongoose', () => {
         }
         // Test whether correct json response is received (no password field in json)
         expect(mJson).toHaveBeenCalledWith(expectedJson);
-        console.log(process.env.TEST_ENV);
+        console.log(process.env["TEST_ENV"]);
     });
 })
