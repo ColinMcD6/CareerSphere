@@ -27,8 +27,6 @@ export const updateUserDetails = catchErrors(
         } else if (user.userRole === "Employer") {
             if (companyDetails) user.companyDetails = companyDetails;
             if (hiringDetails) user.hiringDetails = hiringDetails;
-        } else {
-            appAssert(false, UNAUTHORIZED, "Invalid user role");
         }
 
         // Save updated user details
