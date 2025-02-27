@@ -2,7 +2,6 @@ import * as db from './db'
 import { updateUserDetails } from '../controllers/user.controller';
 import { Request, Response } from 'express';
 import UserModel from '../models/users.model';
-import JobPostingsModel from '../models/jobPostings.model';
 
 describe('Test request with mongoose', () => {
     beforeAll(async () => {
