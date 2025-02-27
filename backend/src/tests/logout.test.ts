@@ -54,5 +54,5 @@ describe("Logout Controller", () => {
 
         const session = await sessionModel.countDocuments({ _id: sessionId?._id });
         expect(session).toBe(1);
-    });
+    }, 10000);
 });

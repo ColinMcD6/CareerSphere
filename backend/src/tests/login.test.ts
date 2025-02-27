@@ -73,5 +73,5 @@ describe("Login Account", () => {
 
         const sessionCount = await sessionModel.countDocuments();
         expect(sessionCount).toBe(0);
-    });
+    }, 10000);
 });

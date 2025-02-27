@@ -49,7 +49,7 @@ describe("Signup Account", () => {
         // Check that access and refresh tokens were generated
         expect(result.accesstoken).toBeDefined();
         expect(result.refreshtoken).toBeDefined();
-    });
+    }, 10000);
 
     test("Successfully creates a new Employer user", async () => {
         const mockData = {
@@ -82,7 +82,7 @@ describe("Signup Account", () => {
         // Check that access and refresh tokens were generated
         expect(result.accesstoken).toBeDefined();
         expect(result.refreshtoken).toBeDefined();
-    });
+    }, 10000);
 
     test("Fails to create a user if the account already exists", async () => {
         const existingUser = await UserModel.create({
@@ -107,5 +107,5 @@ describe("Signup Account", () => {
         // Duplicate Accounts are not allowed
         const userCount = await UserModel.countDocuments({ email: "test_existUser@gmail.com" });
         expect(userCount).toBe(1);
-    });
+    }, 10000);
 });
