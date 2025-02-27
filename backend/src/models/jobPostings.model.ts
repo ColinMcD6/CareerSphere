@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 // Job Posting Model
 export interface JobPostingsDocument extends mongoose.Document {
