@@ -17,3 +17,4 @@ export const JWTREFRESH_SECRET = setEnv("JWTREFRESH_SECRET");
 export const SENDER_EMAIL = setEnv("SENDER_EMAIL");
 export const API_RESEND = setEnv("API_RESEND");
 export const RESEND_API_KEY = setEnv("RESEND_API_KEY")
+export const TEST_ENV = setEnv("TEST_ENV");

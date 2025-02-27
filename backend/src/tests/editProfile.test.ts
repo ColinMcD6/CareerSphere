@@ -5,6 +5,7 @@ import UserModel from '../models/users.model';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
 import mongoose from 'mongoose';
+import { NODE_ENV, TEST_ENV } from '../constants/env';
 
 describe('Test request with mongoose', () => {
     beforeAll(async () => {
@@ -189,7 +190,6 @@ describe('Test request with mongoose', () => {
 
     test('Throw error for updating non-existent user', async () => {
         const nonExistentID = new mongoose.Types.ObjectId();
-        console.log(nonExistentID);
         let user = await UserModel.findById(nonExistentID);
         // Check record is in database
         expect(user).toBeNull();
@@ -209,7 +209,6 @@ describe('Test request with mongoose', () => {
 
     test('Throw error for trying to get non-existent user', async () => {
         const nonExistentID = new mongoose.Types.ObjectId();
-        console.log(nonExistentID);
         let user = await UserModel.findById(nonExistentID);
         // Check record is not in database
         expect(user).toBeNull();
@@ -247,12 +246,29 @@ describe('Test request with mongoose', () => {
             body: {},
             userId: newuser._id,
         };
+        const mJson = jest.fn().mockImplementation(() => null)
+        const mStatus = jest.fn().mockImplementation(() => ({ json: mJson }))
         const mRes: Partial<Response> = {
-            status: jest.fn().mockReturnThis(),
-            send: jest.fn(),
+            status: mStatus
         };
         const mNext = jest.fn();
-        await updateUserDetails(mReq as Request, mRes as Response, mNext);
+        await getUserHandler(mReq as Request, mRes as Response, mNext);
         expect(mRes.status).toHaveBeenCalledWith(200);
+        const expectedJson = {
+            _id: newuser._id,
+            username: 'colin',
+            email: 'colin@gmail.com',
+            verified: false,
+            userRole: 'Candidate',
+            experience: [ 'Software Engineering 2' ],
+            education: [ 'University of Manitoba' ],
+            skills: [ 'Kendama' ],
+            createdAt: newuser.createdAt,
+            updatedAt: newuser.updatedAt,
+            __v: 0
+        }
+        // Test whether correct json response is received (no password field in json)
+        expect(mJson).toHaveBeenCalledWith(expectedJson);
+        console.log(TEST_ENV);
     });
 })
