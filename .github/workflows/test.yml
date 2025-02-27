@@ -24,5 +24,3 @@ jobs:
 
       - name: Run Jest Tests
         run: npm test --prefix backend
-        env:
-          TEST_ENV: ${{ secrets.TEST_ENV }}
