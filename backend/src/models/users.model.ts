@@ -15,7 +15,7 @@ export interface UserDocument extends mongoose.Document {
     createdAt: Date;
     updatedAt: Date;
     checkPassword(val: string): Promise<boolean>;
-    removePassword(): Pick<UserDocument, "_id" | "email" | "verified" | "createdAt" | "updatedAt">;
+    removePassword(): Pick<UserDocument, "_id" | "email" | "verified" | "userRole" | "createdAt" | "updatedAt">;
 }
 
 const userSchema = new mongoose.Schema<UserDocument>(

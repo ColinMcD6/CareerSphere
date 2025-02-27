@@ -16,6 +16,9 @@ describe("Login Account", () => {
         await db.closeDatabase();
     });
 
+    /*
+        test to login with user created email and password, creating a session as soon as user logs in and access and refresh token are created
+    */
     test("Successfully logs in a user with valid credentials", async () => {
 
         const mockUser = await UserModel.create({
@@ -36,7 +39,15 @@ describe("Login Account", () => {
 
         const sessionRecord = await sessionModel.findOne({ userId: mockUser._id });
         expect(sessionRecord).not.toBeNull();
+
+        expect(result).toHaveProperty("accesstoken")
+        expect(result).toHaveProperty("refreshtoken")
     });
+
+    /*
+        test to check that login is failed with message: User Account does not exist ! with invalid email 
+        (not created or signed up with) and check no session is created on that login failed
+    */
 
     test("Fails to log in if user does not exist", async () => {
         await expect(
@@ -51,6 +62,11 @@ describe("Login Account", () => {
         const sessionCount = await sessionModel.countDocuments();
         expect(sessionCount).toBe(0);
     });
+
+    /*
+        test to check that login is failed with message: Invalid email or Password with invalid email entered or 
+        wrong password entered and check no session is created on that login failed
+    */
 
     test("Fails to log in with incorrect password", async () => {
         const mockUser = await UserModel.create({

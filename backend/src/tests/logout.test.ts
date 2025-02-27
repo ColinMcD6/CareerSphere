@@ -3,6 +3,7 @@ import { logoutcontroller } from "../controllers/auth_controllers/logoutcontroll
 import sessionModel from "../models/session.model";
 import { NextFunction, Request, Response } from "express";
 import { signup_account, login_account } from "../services/auth.services";
+import { OK } from "../constants/http";
 
 describe("Logout Controller", () => {
     beforeAll(async () => {
@@ -11,13 +12,16 @@ describe("Logout Controller", () => {
 
     afterEach(async () => {
         await db.clearDatabase();
-        jest.clearAllMocks();
     });
 
     afterAll(async () => {
         await db.closeDatabase();
     });
 
+    /*
+        test to see user is logged out when req contains the cookies and the session created when user logged in is deleted
+        a session for user would still which was created after signup, check if the cookies are clear
+    */
     test("Successfully logs out a user and deletes session", async () => {
         const user = await signup_account({
             username: "test_user",
@@ -54,5 +58,7 @@ describe("Logout Controller", () => {
 
         const session = await sessionModel.countDocuments({ _id: sessionId?._id });
         expect(session).toBe(1);
+        
+        expect(mRes.cookie).toBeUndefined()
     }, 10000);
 });

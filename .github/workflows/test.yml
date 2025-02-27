@@ -17,7 +17,7 @@ jobs:
       JWTREFRESH_SECRET: myjwtrefrestsecret
       SENDER_EMAIL: a
       API_RESEND: bb
-      RESEND_API_KEY: re_aQLEGtYG_3TXkr9ds9eYB473GMZjgU7Uj
+      RESEND_API_KEY: uuuu
 
     steps:
       - name: Checkout Repository
