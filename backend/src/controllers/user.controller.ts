@@ -6,10 +6,11 @@ import appAssert from "../utils/appAssert";
 
 export const getUserHandler = catchErrors(
     async (req: Request, res: Response, next: NextFunction) => {
-    const user = await UserModel.findById(req.userId);
-    appAssert(user, NOT_FOUND, "User account does not exist !")
-    res.status(OK).json(user.removePassword());
-})
+        const user = await UserModel.findById(req.userId);
+        appAssert(user, NOT_FOUND, "User account does not exist !")
+        res.status(OK).json(user.removePassword());
+    }
+);
 
 export const updateUserDetails = catchErrors(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -27,8 +28,6 @@ export const updateUserDetails = catchErrors(
         } else if (user.userRole === "Employer") {
             if (companyDetails) user.companyDetails = companyDetails;
             if (hiringDetails) user.hiringDetails = hiringDetails;
-        } else {
-            appAssert(false, UNAUTHORIZED, "Invalid user role");
         }
 
         // Save updated user details

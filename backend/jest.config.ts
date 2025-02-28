@@ -4,5 +4,5 @@ export default {
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
     collectCoverage: true,
     coverageReporters: ['text', 'html'],
-    coverageDirectory: '<rootDir>/coverage/'
+    coverageDirectory: '<rootDir>/coverage/',
   };

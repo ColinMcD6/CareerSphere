@@ -3,7 +3,7 @@ name: Run Jest Tests
 on: 
   push:
     branches:
-      - account-management-tests-sukhmeet
+      - development
 
 jobs:
   test:

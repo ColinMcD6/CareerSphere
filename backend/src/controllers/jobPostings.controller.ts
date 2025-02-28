@@ -17,7 +17,7 @@ import {v4 as uuidv4} from 'uuid';
 
 
 const MIN_TITLE_LENGTH = 10;
-const MAX_TITLE_LENGTH = 250; 
+const MAX_TITLE_LENGTH = 150; 
 
 const MAX_DESCRIPTION_LENGTH = 20000;
 const MIN_DESCRIPTION_LENGTH = 50;
@@ -140,22 +140,23 @@ export const getJobPostingApplicationsHandler = catchErrors(async (req: Request,
 })
 
 export const getJobPostingApplicationsQueryHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
-    const queryFieldNames = Object.keys(req.query);
+        const queryFieldNames = Object.keys(req.query);
 
-    // Extract query fields from the request query but removes page and limit
-    const query = queryFieldNames.reduce((acc, key) => {
-        if (key !== 'page' && key !== 'limit') {
-            acc[key] = req.query[key];
-        }
-        return acc;
-    }, {} as Record<string, any>);
+        // Extract query fields from the request query but removes page and limit
+        const query = queryFieldNames.reduce((acc, key) => {
+            if (key !== 'page' && key !== 'limit') {
+                acc[key] = req.query[key];
+            }
+            return acc;
+        }, {} as Record<string, any>);
 
-    console.log("Received request to get job applications");
-  
-    const page = req.query.page ? parseInt(req.query.page as string) : 1;
-    const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
-    const applications = await getJobPostingApplicationsQuery(query, page, limit);
+        console.log("Received request to get job applications");
     
-    res.status(OK).json(applications);
+        const page = req.query.page ? parseInt(req.query.page as string) : 1;
+        const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
+        const applications = await getJobPostingApplicationsQuery(query, page, limit);
+        console.log(applications);
+        res.status(OK).json(applications);
+    
 })
 

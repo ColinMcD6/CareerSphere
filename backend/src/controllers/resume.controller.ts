@@ -34,14 +34,15 @@ export const addResumeHandler = catchErrors(async (req: Request, res: Response, 
 });
 
 export const getResumeHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    const resume = await getResume(id);
-    const directory = 'resume\\uploads\\' + resume.file_name;
-    res.download(directory,resume.file_name, err => {
-        if (err) {
-            console.log(err);
-        }
-    });
+        const id = req.params.id;
+        const resume = await getResume(id);
+        const directory = 'resume\\uploads\\' + resume.file_name;
+        res.download(directory,resume.file_name, err => {
+            if (err) {
+                console.log(err);
+            }
+        });
+    
 })
 
 
