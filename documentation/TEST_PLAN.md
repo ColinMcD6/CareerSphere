@@ -46,6 +46,10 @@ Will be implemented in Sprint 3
 5. Update company details section of employer profile with array and test whether mongoose validation error is thrown
 6. Retrieve employer information based on UserID
 7. Retrieving employer information with UserID that does not exist throws an error
+8. Create a job posting meeting all the field criteria and test whether the job posting is created in the database
+9. Create a job posting with a title that is too short and test whether an error is thrown and the job is not created in the database
+10. Create a job posting with description that is too short and test whether an error is thrown and the job is not created in the database
+11. Create a job posting with an invalid compensation type and test whether an error is thrown and the job is not created in the database
 
 ##### Integration Tests
 Will be implemented in Sprint 3

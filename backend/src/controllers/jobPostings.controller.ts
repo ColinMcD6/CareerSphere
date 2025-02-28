@@ -52,8 +52,6 @@ const jobApplicationModel = z.object({
 })
 
 export const addJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
-
-    console.log("Received a request to create a new job posting");
     const job  = {
         title: req.body.title,
         description: req.body.description,
