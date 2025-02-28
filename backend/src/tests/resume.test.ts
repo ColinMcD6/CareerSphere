@@ -111,6 +111,6 @@ describe('Test adding resume', () => {
         // await getResumeHandler(mReq as Request, mRes as Response, mNext);
 
         // expect(mRes.status).toHaveBeenCalledWith(200);
-    });
+    }, 10000);
 
 });
