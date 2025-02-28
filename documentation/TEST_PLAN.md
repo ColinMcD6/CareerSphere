@@ -56,10 +56,13 @@ Will be implemented in Sprint 3
 #### 3. Candidate Portal
 ##### Unit Tests
 1. Update education section of candidate profile and test whether change is reflected in the database
-2. Update skill section of candidate profile and test whether change is reflected in the database
-3. Update experience section of candidate profile and test whether change is reflected in the database
-4. Retrieve candidate information based on UserID
-5. Attempt to update a candidate profile that does not exist throws an error
+2. Update education section of candidate profile with string and test whether it is converted to array and the change is reflected in the database
+3. Update skill section of candidate profile and test whether change is reflected in the database
+4. Update skill section of candidate profile with array containing a string and an integer and test whether integer is converted to a string and change is reflected in the database
+5. Update experience section of candidate profile and test whether change is reflected in the database
+6. Update experience section of candidate profile with JSON object and test whether mongoose throws a validation error
+7. Retrieve candidate information based on UserID
+8. Attempt to update a candidate profile that does not exist throws an error
 
 ##### Integration Tests
 Will be implemented in Sprint 3
