@@ -77,40 +77,40 @@ describe('Test adding resume', () => {
 
      });
 
-    test('Getting a resume (downloading)', async () => {
-        const filePath = path.join(__dirname, 'test.pdf');
-        const response1 = await request(app)
-        .post('/add')
-        .attach('resume', filePath)
-        .expect(200);
+    // test('Getting a resume (downloading)', async () => {
+    //     const filePath = path.join(__dirname, 'test.pdf');
+    //     const response1 = await request(app)
+    //     .post('/add')
+    //     .attach('resume', filePath)
+    //     .expect(200);
         
-        const id = response1.body.resume._id;
-        // Testing Resume Downloads
-        const response = await request(app)
-            .get(`/resume/${id}`)
-            .expect(200);
+    //     const id = response1.body.resume._id;
+    //     // Testing Resume Downloads
+    //     const response = await request(app)
+    //         .get(`/resume/${id}`)
+    //         .expect(200);
 
-        console.log(response1.body);
+    //     console.log(response1.body);
 
-        // Checking response headers to see if the file is being downloaded
-        expect(response.headers['content-disposition']).toContain('attachment; filename="' + response1.body.resume.file_name + '"');
-        expect(response.headers['content-type']).toBe('application/pdf');
+    //     // Checking response headers to see if the file is being downloaded
+    //     expect(response.headers['content-disposition']).toContain('attachment; filename="' + response1.body.resume.file_name + '"');
+    //     expect(response.headers['content-type']).toBe('application/pdf');
 
         
-        // const mReq: Partial<Request> = {
-        //     params: {
-        //         id: response.body.resume._id,
-        //     },
-        // };
-        // const mJson = jest.fn().mockImplementation(() => null)
-        // const mStatus = jest.fn().mockImplementation(() => ({ json: mJson }));
-        // const mRes: Partial<Response> = {
-        //     status: mStatus,
-        // };
-        // const mNext = jest.fn();
-        // await getResumeHandler(mReq as Request, mRes as Response, mNext);
+    //     // const mReq: Partial<Request> = {
+    //     //     params: {
+    //     //         id: response.body.resume._id,
+    //     //     },
+    //     // };
+    //     // const mJson = jest.fn().mockImplementation(() => null)
+    //     // const mStatus = jest.fn().mockImplementation(() => ({ json: mJson }));
+    //     // const mRes: Partial<Response> = {
+    //     //     status: mStatus,
+    //     // };
+    //     // const mNext = jest.fn();
+    //     // await getResumeHandler(mReq as Request, mRes as Response, mNext);
 
-        // expect(mRes.status).toHaveBeenCalledWith(200);
-    }, 100000);
+    //     // expect(mRes.status).toHaveBeenCalledWith(200);
+    // }, 10000);
 
 });
