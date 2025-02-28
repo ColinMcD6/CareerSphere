@@ -5,5 +5,4 @@ export default {
     collectCoverage: true,
     coverageReporters: ['text', 'html'],
     coverageDirectory: '<rootDir>/coverage/',
-    setupFiles: ['./src/tests/jest.setup.ts'],
   };

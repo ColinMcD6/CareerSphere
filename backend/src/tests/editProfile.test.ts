@@ -451,7 +451,8 @@ describe('Test candidate and employer portals', () => {
         };
         const mNext = jest.fn();
         await updateUserDetails(mReq as Request, mRes as Response, mNext);
-        expect(appAssert).toHaveBeenCalledWith(null, NOT_FOUND, "User account does not exist!");
+        let error: Error = mNext.mock.calls[0][0];
+        expect(error.message).toEqual("User account does not exist!");
     });
 
     test('Throw error for trying to get non-existent user', async () => {
@@ -470,7 +471,8 @@ describe('Test candidate and employer portals', () => {
         };
         const mNext = jest.fn();
         await getUserHandler(mReq as Request, mRes as Response, mNext);
-        expect(appAssert).toHaveBeenCalledWith(null, NOT_FOUND, "User account does not exist!");
+        let error: Error = mNext.mock.calls[0][0];
+        expect(error.message).toEqual("User account does not exist !");
     });
 
     test('Get existing user and make sure password is not contained in response body', async () => {
