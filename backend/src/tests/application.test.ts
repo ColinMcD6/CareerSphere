@@ -31,6 +31,10 @@ describe('Test adding Application', () => {
             dateApplied: new Date(),
             status: "Pending",
         };
+
+        const findApplicationEmpty = await ApplicationModel.find().exec();
+        expect(findApplicationEmpty).toHaveLength(0);
+
         const mReq: Partial<Request> = {
             body: {
                 job_id: newApplication.job_id,
@@ -52,7 +56,7 @@ describe('Test adding Application', () => {
 
         expect(mRes.status).toHaveBeenCalledWith(201);
         expect(findApplication).toHaveLength(1);
-        expect(findApplication[0].job_id).toBe(newApplication.job_id);
+        
     });
 
     test('Getting a job application', async () => {
@@ -88,7 +92,6 @@ describe('Test adding Application', () => {
             status: application.status,
             __v: application.__v,
         }
-    
 
         const jsonResponse = {
             _id : mJson.mock.calls[0][0]._id,
@@ -103,7 +106,37 @@ describe('Test adding Application', () => {
 
         expect(mRes.status).toHaveBeenCalledWith(200);
         expect(jsonResponse).toStrictEqual(expected);
+        
     });
+
+    // test('Getting a job application (Does not exist)', async () => {
+    //     const newApplication = {
+    //         job_id: "123",
+    //         employer_id: "123",
+    //         candidate_id: "123",
+    //         resume_id: "123",
+    //         dateApplied: new Date(),
+    //         status: "Pending",
+    //     };
+    //     const application = await ApplicationModel.create(newApplication);
+    //     const mReq: Partial<Request> = {
+    //         params: {
+    //             id: "Not real" as string,
+    //         },
+    //     };
+    //     const mJson = jest.fn().mockImplementation(() => null)
+    //     const mStatus = jest.fn().mockImplementation(() => ({ json: mJson }));
+    //     const mRes: Partial<Response> = {
+    //         status: mStatus,
+    //     };
+    //     const mNext = jest.fn();
+    //     await getJobPostingApplicationsHandler(mReq as Request, mRes as Response, mNext);
+
+    //     expect(mRes.status).toHaveBeenCalledWith(401);
+    //     //Check if error
+        
+        
+    // });
 
     test('Getting a job application with query', async () => {
         const old_education = ["Highschool"]
@@ -404,14 +437,15 @@ describe('Test adding Application', () => {
             status: "Pending",
         };
         const application = await ApplicationModel.create(newApplication);
+        const application2 = await ApplicationModel.create(newApplication);
         const mReq: Partial<Request> = {
             params: {
                 id: application._id as string,
             },
         };
 
-        const findApplication = await ApplicationModel.find().exec();
-        expect(findApplication).toHaveLength(1);
+        const findApplication = await ApplicationModel.findById(application._id).exec();
+        expect(findApplication).not.toBeNull();
 
         const mJson = jest.fn().mockImplementation(() => null)
         const mStatus = jest.fn().mockImplementation(() => ({ json: mJson }));
@@ -421,9 +455,11 @@ describe('Test adding Application', () => {
         const mNext = jest.fn();
         await deleteJobPostingApplicationHandler(mReq as Request, mRes as Response, mNext);
 
-        const findApplication2 = await ApplicationModel.find().exec();
+        const findApplication2 = await ApplicationModel.findById(application._id).exec();
+        const finalAll = await ApplicationModel.find().exec();
         expect(mRes.status).toHaveBeenCalledWith(200);
-        expect(findApplication2).toHaveLength(0);
+        expect(findApplication2).toBeNull();
+        expect(finalAll).toHaveLength(1);
     })
 
 

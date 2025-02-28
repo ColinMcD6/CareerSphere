@@ -52,10 +52,14 @@ Will be implemented in Sprint 3
 
 #### 3. Candidate Portal
 ##### Unit Tests
-- placeholder (we need 10)
-- placeholder (we need 10)
-- placeholder (we need 10)
-- placeholder (we need 10)
+- Adding a new application. Adds an application and saves it to the db
+- Getting a job application. Checks whether function returns the exact application record
+- Getting a job application with query. Checks whether function is querying for specific applications correctly. Only has 1 query.
+- Getting a job application with query 2. Checks whether function is querying for specific applications correctly. Has multiple queries as well as paging
+- Getting a job application with query 3. Checks whether function is querying for specific applications correctly. Only has paging.
+- Deleting a job application. Checks whether function deletes the correct
+- Test adding resume. Test whether a pdf file is successfully added to the db.
+
 
 ##### Integration Tests
 Will be implemented in Sprint 3
