@@ -17,7 +17,7 @@ import {v4 as uuidv4} from 'uuid';
 
 
 const MIN_TITLE_LENGTH = 10;
-const MAX_TITLE_LENGTH = 250; 
+const MAX_TITLE_LENGTH = 150; 
 
 const MAX_DESCRIPTION_LENGTH = 20000;
 const MIN_DESCRIPTION_LENGTH = 50;
