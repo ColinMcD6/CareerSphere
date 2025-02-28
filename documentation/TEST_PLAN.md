@@ -39,12 +39,13 @@ Will be implemented in Sprint 3
 
 #### 2. Employer Portal
 ##### Unit Tests
-1. Update hiring details section of Employer profile
-2. Update company details section of Employer profile
-3. Retreive Employer information based on UserID
-4. Retreiving Employer information with UserID that does not exist throws an error
-- placeholder (we need 10)
-- placeholder (we need 10)
+1. Update hiring details section of employer profile and test whether change is reflected in the database
+2. Update hiring details section of employer profile with an integer or string and test whether they are converted to string arrays and the change is reflected in the database
+3. Update company details section of employer profile and test whether change is reflected in the database
+4. Update company details section of employer profile with an integer and test whether integer is converted to string and update is reflected in the database
+5. Update company details section of employer profile with array and test whether mongoose validation error is thrown
+6. Retreive employer information based on UserID
+7. Retreiving employer information with UserID that does not exist throws an error
 
 ##### Integration Tests
 Will be implemented in Sprint 3
@@ -54,14 +55,11 @@ Will be implemented in Sprint 3
 
 #### 3. Candidate Portal
 ##### Unit Tests
-1. Update education section of Candidate profile
-2. Update skill section of Candidate profile
-3. Update experience section of Candidate profile
-4. Retrieve Candidate information based on UserID
-5. Attempt to update a Candidate profile that does not exist
-- placeholder (we need 10)
-- placeholder (we need 10)
-- placeholder (we need 10)
+1. Update education section of candidate profile and test whether change is reflected in the database
+2. Update skill section of candidate profile and test whether change is reflected in the database
+3. Update experience section of candidate profile and test whether change is reflected in the database
+4. Retrieve candidate information based on UserID
+5. Attempt to update a candidate profile that does not exist throws an error
 
 ##### Integration Tests
 Will be implemented in Sprint 3
@@ -88,6 +86,7 @@ The following testing tools will be used:
 - React Testing Library to test UI components
 - Supertest for API routes
 - JMeter for load testing
+
 ### 3.2 Test Environment
 Tests will be run in the following environments:
 - Local operating system (Windows/MacOS)

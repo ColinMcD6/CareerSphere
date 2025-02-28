@@ -188,7 +188,7 @@ describe('Test candidate and employer portals', () => {
         expect(user?.experience).toEqual(new_experience);
     });
 
-    test('Updating experience field with json object converts object to string', async () => {
+    test('Updating experience field with json object throws mongoose validation error', async () => {
         const old_experience = ["McDonald's"];
         const new_experience = { job1: "McDonald's", job2: "AWS" };
         const newuser = await UserModel.create({
@@ -258,6 +258,79 @@ describe('Test candidate and employer portals', () => {
         expect(user?.companyDetails).toEqual(new_details);
     });
 
+    test('Updating companyDetails field with integer converts integer to string', async () => {
+        const old_details = "We are a small company";
+        const new_details = 123456;
+        const new_details_string = "123456";
+        const newuser = await UserModel.create({
+            username: "colin", 
+            email: "colin@gmail.com", 
+            password: "12345678", 
+            userRole: "Employer",
+            education: undefined,
+            skills: undefined,
+            experience: undefined,
+            companyDetails: old_details,
+            hiringDetails: [],
+        });
+        let user = await UserModel.findById(newuser._id);
+        // Check record is in database
+        expect(user?.companyDetails).toEqual(old_details);
+
+        const mReq: Partial<Request> = {
+            body: { companyDetails: new_details},
+            userId: newuser._id,
+        };
+        const mRes: Partial<Response> = {
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn(),
+        };
+        const mNext = jest.fn();
+        await updateUserDetails(mReq as Request, mRes as Response, mNext);
+        expect(mRes.status).toHaveBeenCalledWith(200);
+        user = await UserModel.findById(newuser._id);
+        // Check record is updated with new experience
+        expect(user?.companyDetails).toEqual(new_details_string);
+    });
+
+    test('Updating companyDetails field with array throws mongoose validation error', async () => {
+        const old_details = "We are a small company";
+        const new_details = ["We", "are", "the", "best"];
+        const newuser = await UserModel.create({
+            username: "colin", 
+            email: "colin@gmail.com", 
+            password: "12345678", 
+            userRole: "Employer",
+            education: undefined,
+            skills: undefined,
+            experience: undefined,
+            companyDetails: old_details,
+            hiringDetails: [],
+        });
+        let user = await UserModel.findById(newuser._id);
+        // Check record is in database
+        expect(user?.companyDetails).toEqual(old_details);
+
+        const mReq: Partial<Request> = {
+            body: { companyDetails: new_details},
+            userId: newuser._id,
+        };
+        const mRes: Partial<Response> = {
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn(),
+        };
+        const mNext = jest.fn();
+        await updateUserDetails(mReq as Request, mRes as Response, mNext);
+        try {
+            await updateUserDetails(mReq as Request, mRes as Response, mNext);
+        } catch (error) {
+            expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
+        }
+        user = await UserModel.findById(newuser._id);
+        // Check record is not updated with new experience
+        expect(user?.companyDetails).toEqual(old_details);
+    });
+
     test('Updating hiringDetails field', async () => {
         const old_hiring = ["Intern"];
         const new_hiring = ["Intern", "CEO"];
@@ -290,6 +363,76 @@ describe('Test candidate and employer portals', () => {
         user = await UserModel.findById(newuser._id);
         // Check record is updated with new experience
         expect(user?.hiringDetails).toEqual(new_hiring);
+    });
+
+    test('Updating hiringDetails field with string converts string to string array', async () => {
+        const old_hiring = ["Intern"];
+        const new_hiring = "Intern and CEO";
+        const expectedHiring = ["Intern and CEO"];
+        const newuser = await UserModel.create({
+            username: "colin", 
+            email: "colin@gmail.com", 
+            password: "12345678", 
+            userRole: "Employer",
+            education: undefined,
+            skills: undefined,
+            experience: undefined,
+            companyDetails: "",
+            hiringDetails: old_hiring,
+        });
+        let user = await UserModel.findById(newuser._id);
+        // Check record is in database
+        expect(user?.hiringDetails).toEqual(old_hiring);
+
+        const mReq: Partial<Request> = {
+            body: { hiringDetails: new_hiring},
+            userId: newuser._id,
+        };
+        const mRes: Partial<Response> = {
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn(),
+        };
+        const mNext = jest.fn();
+        await updateUserDetails(mReq as Request, mRes as Response, mNext);
+        expect(mRes.status).toHaveBeenCalledWith(200);
+        user = await UserModel.findById(newuser._id);
+        // Check record is updated with new experience
+        expect(user?.hiringDetails).toEqual(expectedHiring);
+    });
+
+    test('Updating hiringDetails field with integer converts integer to string array', async () => {
+        const old_hiring = ["Intern"];
+        const new_hiring = 1234567;
+        const expectedHiring = ["1234567"];
+        const newuser = await UserModel.create({
+            username: "colin", 
+            email: "colin@gmail.com", 
+            password: "12345678", 
+            userRole: "Employer",
+            education: undefined,
+            skills: undefined,
+            experience: undefined,
+            companyDetails: "",
+            hiringDetails: old_hiring,
+        });
+        let user = await UserModel.findById(newuser._id);
+        // Check record is in database
+        expect(user?.hiringDetails).toEqual(old_hiring);
+
+        const mReq: Partial<Request> = {
+            body: { hiringDetails: new_hiring},
+            userId: newuser._id,
+        };
+        const mRes: Partial<Response> = {
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn(),
+        };
+        const mNext = jest.fn();
+        await updateUserDetails(mReq as Request, mRes as Response, mNext);
+        expect(mRes.status).toHaveBeenCalledWith(200);
+        user = await UserModel.findById(newuser._id);
+        // Check record is updated with new experience
+        expect(user?.hiringDetails).toEqual(expectedHiring);
     });
 
     test('Throw error for updating non-existent user', async () => {
