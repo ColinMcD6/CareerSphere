@@ -23,6 +23,10 @@ User Friendly Career Platform that connects job seekers and employers through fe
 ### Testing Plan
 
 * [Testing Plan](documentation/TEST_PLAN.md)
+
+### Sequence Diagrams
+
+* [Sequence Diagrams](https://github.com/ColinMcD6/CareerSphere/wiki/Sequence-Diagrams)
  
 ### Running Application
 1. Run the command npm install on the root of the project and then follow the backend and frontend instructions below.

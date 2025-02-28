@@ -5,10 +5,19 @@ on:
     branches:
       - development
 
-
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: development
+      APP_ORIGIN: http://localhost:5173
+      MONGO_URI: mongodb://localhost:27017/Comp4350_CareerSphere
+      PORT: 5050
+      JWT_SECRET: myjwtsecret
+      JWTREFRESH_SECRET: myjwtrefrestsecret
+      SENDER_EMAIL: a
+      API_RESEND: bb
+      RESEND_API_KEY: uuuu
 
     steps:
       - name: Checkout Repository
