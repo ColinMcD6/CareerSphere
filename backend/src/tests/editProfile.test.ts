@@ -469,8 +469,7 @@ describe('Test candidate and employer portals', () => {
             send: jest.fn(),
         };
         const mNext = jest.fn();
-        await getUserHandler(mReq as Request, mRes as Response, mNext);
-        expect(appAssert).toHaveBeenCalledWith(null, NOT_FOUND, "User account does not exist!");
+        await expect(getUserHandler(mReq as Request, mRes as Response, mNext)).rejects.toThrow("User account does not exist!");
     });
 
     test('Get existing user and make sure password is not contained in response body', async () => {
