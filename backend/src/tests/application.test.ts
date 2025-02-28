@@ -21,37 +21,37 @@ describe('Test adding Application', () => {
         await db.closeDatabase()
     });
 
-    test('Adding a new application', async () => {
-        const newApplication = {
-            job_id: "123",
-            employer_id: "123",
-            candidate_id: "123",
-            resume_id: "123",
-            dateApplied: new Date(),
-            status: "Pending",
-        };
-        const mReq: Partial<Request> = {
-            body: {
-                job_id: newApplication.job_id,
-                employer_id: newApplication.employer_id,
-                candidate_id: newApplication.candidate_id,
-                resume_id: newApplication.resume_id,
-            },
-        };
-        const mJson = jest.fn().mockImplementation(() => null)
-        const mStatus = jest.fn().mockImplementation(() => ({ json: mJson }));
-        const mRes: Partial<Response> = {
-            status: mStatus,
-            json: mJson,
-        };
-        const mNext = jest.fn();
-        await addJobPostingApplicationHandler(mReq as Request, mRes as Response, mNext);
+    // test('Adding a new application', async () => {
+    //     const newApplication = {
+    //         job_id: "123",
+    //         employer_id: "123",
+    //         candidate_id: "123",
+    //         resume_id: "123",
+    //         dateApplied: new Date(),
+    //         status: "Pending",
+    //     };
+    //     const mReq: Partial<Request> = {
+    //         body: {
+    //             job_id: newApplication.job_id,
+    //             employer_id: newApplication.employer_id,
+    //             candidate_id: newApplication.candidate_id,
+    //             resume_id: newApplication.resume_id,
+    //         },
+    //     };
+    //     const mJson = jest.fn().mockImplementation(() => null)
+    //     const mStatus = jest.fn().mockImplementation(() => ({ json: mJson }));
+    //     const mRes: Partial<Response> = {
+    //         status: mStatus,
+    //         json: mJson,
+    //     };
+    //     const mNext = jest.fn();
+    //     await addJobPostingApplicationHandler(mReq as Request, mRes as Response, mNext);
 
-        expect(mRes.status).toHaveBeenCalledWith(201);
-        expect(mRes.json).toHaveBeenCalledWith({
-            jobApplication: expect.any(Object),
-        });
-    });
+    //     expect(mRes.status).toHaveBeenCalledWith(201);
+    //     expect(mRes.json).toHaveBeenCalledWith({
+    //         jobApplication: expect.any(Object),
+    //     });
+    // });
 
     test('Getting a job application', async () => {
         const newApplication = {

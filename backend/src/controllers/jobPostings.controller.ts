@@ -136,7 +136,7 @@ export const getJobPostingApplicationsHandler = catchErrors(async (req: Request,
 
     const id = req.params.id;
     const application = await getJobPostingApplications(id);
-    res.status(OK).json(application);
+    res.status(OK).json(application.toObject());
 })
 
 export const getJobPostingApplicationsQueryHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
