@@ -4,6 +4,7 @@
 |---------|-------------|----------------|--------------------------|
 | 1.0     |Feb 23, 2025 | Colin McDonell | Create initial test plan |
 | 1.1     |Feb 27, 2025 | Sukhmeet Singh Hora | Added unit tests for Signup, Login, Logout, Reset password, Verify Code and View Applicants |
+| 1.2     |Feb 28, 2025 | Colin McDonell | Documented all unit and acceptance tests for sprint 2 |
 
 ## 1 Introduction
 ### 1.1 Scope
@@ -13,12 +14,12 @@ tested
 ### 1.2 Roles and Responsibilities
 | Name                | Email                   | Github Username | Role |
 |---------------------|-------------------------|-----------------|------|
-| Sudip Dip           | dips@myumanitoba.ca     | sudipta2621     |      |
-| Bryce Erichsen      | erichseb@myumanitoba.ca | Bry-er          |      |
-| Ethan Lapkin        | lapkine@myumanitoba.ca  | EthanLapkin     |      |
-| AJ Manique          | manigqua@myumanitoba.ca | ThreshvsGaming  |      |
-| Colin McDonell      | mcdonelc@myumanitoba.ca | ColinMcD6       |      |
-| Sukhmeet Singh Hora | horass@myumanitoba.ca   | sukhmeet468     |      |
+| Sudip Dip           | dips@myumanitoba.ca     | sudipta2621     | Developers     |
+| Bryce Erichsen      | erichseb@myumanitoba.ca | Bry-er          | Developers     |
+| Ethan Lapkin        | lapkine@myumanitoba.ca  | EthanLapkin     | Developers     |
+| AJ Manique          | manigqua@myumanitoba.ca | ThreshvsGaming  | Developers     |
+| Colin McDonell      | mcdonelc@myumanitoba.ca | ColinMcD6       | Test Manager     |
+| Sukhmeet Singh Hora | horass@myumanitoba.ca   | sukhmeet468     | Developers     |
 
 ## 2 Test Methodology 
 
@@ -42,7 +43,47 @@ Below are the core features and how we plan to test them. More details will be a
 Will be implemented in Sprint 3
 
 ##### Acceptance Tests
-- Placeholder
+1. Successful Account Creation
+    - A new user fills in their name, email, password, and selects "Candidate" or "Employer."   
+    - After clicking "Sign Up," they are redirected to a dashboard matching their role (e.g., Employers see "Post Job," Candidates see "Apply for Jobs").   
+
+2. Duplicate Account Prevention   
+    - A user tries to sign up with an email already registered.   
+    - They see an error: "Account already exists!"   
+
+3. Password Strength Feedback 
+    - A user enters a password with less than 8 characters while signing up 
+    - They see: "Password must be at least 8 characters"   
+
+4. Login Success 
+    - A user enters their email and password.   
+    - They are redirected to their role-specific dashboard (e.g., Employer Dashboard).   
+
+5. Login Error Handling 
+    - A user enters an incorrect password or invalid email.   
+    - They see: "Invalid email or password"   
+
+6. Session Persistence 
+    - After closing and reopening the browser, the user remains logged in.   
+
+7. Reset Password via Email   
+    - A user clicks "Forgot Password," enters their email, and receives a reset link. 
+    - Clicking the link lets them set a new password.   
+
+8. Expired Reset Link 
+    - A user tries to use a password reset link after 60 minutes.   
+    - They see: "Invalid or expired reset link" 
+
+9. New Password Validation   
+    - After resetting their password, the user should see “Password Reset Successful” 
+    - The user can log in with the new password.   
+
+10. Logout Functionality  
+    - After clicking "Logout," the user is redirected to the login page.   
+    - The user sees “Logout Successful”   
+
+11. Security 
+    - After logging out, a user cannot access `/dashboard` without logging in again.  
 
 #### 2. Employer Portal
 ##### Unit Tests
@@ -51,18 +92,37 @@ Will be implemented in Sprint 3
 3. Update company details section of employer profile and test whether change is reflected in the database
 4. Update company details section of employer profile with an integer and test whether integer is converted to string and update is reflected in the database
 5. Update company details section of employer profile with array and test whether mongoose validation error is thrown
-6. Retreive employer information based on UserID
-7. Retreiving employer information with UserID that does not exist throws an error
+6. Retrieve employer information based on UserID
+7. Retrieving employer information with UserID that does not exist throws an error
 8. Should return applications with usernames for specific employer ID and job ID: Ensures that job applications for a given employer and job ID are retrieved, including candidate usernames.
 9. Should return applications with usernames for another specific employer ID and job ID: Verifies that job applications for a different employer and job ID are correctly fetched with candidate usernames.
 10. Should handle no applications: Confirms that the function correctly handles cases where no applications exist, returning an empty list.
-
+11. Create a job posting meeting all the field criteria and test whether the job posting is created in the database
+12. Create a job posting with a title that is too short and test whether an error is thrown and the job is not created in the database
+13. Create a job posting with description that is too short and test whether an error is thrown and the job is not created in the database
+14. Create a job posting with an invalid compensation type and test whether an error is thrown and the job is not created in the database
 
 ##### Integration Tests
 Will be implemented in Sprint 3
 
 ##### Acceptance Tests
-- Placeholder
+1. Employer View
+    - A user can see “Edit Profile” option as an employer 
+    - Employers see "Post Job" and "View Applicants" but no "Apply" button. 
+
+2. Employer Profile Update 
+    - An Employer updates their company’s location to "New York."   
+    - The change is reflected on their company profile page.   
+
+3. Post a New Job 
+    - An Employer fills out a job form (title: "Frontend Developer," location: "Remote").   
+    - The job appears in the public "Job Listings" page.   
+
+4. Track Applicants 
+    - An Employer can see a list of Candidates who applied, with usernames below the specific job posting.   
+
+5. Form Validation 
+    - A user tries to submit a job form, and then on submit they can see the validation errors. 
 
 #### 3. Candidate Portal
 ##### Unit Tests
@@ -87,7 +147,28 @@ Will be implemented in Sprint 3
 Will be implemented in Sprint 3
 
 ##### Acceptance Tests
-- Placeholder
+1. Candidate View  
+    - A user can see “Edit Profile” option as a candidate 
+    - Candidates see "Apply for Jobs" but no "Create Job" button.  
+
+2. Update Profile Details 
+    - A Candidate adds their "Software Engineering" skills and saves the profile.   
+
+3. Resume Upload Success   
+    - A Candidate uploads a PDF resume. 
+
+4. Invalid Resume Handling   
+    - File must be PDF/DOCX. 
+
+5. View Job Details
+    - A Candidate clicks on a job titled "Frontend Developer."   
+    - They see the full description, salary, and location.   
+
+6. Apply for a Job 
+    - A Candidate clicks "Apply" on a job, uploads their resume, and submits. The apply button changes to applied. 
+
+7. View Application Status 
+    - A Candidate checks "My Applications" and sees their status: "Pending," "Accepted". 
 
 ### Non-functional Feature
 - Implemented in later sprint (For load testing, when design the load, make sure at least twos request associated with
@@ -116,3 +197,4 @@ Tests will be run in the following environments:
 - Github Actions
 
 ## 4 Terms/Acronyms
+API - Application Program Interface
