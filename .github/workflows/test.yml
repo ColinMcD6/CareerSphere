@@ -3,7 +3,7 @@ name: Run Jest Tests
 on: 
   push:
     branches:
-      - portal-tests
+      - add-job-posting-tests
 
 jobs:
   test:

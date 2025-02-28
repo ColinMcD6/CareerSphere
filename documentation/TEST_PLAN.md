@@ -44,8 +44,8 @@ Will be implemented in Sprint 3
 3. Update company details section of employer profile and test whether change is reflected in the database
 4. Update company details section of employer profile with an integer and test whether integer is converted to string and update is reflected in the database
 5. Update company details section of employer profile with array and test whether mongoose validation error is thrown
-6. Retreive employer information based on UserID
-7. Retreiving employer information with UserID that does not exist throws an error
+6. Retrieve employer information based on UserID
+7. Retrieving employer information with UserID that does not exist throws an error
 
 ##### Integration Tests
 Will be implemented in Sprint 3
