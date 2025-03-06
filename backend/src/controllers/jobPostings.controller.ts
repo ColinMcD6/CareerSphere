@@ -12,36 +12,8 @@ import {
     getJobPostingApplicationsQuery
 } from "../services/jobPostings.services";
 import { CREATED, OK } from "../constants/http";
-import {v4 as uuidv4} from 'uuid';
-
-
-
-const MIN_TITLE_LENGTH = 10;
-const MAX_TITLE_LENGTH = 150; 
-
-const MAX_DESCRIPTION_LENGTH = 20000;
-const MIN_DESCRIPTION_LENGTH = 50;
-
-const MAX_POSITION_LENGTH = 100;
-const MIN_POSITION_LENGTH = 5;
-
-const jobPostingsZModel = z.object({
-    title: z.string().min(MIN_TITLE_LENGTH, `Title length must be a minimum of ${MIN_TITLE_LENGTH} characters long`).max(MAX_TITLE_LENGTH, `Title length can be a maximum of ${MAX_TITLE_LENGTH} characters long`),
-    positionTitle: z.string().min(MIN_POSITION_LENGTH, `Position Title must have a minimum of ${MIN_POSITION_LENGTH} characters`).max(MAX_DESCRIPTION_LENGTH, `Position Title can have a maximum of ${MAX_POSITION_LENGTH} characters` ),
-    description: z.string().min(MIN_DESCRIPTION_LENGTH, `Description must have a minimum of ${MIN_DESCRIPTION_LENGTH} characters`).max(MAX_DESCRIPTION_LENGTH, `Description can have a maximum of ${MAX_DESCRIPTION_LENGTH} characters` ),
-    employer: z.string().min(1).max(225),
-    employer_id: z.string().min(1).max(225),
-    location: z.string().min(1, "Location must have at least 1 character").max(225),
-    compensationType: z.enum(['do-not-disclose', 'hourly', 'salary']),
-    salary: z.number().min(0, "Salary value must be greater than 0"),
-    experience: z.array(z.string()), 
-    skills: z.array(z.string()),
-    education: z.array(z.string()),
-    status: z.string().min(1).max(225), // Change to open/close later
-    startingDate: z.string(), // I am not sure what to do about this right now, but this should be a date
-    jobType: z.enum(['Full-time', 'Part-time', 'Temporary', 'Internship'])
-})
-
+import JobPostingValidation from "../common/JobPostingValidation"
+  
 const jobApplicationModel = z.object({
     job_id: z.string().min(1).max(225),
     employer_id: z.string().min(1).max(225),
@@ -68,9 +40,11 @@ export const addJobPostingHandler = catchErrors(async (req: Request, res: Respon
         skills: req.body.skills,
         education: req.body.education,
         status: req.body.status,
-        startingDate: req.body.startingDate
+        dueDate: req.body.dueDate,
+        startDate: req.body.startDate
     }
-    const request = jobPostingsZModel.parse(job);
+
+    const request = JobPostingValidation.parse(job);
     const user = await createJobPosting(request);
     res.status(CREATED).json(request);
 });
@@ -159,4 +133,3 @@ export const getJobPostingApplicationsQueryHandler = catchErrors(async (req: Req
         res.status(OK).json(applications);
     
 })
-
