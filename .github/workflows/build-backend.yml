@@ -11,8 +11,8 @@ env:
   FRONTEND_PORT: 80
   MONGODB_USER: ${{ secrets.MONGODB_USER }}
   MONGODB_PASS: ${{ secrets.MONGODB_PASS }}
-  JWT_SECRET_VALUE: ${{ secrets.JWT_SECRET_VALUE }}
-  JWTREFRESH_SECRET_VALUE: ${{ secrets.JWTREFRESH_SECRET_VALUE}}
+  JWT_SECRET_VALUE: ${{ secrets.JWT_SECRET }}
+  JWTREFRESH_SECRET_VALUE: ${{ secrets.JWTREFRESH_SECRET}}
   RESEND_API_KEY_VALUE: ${{ secrets.RESEND_API_KEY }}
   GKE_CLUSTER: autopilot-cluster-careersphere--1
   GKE_REGION: us-central1
