@@ -23,7 +23,7 @@ spec:
         - name: NODE_ENV
           value: development
         - name: PORT
-          value: 0000
+          value: "0000"
         - name: JWT_SECRET
           value: JWT_SECRET_VALUE
         - name: JWTREFRESH_SECRET
