@@ -34,6 +34,8 @@ spec:
           value: bb
         - name: RESEND_API_KEY
           value: RESEND_API_KEY_VALUE
+        - name: APP_ORIGIN
+          value: http://backend-service.default.svc.cluster.local:BACKEND_PORT
 ---
 apiVersion: v1
 kind: Service
