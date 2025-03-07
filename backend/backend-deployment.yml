@@ -21,7 +21,7 @@ spec:
         - name: MONGO_URI
           value: "mongodb+srv://MONGODB_USER:MONGODB_PASS@careersphere.ldhzb.mongodb.net/?retryWrites=true&w=majority&appName=CareerSphere"
         - name: NODE_ENV
-          value: development
+          value: production
         - name: PORT
           value: "0000"
         - name: JWT_SECRET
