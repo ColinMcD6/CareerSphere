@@ -9,7 +9,6 @@ import {
 } from "../lib/api";
 import useUser from "../hooks/user";
 import { Navigate } from "react-router-dom";
-import { DiJava } from "react-icons/di";
 
 const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();
