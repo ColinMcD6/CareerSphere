@@ -328,6 +328,7 @@ const CreateJobPost: React.FC = () => {
               <label className="form-label">Location:</label>
               <input
                 type="text"
+                style={{ textAlign: "center" }}
                 className={`form-control ${getErrorForField("location") === undefined ? "" : "is-invalid"
                   }`}
                 value={formData.location}
