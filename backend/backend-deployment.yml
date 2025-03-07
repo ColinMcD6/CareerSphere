@@ -20,6 +20,20 @@ spec:
         env:
         - name: MONGO_URI
           value: "mongodb+srv://MONGODB_USER:MONGODB_PASS@careersphere.ldhzb.mongodb.net/?retryWrites=true&w=majority&appName=CareerSphere"
+        - name: NODE_ENV
+          value: development
+        - name: PORT
+          value: 0000
+        - name: JWT_SECRET
+          value: JWT_SECRET_VALUE
+        - name: JWTREFRESH_SECRET
+          value: JWTREFRESH_SECRET_VALUE
+        - name: SENDER_EMAIL
+          value: aa
+        - name: API_RESEND
+          value: bb
+        - name: RESEND_API_KEY
+          value: RESEND_API_KEY_VALUE
 ---
 apiVersion: v1
 kind: Service

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: us-central1-docker.pkg.dev/GOOGLE_PROJECT/docker-career-sphere/backend:latest
+        image: us-central1-docker.pkg.dev/GOOGLE_PROJECT/docker-career-sphere/frontend:latest
         ports:
         - containerPort: FRONTEND_PORT
 ---
