@@ -9,7 +9,6 @@ import {
 } from "../lib/api";
 import useUser from "../hooks/user";
 import { Navigate } from "react-router-dom";
-import { DiJava } from "react-icons/di";
 
 const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();
@@ -171,141 +170,143 @@ const ViewJobPosting = () => {
     return <div>Loading...</div>;
   }
   return (
-    <div className="container mt-5">
-      <div className="card mb-4 shadow">
-        <h2 className="card-header bg-primary text-white">{data.title}</h2>
-        <div className="card-body">
-          <h5 className="card-subtitle mb-3 text-muted">
-            Job Position: {data.positionTitle}
-          </h5>
-          <div className="card mb-3">
-            <div className="card-body">
-              <h5 className="card-title">Description</h5>
-              <p className="card-text">{data.description}</p>
+    <div className="mt-5 pt-1">
+      <div className="container mt-5">
+        <div className="card mb-4 shadow">
+          <h2 className="card-header bg-primary text-white">{data.title}</h2>
+          <div className="card-body">
+            <h5 className="card-subtitle mb-3 text-muted">
+              Job Position: {data.positionTitle}
+            </h5>
+            <div className="card mb-3">
+              <div className="card-body">
+                <h5 className="card-title">Description</h5>
+                <p className="card-text">{data.description}</p>
+              </div>
             </div>
-          </div>
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <p className="card-text">
-                <strong>Location:</strong> {data.location}
-              </p>
-              <p className="card-text">
-                <strong>Compensation Type:</strong> {data.compensationType}
-              </p>
-              {data.compensationType !== "do-not-disclose" && (
+            <div className="row mb-3">
+              <div className="col-md-6">
                 <p className="card-text">
-                  <strong>Salary:</strong> ${data.salary}
+                  <strong>Location:</strong> {data.location}
                 </p>
-              )}
-              <p className="card-text">
-                <strong>Job Type:</strong> {data.jobType}
-              </p>
+                <p className="card-text">
+                  <strong>Compensation Type:</strong> {data.compensationType}
+                </p>
+                {data.compensationType !== "do-not-disclose" && (
+                  <p className="card-text">
+                    <strong>Salary:</strong> ${data.salary}
+                  </p>
+                )}
+                <p className="card-text">
+                  <strong>Job Type:</strong> {data.jobType}
+                </p>
+              </div>
+              <div className="col-md-6">
+                <p className="card-text">
+                  <strong>Status:</strong> {data.status}
+                </p>
+                <p className="card-text">
+                  <strong>Date Posted:</strong>{" "}
+                  {new Date(data.datePosted).toLocaleDateString()}
+                </p>
+                <p className="card-text">
+                  <strong>Deadline:</strong>{" "}
+                  {new Date(data.deadline).toLocaleDateString()}
+                </p>
+              </div>
             </div>
-            <div className="col-md-6">
-              <p className="card-text">
-                <strong>Status:</strong> {data.status}
-              </p>
-              <p className="card-text">
-                <strong>Date Posted:</strong>{" "}
-                {new Date(data.datePosted).toLocaleDateString()}
-              </p>
-              <p className="card-text">
-                <strong>Deadline:</strong>{" "}
-                {new Date(data.deadline).toLocaleDateString()}
-              </p>
+            <div className="mb-3 d-none">
+              <h6>Experience:</h6>
+              <ul className="list-group">
+                {data.experience.map((exp, index) => (
+                  <li key={index} className="list-group-item">
+                    {exp}
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
-          <div className="mb-3 d-none">
-            <h6>Experience:</h6>
-            <ul className="list-group">
-              {data.experience.map((exp, index) => (
-                <li key={index} className="list-group-item">
-                  {exp}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="mb-3">
-            <h6>Skills:</h6>
-            <ul className="list-group">
-              {data.skills.map((skill, index) => (
-                <li key={index} className="list-group-item">
-                  {skill}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="mb-3">
-            <h6>Education:</h6>
-            <ul className="list-group">
-              {data.education.map((edu, index) => (
-                <li key={index} className="list-group-item">
-                  {edu}
-                </li>
-              ))}
-            </ul>
-          </div>
-          {user.userRole === "Candidate" && (
-            <div>
-              <button
-                className="btn btn-primary"
-                onClick={() => setShowModal(true)}
-                disabled={isApplied} // Disable the button if already applied
-              >
-                {isApplied ? "Applied" : "Apply"} {/* Change text */}
-              </button>
+            <div className="mb-3">
+              <h6>Skills:</h6>
+              <ul className="list-group">
+                {data.skills.map((skill, index) => (
+                  <li key={index} className="list-group-item">
+                    {skill}
+                  </li>
+                ))}
+              </ul>
             </div>
-          )}
-          <FormModalPopupComponent
-            show={showModal}
-            handleClose={() => setShowModal(false)}
-            handleSubmit={submitHandler}
-            title="Application Submitted"
-            body="Fill out the following "
-            submitText="Submit"
-          >
-            <div className="form-group">
-              <label htmlFor="resume">Resume</label>
-              <input
-                type="file"
-                className="form-control"
-                id="resume"
-                name="resume"
-                accept=".pdf , .docx"
-                required
-              />
+            <div className="mb-3">
+              <h6>Education:</h6>
+              <ul className="list-group">
+                {data.education.map((edu, index) => (
+                  <li key={index} className="list-group-item">
+                    {edu}
+                  </li>
+                ))}
+              </ul>
             </div>
-          </FormModalPopupComponent>
+            {user.userRole === "Candidate" && (
+              <div>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setShowModal(true)}
+                  disabled={isApplied} // Disable the button if already applied
+                >
+                  {isApplied ? "Applied" : "Apply"} {/* Change text */}
+                </button>
+              </div>
+            )}
+            <FormModalPopupComponent
+              show={showModal}
+              handleClose={() => setShowModal(false)}
+              handleSubmit={submitHandler}
+              title="Application Submitted"
+              body="Fill out the following "
+              submitText="Submit"
+            >
+              <div className="form-group">
+                <label htmlFor="resume">Resume</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  id="resume"
+                  name="resume"
+                  accept=".pdf , .docx"
+                  required
+                />
+              </div>
+            </FormModalPopupComponent>
+          </div>
         </div>
+        {user?.userRole == "Employer" && (
+          <div className="container mt-4">
+            <h2 className="mb-4">Applications</h2>
+            <p className="text-muted mt-4">
+              You have <strong>{appliedApplications?.length}</strong> Applications
+              to this job post!
+            </p>
+            <ul className="list-group">
+              {appliedApplications?.map((application, index) => (
+                <li key={index} className="list-group-item">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h5 className="mb-1">
+                        User : <strong>{application.username}</strong>
+                      </h5>
+                    </div>
+                    <div>
+                    {"Status:  "}  
+                    <span className={`badge bg-success`} >
+                      Open
+                    </span>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
-      {user?.userRole == "Employer" && (
-        <div className="container mt-4">
-          <h2 className="mb-4">Applications</h2>
-          <p className="text-muted mt-4">
-            You have <strong>{appliedApplications?.length}</strong> Applications
-            to this job post!
-          </p>
-          <ul className="list-group">
-            {appliedApplications?.map((application, index) => (
-              <li key={index} className="list-group-item">
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <h5 className="mb-1">
-                      User : <strong>{application.username}</strong>
-                    </h5>
-                  </div>
-                  <div>
-                   {"Status:  "}  
-                  <span className={`badge bg-success`} >
-                    Open
-                  </span>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 };

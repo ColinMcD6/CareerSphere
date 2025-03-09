@@ -63,7 +63,7 @@ const ViewAllJobs: React.FC = () => {
   }
 
   return (
-    <div className="mt-5">
+    <div className="mt-5 pt-1">
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1>{user.userRole === "Employer" ? "My Job Postings" : "All Job Postings"}</h1>
