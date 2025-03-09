@@ -1,9 +1,9 @@
 name: Build Backend
 
 on:
-  push:
-    branches:
-    - 'deployment'
+  # push:
+  #   branches:
+  #   - 'deployment'
 
 env:
   GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
