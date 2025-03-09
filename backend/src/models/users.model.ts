@@ -12,6 +12,8 @@ export interface UserDocument extends mongoose.Document {
     experience?: string[];
     hiringDetails?: string[];
     companyDetails?: string;
+    phoneNumber?: string;
+    userlink?: string;
     createdAt: Date;
     updatedAt: Date;
     checkPassword(val: string): Promise<boolean>;
@@ -29,6 +31,26 @@ const userSchema = new mongoose.Schema<UserDocument>(
             required: true,
             enum: ["Employer", "Candidate"],
             default: "Candidate",
+        },
+        phoneNumber: {
+            type: String,
+            default: undefined,
+            validate: {
+                validator: function (val: string) {
+                    return /^[\d+\-() ]{7,15}$/.test(val); // Basic phone validation
+                },
+                message: "Invalid phone number format.",
+            },
+        },
+        userlink: {
+            type: String,
+            default: undefined,
+            validate: {
+                validator: function (val: string) {
+                    return /^(https?:\/\/)?([\w\d\-_]+\.+[A-Za-z]{2,})\/?.*/.test(val);
+                },
+                message: "Invalid URL format.",
+            },
         },
         experience: {
             type: [String],

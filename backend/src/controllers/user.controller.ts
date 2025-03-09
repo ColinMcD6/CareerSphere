@@ -14,11 +14,14 @@ export const getUserHandler = catchErrors(
 
 export const updateUserDetails = catchErrors(
     async (req: Request, res: Response, next: NextFunction) => {
-        const { education, skills, experience, hiringDetails, companyDetails } = req.body;
+        const { education, skills, experience, hiringDetails, companyDetails, phoneNumber, userlink } = req.body;
 
         // Find user by ID
         const user = await UserModel.findById(req.userId);
         appAssert(user, NOT_FOUND, "User account does not exist!");
+
+        if(phoneNumber) user.phoneNumber = phoneNumber;
+        if(userlink) user.userlink = userlink;
 
         // Check user role
         if (user.userRole === "Candidate") {
