@@ -111,7 +111,7 @@ const SignUp = () => {
               <div className="d-flex gap-3">
                 <Form.Check
                   type="radio"
-                  label="Candidate (default)"
+                  label="Candidate"
                   name="roleRadio"
                   checked={candidate}
                   onChange={() => setCandidate(true)}
