@@ -29,8 +29,8 @@ jobs:
 
       - name: Build and Push Frontend Image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/careersphere/frontend:latest ./frontend
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/careersphere/frontend:latest
+          docker build -t colinmcd6/careersphere/frontend:latest ./frontend
+          docker push colinmcd6/careersphere/frontend:latest
 
       - name: Build and Push Backend Image
         run: |
