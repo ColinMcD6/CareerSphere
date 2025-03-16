@@ -6,107 +6,24 @@ import { useNavigate } from "react-router-dom"; // Add useNavigate for redirecti
 import { createJobPosting } from "../lib/api";
 import useUser from "../hooks/user";
 import { Navigate } from "react-router-dom";
-import JobPostingValidation from "../../../backend/src/common/JobPostingValidation"
-
-interface JobPostingInterface {
-  title: string;
-  positionTitle: string;
-  description: string;
-  startDate?: string;
-  dueDate?: string;
-  startDateEnabled: boolean; // Only for react front end, not used by back end
-  dueDateEnabled: boolean; // Only for react front end, not used by back end
-  location: string;
-  deadline: string;
-  salary: number;
-  startingDate: string;
-  status: string;
-  skills: [];
-  education: [];
-  experience: [],
-  compensationType: "salary" | "hourly" | "do-not-disclose";
-  jobType: string;
-
-}
 
 const CreateJobPost: React.FC = () => {
-
+  const [postingTitle, setPostingTitle] = useState<string>("");
+  const [positionTitle, setPositionTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [dueDate, setDueDate] = useState<string>();
+  const [location, setLocation] = useState<string>("");
+  const [skills, setSkills] = useState<string>("");
+  const [education, setEducation] = useState<string>("");
+  const [compensationType, setCompensationType] = useState<
+    "salary" | "hourly" | "do-not-disclose"
+  >("do-not-disclose");
+  const [compensationAmount, setCompensationAmount] = useState<number>(0);
+  const [jobType, setJobType] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false); // Track submission state
   const navigate = useNavigate(); // For redirection
   const { user, isLoading } = useUser();
-
-  // Feed back errors, allowing user to know what information is invalid
-  const [errors, setErrors] = useState<{ field: string; message: string }[]>([]
-  );
-
-  const [formData, setFormData] = useState<JobPostingInterface>({
-    title: "",
-    positionTitle: "",
-    description: "",
-    startDate: "",
-    startDateEnabled: false,  
-    dueDate: "",
-    dueDateEnabled: false, 
-    location: "",
-    deadline: "",
-    salary: 0,
-    startingDate: "",
-    status: "Open",
-    experience: [],
-    skills: [],
-    education: [],
-    compensationType: "do-not-disclose",
-    jobType: "",
-  });
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = event.target;
-    const castType = event.currentTarget.getAttribute('data-cast-type') || 'string';
-
-    setFormData((prev) => {
-      let newFormData = undefined;
-      if (castType === "array")
-        newFormData = { ...prev, [name]: value.split(",") };
-      else if (castType === "number")
-        newFormData = { ...prev, [name]: Number(value) };
-      else if (castType === "check") {
-        const isCheckbox = type === "checkbox";
-        const checked = isCheckbox ? (event.target as HTMLInputElement).checked : undefined;
-        newFormData = { ...prev, [name]: Boolean(checked) };
-      }
-      else
-        newFormData = { ...prev, [name]: value };
-
-      errorCheckAfterChange(name, newFormData); // Pass the newFormData to errorCheckAfterChange
-      return newFormData;
-    });
-  };
-
-  const errorCheckAfterChange = (target: string, formData: any) => {
-    const result = JobPostingValidation.safeParse(transformData(formData));
-    let targetError = undefined;
-    if (!result.success) {
-      targetError = result.error.errors.find((error) => error.path[0] === target);
-    }
-
-    let filteredErrors = errors.filter((error) => error.field !== target);
-    // If targetError is defined, add it to the errors array
-    if (targetError) {
-      filteredErrors = [...filteredErrors, { field: target, message: targetError.message }];
-    }
-    setErrors(filteredErrors);
-  }
-
-  const transformData = (formData: JobPostingInterface) => {
-    const transformedData = { ...formData };
-    if (!transformedData.startDateEnabled)
-      transformedData.startDate = undefined;
-
-    if (!transformedData.dueDateEnabled)
-      transformedData.dueDate = undefined;
-
-    return transformedData
-  }
 
   // If the user is not logged in, redirect them away from this page
   useEffect(() => {
@@ -115,7 +32,10 @@ const CreateJobPost: React.FC = () => {
     }
   }, [user, isLoading]);
 
-
+  // Feed back errors, allowing user to know what information is invalid
+  const [errors, setErrors] = useState<{ field: string; message: string }[]>(
+    []
+  );
   // Get the Errors
   const getErrorForField = (field: string) => {
     return errors.find((err) => err.field === field)?.message;
@@ -127,16 +47,33 @@ const CreateJobPost: React.FC = () => {
   };
 
   // Submit job post button clicked
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => 
+  {
     e.preventDefault();
     setIsSubmitting(true); // Disable inputs and buttons
+
+    const formData = {
+      title: postingTitle,
+      positionTitle: positionTitle,
+      compensationType: compensationType,
+      salary: compensationAmount,
+      description: description,
+      location: location,
+      experience: [],
+      skills: skills.split(","),
+      education: education.split(","),
+      deadline: dueDate,
+      startingDate: startDate,
+      status: "Open",
+      jobType: jobType,
+    };
 
     console.log(`Sending a create job post request to ${BACK_END_URL}/job/add`);
 
     try {
 
       setIsSubmitting(true); // Disable inputs and buttons
-      await createJobPosting(transformData({ ...formData }));
+      await createJobPosting({ ...formData });
 
       // The job posting was successfully created - Let user know, then redirect to home page
       console.log("Job post successfully created and okay response received!");
@@ -160,8 +97,9 @@ const CreateJobPost: React.FC = () => {
         console.log("Received Validation error: ");
         console.log(error);
       } else {
-        console.log("Received an unknown error when trying to submit job posting");
-        console.log(error);
+        console.log(
+          "Received an unknown error when trying to submit job posting : " + error
+        );
       }
     }
   }; // End of function that handles submit button
@@ -187,11 +125,11 @@ const CreateJobPost: React.FC = () => {
               <label className="form-label">Title of Job Posting:</label>
               <input
                 type="text"
-                className={`form-control ${getErrorForField("title") === undefined ? "" : "is-invalid"
-                  }`}
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
+                className={`form-control ${
+                  getErrorForField("title") === undefined ? "" : "is-invalid"
+                }`}
+                value={postingTitle}
+                onChange={(e) => setPostingTitle(e.target.value)}
                 disabled={isSubmitting}
               />
               <div className="invalid-feedback">
@@ -202,13 +140,13 @@ const CreateJobPost: React.FC = () => {
               <label className="form-label">Job Position Title:</label>
               <input
                 type="text"
-                name="positionTitle"
-                className={`form-control ${getErrorForField("positionTitle") === undefined
-                  ? ""
-                  : "is-invalid"
-                  }`}
-                value={formData.positionTitle}
-                onChange={handleChange}
+                className={`form-control ${
+                  getErrorForField("positionTitle") === undefined
+                    ? ""
+                    : "is-invalid"
+                }`}
+                value={positionTitle}
+                onChange={(e) => setPositionTitle(e.target.value)}
                 disabled={isSubmitting}
               />
               <div className="invalid-feedback">
@@ -218,13 +156,13 @@ const CreateJobPost: React.FC = () => {
             <div className="mb-3">
               <label className="form-label">Job Description:</label>
               <textarea
-                className={`form-control ${getErrorForField("description") === undefined
-                  ? ""
-                  : "is-invalid"
-                  }`}
-                value={formData.description}
-                name="description"
-                onChange={handleChange}
+                className={`form-control ${
+                  getErrorForField("description") === undefined
+                    ? ""
+                    : "is-invalid"
+                }`}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 disabled={isSubmitting}
               />
               <div className="invalid-feedback">
@@ -233,64 +171,39 @@ const CreateJobPost: React.FC = () => {
             </div>
 
             <div className="mb-3">
-              <input
-                type="checkbox"
-                className="form-check-input me-2"
-                id="startDateEnabled"
-                name="startDateEnabled"
-                checked={formData.startDateEnabled}
-                data-cast-type="check"
-                onChange={handleChange}
-                disabled={isSubmitting}
-              />
-              <label className={`form-label`}>Starting Date For Job:</label>
+              <label className="form-label">Starting Date For Job:</label>
               <input
                 type="date"
                 style={{ textAlign: "center" }}
-                className={`form-control justify-content-center ${getErrorForField("startDate") === undefined || !formData.startDateEnabled ? "" : "is-invalid"}`}
-                name="startDate"
-                value={formData.startDate}
-                onChange={handleChange}
-                disabled={isSubmitting || !formData.startDateEnabled}
+                className="form-control justify-content-center"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                disabled={isSubmitting}
               />
-              <div className="invalid-feedback">
-                {getErrorForField("startDate")}
-              </div>
             </div>
 
             <div className="mb-3">
-              <input
-                type="checkbox"
-                className="form-check-input me-2"
-                id="dueDateEnabled"
-                name="dueDateEnabled"
-                checked={formData.dueDateEnabled}
-                data-cast-type="check"
-                onChange={handleChange}
-                disabled={isSubmitting}
-              />
               <label className="form-label">Due Date for Applying:</label>
               <input
                 style={{ textAlign: "center" }}
                 type="date"
-                name="dueDate"
-                value={formData.dueDate}
-                onChange={handleChange}
-                className={`form-control ${getErrorForField("dueDate") === undefined || !formData.dueDateEnabled ? "" : "is-invalid"}`}
-                disabled={isSubmitting || !formData.dueDateEnabled}
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                className={`form-control  ${true ? "" : "is-invalid"}`}
+                disabled={isSubmitting}
               />
-              <div className="invalid-feedback">
-                {getErrorForField("dueDate")}
-              </div>
             </div>
             <div className="mt-3 p-3 border rounded bg-light">
               <div className="mb-3">
                 <label className="form-label">Compensation Type:</label>
                 <select
                   className={`form-select ${true ? "" : "is-invalid"}`}
-                  name="compensationType"
-                  value={formData.compensationType}
-                  onChange={handleChange}
+                  value={compensationType}
+                  onChange={(e) => {
+                    setCompensationType(
+                      e.target.value as "salary" | "hourly" | "do-not-disclose"
+                    );
+                  }}
                   disabled={isSubmitting}
                   style={{ textAlign: "center" }}
                 >
@@ -300,21 +213,22 @@ const CreateJobPost: React.FC = () => {
                 </select>
               </div>
 
-              {formData.compensationType !== "do-not-disclose" && (
+              {compensationType !== "do-not-disclose" && (
                 <div className="mb-3">
                   <label className="form-label">
-                    {formData.compensationType === "salary" ? "Salary" : "Hourly Wage"}:
+                    {compensationType === "salary" ? "Salary" : "Hourly Wage"}:
                   </label>
                   <input
                     type="number"
-                    className={`form-control ${getErrorForField("salary") === undefined
-                      ? ""
-                      : "is-invalid"
-                      }`}
-                    value={formData.salary == 0 ? "" : formData.salary}
-                    name="salary"
-                    data-cast-type="number"
-                    onChange={handleChange}
+                    className={`form-control ${
+                      getErrorForField("salary") === undefined
+                        ? ""
+                        : "is-invalid"
+                    }`}
+                    value={compensationAmount == 0 ? "" : compensationAmount}
+                    onChange={(e) =>
+                      setCompensationAmount(Number(e.target.value))
+                    }
                     disabled={isSubmitting}
                   />
                   <div className="invalid-feedback">
@@ -328,12 +242,11 @@ const CreateJobPost: React.FC = () => {
               <label className="form-label">Location:</label>
               <input
                 type="text"
-                style={{ textAlign: "center" }}
-                className={`form-control ${getErrorForField("location") === undefined ? "" : "is-invalid"
-                  }`}
-                value={formData.location}
-                name="location"
-                onChange={handleChange}
+                className={`form-control ${
+                  getErrorForField("location") === undefined ? "" : "is-invalid"
+                }`}
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
                 disabled={isSubmitting}
               />
               <div className="invalid-feedback">
@@ -345,10 +258,8 @@ const CreateJobPost: React.FC = () => {
               <label className="form-label">Skills (comma-separated):</label>
               <textarea
                 className="form-control"
-                name="skills"
-                value={formData.skills}
-                data-cast-type="array"
-                onChange={handleChange}
+                value={skills}
+                onChange={(e) => setSkills(e.target.value)}
                 disabled={isSubmitting}
               />
             </div>
@@ -356,17 +267,16 @@ const CreateJobPost: React.FC = () => {
               <label className="form-label">Education (comma-separated):</label>
               <textarea
                 className="form-control"
-                name="education"
-                value={formData.education}
-                data-cast-type="array"
-                onChange={handleChange}
+                value={education}
+                onChange={(e) => setEducation(e.target.value)}
                 disabled={isSubmitting}
               />
             </div>
             <div className="mb-3">
               <div
-                className={`d-flex justify-content-center align-items-center  ${getErrorForField("jobType") === undefined ? "" : "is-invalid"
-                  }`}
+                className={`d-flex justify-content-center align-items-center  ${
+                  getErrorForField("jobType") === undefined ? "" : "is-invalid"
+                }`}
               >
                 <div className={`form-label`}>
                   <label className={`form-label`}>
@@ -405,8 +315,8 @@ const CreateJobPost: React.FC = () => {
                           id={id}
                           name="jobType"
                           value={value}
-                          checked={formData.jobType === value}
-                          onChange={handleChange}
+                          checked={jobType === value}
+                          onChange={(e) => setJobType(e.target.value)}
                           disabled={isSubmitting}
                         />
                         <label className="form-check-label mb-0" htmlFor={id}>

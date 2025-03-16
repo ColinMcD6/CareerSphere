@@ -66,13 +66,9 @@ const ViewAllJobs: React.FC = () => {
     <div className="mt-5">
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
-      <div className="d-flex justify-content-center flex-grow-1">
-        <h1>
-          {user.userRole === "Employer" ? "My Job Postings" : "All Job Postings"}
-        </h1>
-        </div>
+        <h1>{user.userRole === "Employer" ? "My Job Postings" : "All Job Postings"}</h1>
         {user.userRole === "Employer" && (
-          <button className="btn btn-success me-5" onClick={createJobPosting}>
+          <button className="btn btn-success" onClick={createJobPosting}>
             <FaPlus/> Create
           </button>
         )}

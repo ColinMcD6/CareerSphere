@@ -38,9 +38,8 @@ const ViewJobPosting = () => {
     skills: string[];
     education: string[];
     compensationType: string;
-    datePosted: string;
-    startDate: string;
-    dueDate: string;
+    datePosted: Date;
+    deadline: Date;
     status: string;
   }
 
@@ -166,14 +165,6 @@ const ViewJobPosting = () => {
     );
   }
 
-  const DateToString = (time : string) =>
-  {
-    if ( time === "" || time === undefined)
-      return "Not listed"
-    else 
-      return time;
-  }
-
   // This needs to be below and separate from the isLoading div
   if (!data) {
     return <div>Loading...</div>;
@@ -215,15 +206,11 @@ const ViewJobPosting = () => {
               </p>
               <p className="card-text">
                 <strong>Date Posted:</strong>{" "}
-                {DateToString(data.datePosted)}
+                {new Date(data.datePosted).toLocaleDateString()}
               </p>
               <p className="card-text">
                 <strong>Deadline:</strong>{" "}
-                {DateToString(data.dueDate)}
-              </p>
-              <p className="card-text">
-                <strong>Starting Date For Job:</strong>{" "}
-                {DateToString(data.startDate)}
+                {new Date(data.deadline).toLocaleDateString()}
               </p>
             </div>
           </div>
