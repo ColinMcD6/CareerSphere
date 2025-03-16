@@ -38,8 +38,9 @@ const ViewJobPosting = () => {
     skills: string[];
     education: string[];
     compensationType: string;
-    datePosted: Date;
-    deadline: Date;
+    datePosted: string;
+    startDate: string;
+    dueDate: string;
     status: string;
   }
 
@@ -165,6 +166,14 @@ const ViewJobPosting = () => {
     );
   }
 
+  const DateToString = (time : string) =>
+  {
+    if ( time === "" || time === undefined)
+      return "Not listed"
+    else 
+      return time;
+  }
+
   // This needs to be below and separate from the isLoading div
   if (!data) {
     return <div>Loading...</div>;
@@ -215,15 +224,22 @@ const ViewJobPosting = () => {
                 </p>
               </div>
             </div>
-            <div className="mb-3 d-none">
-              <h6>Experience:</h6>
-              <ul className="list-group">
-                {data.experience.map((exp, index) => (
-                  <li key={index} className="list-group-item">
-                    {exp}
-                  </li>
-                ))}
-              </ul>
+            <div className="col-md-6">
+              <p className="card-text">
+                <strong>Status:</strong> {data.status}
+              </p>
+              <p className="card-text">
+                <strong>Date Posted:</strong>{" "}
+                {DateToString(data.datePosted)}
+              </p>
+              <p className="card-text">
+                <strong>Deadline:</strong>{" "}
+                {DateToString(data.dueDate)}
+              </p>
+              <p className="card-text">
+                <strong>Starting Date For Job:</strong>{" "}
+                {DateToString(data.startDate)}
+              </p>
             </div>
             <div className="mb-3">
               <h6>Skills:</h6>
