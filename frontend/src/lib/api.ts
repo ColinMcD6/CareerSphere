@@ -10,6 +10,8 @@ interface UserResponse {
   skills: string[];
   hiringDetails: string[];
   companyDetails: string;
+  phoneNumber: string;
+  userlink: string;
 }
 
 export const getUser = async (): Promise<UserResponse> =>
@@ -20,7 +22,9 @@ export const updateUser = async(data: {
   education: string[],
   skills: string[],
   hiringDetails: string[],
-  companyDetails: string
+  companyDetails: string,
+  phoneNumber: string,
+  userlink: string,
 }) => 
   API.put("/user/update", data);
 
