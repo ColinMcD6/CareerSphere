@@ -17,7 +17,8 @@ export interface JobPostingsDocument extends mongoose.Document {
     datePosted: Date,
     startingDate: string,
     deadline: Date,
-    status: string
+    status: string,
+    quizzes: string[];
 }
 
 const jobPostingsSchema = new mongoose.Schema<JobPostingsDocument>({
@@ -36,7 +37,8 @@ const jobPostingsSchema = new mongoose.Schema<JobPostingsDocument>({
     datePosted: { type: Date, default: Date.now }, //FIX DATES LATER
     startingDate: { type: String},
     deadline: {type: Date, required: false, default: Date.now},  //FIX DATES LATER
-    status: {type: String, enum: ["Open", "Close"] ,required: true} 
+    status: {type: String, enum: ["Open", "Close"] ,required: true} ,
+    quizzes: { type: [String], default: [] },
 })
 
 const JobPostingsModel = mongoose.model<JobPostingsDocument>("JobPostings", jobPostingsSchema);
