@@ -1,16 +1,16 @@
 import { Router } from "express";
-import { 
-    addJobPostingHandler,
-    getJobPostingHandler,
-    getAllJobPostingsHandler,
-    getAllJobPostingsQueryHandler,
+import {
     addJobPostingApplicationHandler,
+    addJobPostingHandler,
     deleteJobPostingApplicationHandler,
+    getAllJobPostingsQueryHandler,
     getJobPostingApplicationsHandler,
     getJobPostingApplicationsQueryHandler,
+    getJobPostingHandler,
+    getSavedJobPostingsHandler,
     saveJobPostingHandler,
     unsaveJobPostingHandler
- } from "../controllers/jobPostings.controller";
+} from "../controllers/jobPostings.controller";
 
 const jobPostingRoutes = Router();
 
@@ -24,6 +24,7 @@ jobPostingRoutes.post("/add", addJobPostingHandler);
 //saving jobs
 jobPostingRoutes.post("/save", saveJobPostingHandler);
 jobPostingRoutes.delete("/save/:id", unsaveJobPostingHandler);
+jobPostingRoutes.get("/save/query", getSavedJobPostingsHandler);
 
 
 //Applications

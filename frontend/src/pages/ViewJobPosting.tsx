@@ -1,17 +1,16 @@
-import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Navigate, useSearchParams } from "react-router-dom";
 import FormModalPopupComponent from "../components/popup";
+import useUser from "../hooks/user";
 import {
   addResume,
   applyforJob,
-  getIndividualJobPosting,
   checkwhoApplied,
+  getIndividualJobPosting,
+  getSavedJobs,
   saveJob,
-  unsaveJob,
+  unsaveJob
 } from "../lib/api";
-import useUser from "../hooks/user";
-import { Navigate } from "react-router-dom";
-import { DiJava } from "react-icons/di";
 
 const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();
@@ -31,7 +30,9 @@ const ViewJobPosting = () => {
 
 
   interface SingleApplication {
+    candidate_id: string;
     username: string;
+    status: string;
   }
   interface JobPosting {
     _id: string;
@@ -60,7 +61,30 @@ const ViewJobPosting = () => {
     } else {
       setJobNotFound(true);
     }
-  }, [jobId]);
+  }, [user]);
+
+  useEffect(() => {
+    const queryForSavedJobs = async () => {
+      if (user?.userRole === "Candidate" && jobId !== null) {
+        try {
+          console.log("Checking if job is saved");
+          const response = await getSavedJobs(user._id, jobId);
+          console.log(response);
+          if(response !== null)
+          {
+            setIsSaved(true);
+            setIsSavedID(response?.data._id);
+          }
+          console.log("Received job posting");
+        } catch (error) {
+          console.log("Error trying to geting saved jobs");
+          console.log(error);
+        }
+      }
+    };
+    queryForSavedJobs();
+
+  }, [user, isSaved]);
 
   // Query to get applications if Employer is viewing page ----------------------------------------------------
   useEffect(() => {
@@ -72,6 +96,7 @@ const ViewJobPosting = () => {
             emp_id: user._id,
             job_id: jobId,
           });
+          console.log(response)
           setAppliedApplications(response.applications);
           console.log("Received applications for job posting");
         } catch (error) {
@@ -81,7 +106,7 @@ const ViewJobPosting = () => {
       }
     };
     queryForApplications();
-  }, [user, jobId, data]);
+  }, [data]);
 
   // Send Application ----------------------------------------------------
   useEffect(() => {
@@ -138,13 +163,14 @@ const ViewJobPosting = () => {
       console.log(
         "Contacting Express server to get a job posting with id : " + id
       );
+      
       const response = await getIndividualJobPosting(id, user?._id); // Wait for the promise to resolve
       console.log("successfully received job posting response");
+      console.log(response);
       setJob(response.jobPosting);
-      if(user?.userRole === "Candidate" && jobNotFound)
+      if(user?.userRole === "Candidate" && !jobNotFound && response.application)
       {
-        setIsSavedID(response.isSaved._id);
-        setIsSaved(response.isSaved._id ? true : false);
+        setIsApplied(true);
         setApplicationStatus(response.application.status);
       }
 
@@ -161,13 +187,20 @@ const ViewJobPosting = () => {
 
   //Save Job Posting
   const saveJobPosting = async () => {
-    //Check if user is logged in and job id is present
-    if(user?._id && jobId)
+    if(isSaved)
     {
-      saveJob({
-        job_id: jobId,
-        candidate_id: user._id
-      })
+      unsaveJob(isSavedID);
+      setIsSaved(false);
+    }
+    else{
+      if(user?._id && jobId)
+      {
+        saveJob({
+          job_id: jobId,
+          candidate_id: user._id
+        });
+        setIsSaved(true);
+      }
     }
   }
 
@@ -203,7 +236,7 @@ const ViewJobPosting = () => {
         <h2 className="card-header bg-primary text-white">
 
           {user?.userRole === "Candidate" && (
-            <span className={`badge bg-warning`} >
+            <span className={`badge bg-warning float-start`}>
               {applicationStatus}
             </span>
           )}
@@ -345,7 +378,7 @@ const ViewJobPosting = () => {
                   <div>
                    {"Status:  "}  
                   <span className={`badge bg-success`} >
-                    Open
+                    {application.status}
                   </span>
                   </div>
                 </div>

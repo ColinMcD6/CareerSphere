@@ -1,22 +1,20 @@
-import { literal, number, record, z } from "zod";
-import e, { NextFunction, Request, Response } from "express";
-import catchErrors from "../utils/catchErrors";
-import { 
-    createJobPosting, 
-    getJobPosting,
-    getJobPostingImproved,
-    getAllJobPostings,
-    getAllJobPostingsQuery,
+import { NextFunction, Request, Response } from "express";
+import { z } from "zod";
+import { CREATED, OK } from "../constants/http";
+import {
     addJobPostingApplication,
+    createJobPosting,
     deleteJobPostingApplication,
+    getAllJobPostings,
+    getAllJobPostingsQueryWithSaved,
     getJobPostingApplications,
     getJobPostingApplicationsQuery,
+    getJobPostingImproved,
+    getSavedJobPostings,
     saveJobPosting,
-    unsaveJobPosting,
-    getAllJobPostingsQueryWithSaved
+    unsaveJobPosting
 } from "../services/jobPostings.services";
-import { CREATED, OK } from "../constants/http";
-import {v4 as uuidv4} from 'uuid';
+import catchErrors from "../utils/catchErrors";
 
 
 
@@ -140,6 +138,14 @@ export const unsaveJobPostingHandler = catchErrors(async (req: Request, res: Res
     const id = req.params.id;
     const saved_posting = await unsaveJobPosting(id);
     res.status(OK).json(saved_posting);
+})
+
+
+export const getSavedJobPostingsHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+    const candidate_id = req.query.candidate_id;
+    const job_id = req.query.job_id;
+    const savedPostings = await getSavedJobPostings(candidate_id, job_id);
+    res.status(OK).json(savedPostings);
 })
 
 

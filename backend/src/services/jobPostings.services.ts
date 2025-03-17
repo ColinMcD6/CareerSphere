@@ -1,10 +1,9 @@
 import { CONFLICT } from "../constants/http";
+import ApplicationModel from "../models/application.model";
 import JobPostingsModel from "../models/jobPostings.model";
 import SaveJobPostingsModel from "../models/saveJobPostings.model";
-import ApplicationModel from "../models/application.model";
-import appAssert from "../utils/appAssert";
 import UserModel from "../models/users.model";
-import e, { query } from "express";
+import appAssert from "../utils/appAssert";
 const mongoose = require("mongoose");
 
 export const createJobPosting = async (data: any) => {
@@ -31,13 +30,6 @@ export const getJobPostingImproved = async (id: string, candidate_id: any) => {
 
     const jobPosting = await JobPostingsModel.findById(id);
     
-
-    // Check if the job posting is saved by the candidate
-    const savedJobPosting = await SaveJobPostingsModel.findOne({
-        job_id: id,
-        candidate_id: candidate_id,
-    });
-
     const application = await ApplicationModel.findOne({
         job_id: id,
         candidate_id: candidate_id,
@@ -45,8 +37,7 @@ export const getJobPostingImproved = async (id: string, candidate_id: any) => {
 
     return {
         jobPosting: jobPosting,
-        isSaved: savedJobPosting,
-        application: application,
+        application: application
     };
 }
 
@@ -153,9 +144,14 @@ export const unsaveJobPosting = async (id: any) => {
     return savedJobPosting;
 }
 
-export const getSavedJobPostingsByCandidate = async (candidate_id: any) => {
-    const savedJobPostings = await SaveJobPostingsModel.find({ candidate_id: candidate_id });
-    return savedJobPostings;
+export const getSavedJobPostings = async (candidate_id: any, job_id: any) => {
+    console.log(candidate_id, job_id);
+    const savedJobPosting = await SaveJobPostingsModel.findOne(
+        { 
+            candidate_id: candidate_id,
+            job_id: job_id
+        });
+    return savedJobPosting;
 }
 
 

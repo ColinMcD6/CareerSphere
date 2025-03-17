@@ -87,3 +87,6 @@ export const saveJob = async(data: { job_id: string, candidate_id: string}) =>
 
 export const unsaveJob = async(id: string) =>
   API.delete(`/job/save/${id}`)
+
+export const getSavedJobs = async(candidate_id: string, job_id: string) => 
+  API.get(`/job/save/query?candidate_id=${candidate_id}&job_id=${job_id}`)
