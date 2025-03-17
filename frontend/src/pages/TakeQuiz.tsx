@@ -3,6 +3,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { getSpecificQuiz, submitQuizResponse } from "../lib/api";
 import { useSearchParams } from "react-router-dom";
 import { BiQuestionMark } from "react-icons/bi";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom"; // Add useNavigate for redirection
+
 
 interface Question {
   questionText: string;
@@ -22,13 +26,12 @@ interface Quiz {
 
 const TakeQuiz: React.FC = () => {
   const [quiz, setQuiz] = useState<Quiz | null>(null);
-
   const [searchParams] = useSearchParams();
-   const jobId = searchParams.get("ID");
-   const quizId = searchParams.get("quizId");
+  const jobId = searchParams.get("ID");
+  const quizId = searchParams.get("quizId");
+  const navigate = useNavigate(); // For redirection
 
 
-  // Query to get job posting ----------------------------------------------------
   useEffect(() => {
     if (jobId !== undefined && quizId !== null) {
       fetchQuiz();
@@ -43,12 +46,10 @@ const TakeQuiz: React.FC = () => {
         `Fetching the quiz with id : ${quizId} for job post with id: ${jobId}`
       );
       const data = { jobId: jobId, quizId: quizId };
-
       const response = await getSpecificQuiz(data); // Wait for the promise to resolve
       console.log("successfully received quiz response");
       console.log(response);
       setQuiz(response.quiz);
-      //setJob(response);
     } catch (error: any) {
       if (error.status == 409) {
         console.log("Quiz could not be found!");
@@ -107,12 +108,23 @@ const TakeQuiz: React.FC = () => {
         responses: responses,
       },
     };
-
     try {
       const response = await submitQuizResponse(data);
-    } catch (error) {
+      console.log("Quiz successfully created!");
+      const WAIT_TIME = 3000;
+      // Show success toast
+      toast.success("You sucesfully submitted quiz answers!!", {
+        position: "top-center",
+        autoClose: WAIT_TIME,
+      });
+
+      setTimeout(() => {
+        navigate(`/view-job-posting?ID=${jobId}`);
+      }, WAIT_TIME);
+    } catch (error: any) {
       console.log("Received error when try to send quiz response");
       console.log(error);
+      alert(error.message);
     }
   };
 
@@ -121,6 +133,7 @@ const TakeQuiz: React.FC = () => {
   }
   return (
     <div className="container mt-5">
+      <ToastContainer aria-label={undefined} />
       <div className="card shadow">
         <div className="card-body">
           <h2 className="card-title mb-4">{quiz.quizName}</h2>

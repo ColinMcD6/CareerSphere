@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { useSearchParams } from "react-router-dom";
 import FormModalPopupComponent from "../components/popup";
 import {
@@ -6,7 +6,8 @@ import {
   applyforJob,
   getIndividualJobPosting,
   checkwhoApplied,
-  getAllQuizzesForJob
+  getAllQuizzesForJob,
+  fetchQuizResults,
 } from "../lib/api";
 import useUser from "../hooks/user";
 import { Navigate } from "react-router-dom";
@@ -19,13 +20,13 @@ const ViewJobPosting = () => {
   const [showModal, setShowModal] = useState(false);
   const [application, setApplication] = useState<FormData | null>(null);
   const [isApplied, setIsApplied] = useState<boolean>(false); // New state for tracking application submission
-  const [quizzes, setQuizzes] = useState <quizInterface[]> ([]);
+  const [quizzes, setQuizzes] = useState<quizInterface[]>([]);
   const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
   const [jobNotFound, setJobNotFound] = useState<boolean>(false); // Define the type for job
   const [appliedApplications, setAppliedApplications] = useState<
     SingleApplication[]
   >([]);
-  
+
   interface SingleApplication {
     username: string;
   }
@@ -49,9 +50,16 @@ const ViewJobPosting = () => {
     status: string;
   }
 
+  interface submissionInterface {
+    candidateUsername: string;
+    score: number;
+  }
+
   interface quizInterface {
     _id: string;
-    quizName: string
+    quizName: string;
+    submissions: submissionInterface[];
+    expanded: boolean;
   }
 
   const navigate = useNavigate();
@@ -61,7 +69,7 @@ const ViewJobPosting = () => {
     if (jobId !== undefined && jobId !== null) {
       console.log("Fetching the job post");
       fetchJobPosting(jobId);
-      fetchQuizzes(jobId)
+      fetchQuizzes(jobId);
     } else {
       setJobNotFound(true);
     }
@@ -87,8 +95,6 @@ const ViewJobPosting = () => {
     };
     queryForApplications();
   }, [user, jobId, data]);
-
-  
 
   // Send Application ----------------------------------------------------
   useEffect(() => {
@@ -159,22 +165,28 @@ const ViewJobPosting = () => {
     }
   };
 
-   // Function to call when fetching jobs
-   const fetchQuizzes = async (id: string) => {
+  const viewResults = async (quizId: string, index: number) => {
+    const newQuiz: quizInterface[] = [...quizzes];
+    newQuiz[index].expanded = !newQuiz[index].expanded;
+    setQuizzes(newQuiz);
+  };
+
+  // Function to call when fetching jobs
+  const fetchQuizzes = async (id: string) => {
     try {
-      console.log(
-        "Contacting Express server to get all quizzes for job post"
-      );
+      console.log("Contacting Express server to get all quizzes for job post");
       const response = await getAllQuizzesForJob(id); // Wait for the promise to resolve
       console.log("successfully received quizzes");
-      console.log(response)
+      console.log(response);
+      response.quizzes.expanded = false;
       setQuizzes(response.quizzes);
-
     } catch (error: any) {
       if (error.status == 409) {
         console.log("No quizzes for job posting could be found!");
       } else {
-        console.log("Unknown Error occurred when requesting quizzes from server");
+        console.log(
+          "Unknown Error occurred when requesting quizzes from server"
+        );
         console.error(error);
       }
     }
@@ -205,6 +217,21 @@ const ViewJobPosting = () => {
       </div>
     );
   }
+
+  const checkIfQuizTaken = (quiz: quizInterface) => {
+    for (const submission of quiz.submissions)
+      if (submission.candidateUsername === user.username) return true;
+
+    return false;
+  };
+
+  const getScore = (quiz: quizInterface) => {
+    for (const submission of quiz.submissions)
+      if (submission.candidateUsername === user.username) 
+        return submission.score;
+
+    return "Could not find score";
+  };
 
   const createQuizPage = (id: string | null) => {
     navigate(`/Create-Quiz-For-Job?ID=${id}`);
@@ -261,7 +288,7 @@ const ViewJobPosting = () => {
                 </p>
                 <p className="card-text">
                   <strong>Deadline:</strong>{" "}
-                  {new Date(data.deadline).toLocaleDateString()}
+                  {new Date(data.dueDate).toLocaleDateString()}
                 </p>
               </div>
             </div>
@@ -332,18 +359,37 @@ const ViewJobPosting = () => {
               </div>
             </FormModalPopupComponent>
           </div>
-          <h6> Available Quizzes!</h6>
-          <div className="list-group">
-          {quizzes.map((quiz) => (
-            <div  key={quiz._id} className="list-group-item d-flex justify-content-between align-items-center">
-              <span>{quiz.quizName}</span>
-              <button className="btn btn-primary"  onClick={() => takeQuizLink(quiz._id)}>
-                  Take Quiz
-              </button>
+          {user?.userRole == "Candidate" && (
+            <div className="mt-3">
+              <h6> Available Quizzes!</h6>
+              <div className="list-group">
+                {quizzes.map((quiz) => (
+                  <div
+                    key={quiz._id}
+                    className="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    <span>{quiz.quizName}</span>
+                    <span>
+                      {checkIfQuizTaken(quiz)
+                        ? `Score : ${getScore(quiz)} `
+                        : ""}
+                    </span>
+                    <button
+                      className={`btn ${
+                        checkIfQuizTaken(quiz) ? "btn-secondary" : "btn-success"
+                      }`}
+                      onClick={() => takeQuizLink(quiz._id)}
+                      disabled={checkIfQuizTaken(quiz)}
+                    >
+                      {`${checkIfQuizTaken(quiz) ? "Quiz Taken" : "Take Quiz"}`}
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
-          </div>
+          )}
         </div>
+
         {user?.userRole == "Employer" && (
           <div className="container mt-4">
             <h2 className="mb-4">Applications</h2>
@@ -371,9 +417,63 @@ const ViewJobPosting = () => {
           </div>
         )}
 
-        <button className="btn btn-primary" onClick={() => createQuizPage(jobId)} >
-            Create Quiz for job Posting
-        </button>
+        {user?.userRole == "Employer" && (
+          <div className="container mt-3 ">
+            <h3 className="mb-3 ">Quizz Section</h3>
+            <h6>Existing Quizzes</h6>
+            <div className="row justify-content-center">
+              <div className="col-6">
+                <div className="list-group width">
+                  {quizzes.map((quiz, index) => (
+                    <div
+                      key={quiz._id}
+                      className="list-group-item d-flex flex-column"
+                    >
+                      <div className="d-flex justify-content-between align-items-center">
+                        <span>{quiz.quizName}</span>
+                        <span>Quiz submissions: {quiz.submissions.length}</span>
+                        <button
+                          className={`btn ${
+                            quiz.expanded ? "btn-warning" : "btn-success"
+                          }`}
+                          onClick={() => viewResults(quiz._id, index)}
+                        >
+                          {quiz.expanded ? "Hide results ▲" : "View results ▼"}
+                        </button>
+                      </div>
+                      {quiz.expanded && (
+                        <div className="mt-3">
+                          <table className="table table-hover">
+                            <thead>
+                              <tr>
+                                <th scope="col">Username</th>
+                                <th scope="col">Score</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {quiz.submissions.map((submission, subIndex) => (
+                                <tr key={subIndex}>
+                                  <td>{submission.candidateUsername}</td>
+                                  <td>{submission.score}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <button
+              className="btn btn-primary mt-3 mb-3"
+              onClick={() => createQuizPage(jobId)}
+            >
+              Create new Quiz for job Posting
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

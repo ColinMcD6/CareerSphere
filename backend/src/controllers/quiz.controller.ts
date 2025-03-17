@@ -150,6 +150,7 @@ export const addquizCandiateResponse = catchErrors(async (req: Request, res: Res
 
 export const getquizSubmissions = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
   try {
+    console.log("TRYING TO GET QUIZ SUBMISSION ");
     const { quizId } = req.params;
     const quiz = await Quiz.findById(quizId);
     

@@ -95,6 +95,8 @@ export const getAllQuizzesForJob = async( jobId : string) : Promise <any>=>
 export const getSpecificQuiz = async(  data: { jobId: string, quizId: string}) : Promise <any>=> 
   API.get(`job/${data.jobId}/quizzes/${data.quizId}`)
 
-
 export const submitQuizResponse = async(  data: { jobId: string, quizId: string, body: {}}) : Promise <any>=> 
   API.post(`job/${data.jobId}/quizzes/${data.quizId}/submissions`, data.body)
+
+export const fetchQuizResults = async(  data: { jobId: string, quizId: string}) : Promise <any>=> 
+  API.get(`job/${data.jobId}/quizzes/${data.quizId}/submissions`)
