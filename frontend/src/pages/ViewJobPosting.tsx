@@ -6,6 +6,8 @@ import {
   applyforJob,
   getIndividualJobPosting,
   checkwhoApplied,
+  saveJob,
+  unsaveJob,
 } from "../lib/api";
 import useUser from "../hooks/user";
 import { Navigate } from "react-router-dom";
@@ -21,6 +23,12 @@ const ViewJobPosting = () => {
   const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
   const [jobNotFound, setJobNotFound] = useState<boolean>(false); // Define the type for job
   const [appliedApplications, setAppliedApplications] = useState<SingleApplication[]>([]);
+
+  //Below is dedicated to Candidate information
+  const [isSaved, setIsSaved] = useState<boolean>(false);
+  const [isSavedID, setIsSavedID] = useState<string>("");
+  const [applicationStatus, setApplicationStatus] = useState<string>("");
+
 
   interface SingleApplication {
     username: string;
@@ -130,9 +138,16 @@ const ViewJobPosting = () => {
       console.log(
         "Contacting Express server to get a job posting with id : " + id
       );
-      const response = await getIndividualJobPosting(id); // Wait for the promise to resolve
+      const response = await getIndividualJobPosting(id, user?._id); // Wait for the promise to resolve
       console.log("successfully received job posting response");
-      setJob(response);
+      setJob(response.jobPosting);
+      if(user?.userRole === "Candidate" && jobNotFound)
+      {
+        setIsSavedID(response.isSaved._id);
+        setIsSaved(response.isSaved._id ? true : false);
+        setApplicationStatus(response.application.status);
+      }
+
     } catch (error: any) {
       if (error.status == 409) {
         console.log("Job posting could not be found!");
@@ -143,6 +158,18 @@ const ViewJobPosting = () => {
       }
     }
   };
+
+  //Save Job Posting
+  const saveJobPosting = async () => {
+    //Check if user is logged in and job id is present
+    if(user?._id && jobId)
+    {
+      saveJob({
+        job_id: jobId,
+        candidate_id: user._id
+      })
+    }
+  }
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -173,7 +200,27 @@ const ViewJobPosting = () => {
   return (
     <div className="container mt-5">
       <div className="card mb-4 shadow">
-        <h2 className="card-header bg-primary text-white">{data.title}</h2>
+        <h2 className="card-header bg-primary text-white">
+
+          {user?.userRole === "Candidate" && (
+            <span className={`badge bg-warning`} >
+              {applicationStatus}
+            </span>
+          )}
+
+          {data.title}
+         
+          {user?.userRole === "Candidate" && (
+            <button
+              className="btn btn-primary float-end"
+              style={{ backgroundColor: "#f8f9fa", color: "#0d6efd" }}
+              onClick={saveJobPosting}
+            >
+              {isSaved ? "Unsave" : "Save"}
+            </button>
+          )}
+            
+        </h2>
         <div className="card-body">
           <h5 className="card-subtitle mb-3 text-muted">
             Job Position: {data.positionTitle}
@@ -254,6 +301,7 @@ const ViewJobPosting = () => {
               >
                 {isApplied ? "Applied" : "Apply"} {/* Change text */}
               </button>
+
             </div>
           )}
           <FormModalPopupComponent

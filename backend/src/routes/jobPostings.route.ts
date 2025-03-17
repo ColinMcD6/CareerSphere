@@ -7,17 +7,24 @@ import {
     addJobPostingApplicationHandler,
     deleteJobPostingApplicationHandler,
     getJobPostingApplicationsHandler,
-    getJobPostingApplicationsQueryHandler
+    getJobPostingApplicationsQueryHandler,
+    saveJobPostingHandler,
+    unsaveJobPostingHandler
  } from "../controllers/jobPostings.controller";
 
 const jobPostingRoutes = Router();
 
 //prefix: /jobs
-//Job Posting
+//Job Posting: 
 jobPostingRoutes.get("/:id", getJobPostingHandler);
 jobPostingRoutes.get("/", getAllJobPostingsQueryHandler);
 
 jobPostingRoutes.post("/add", addJobPostingHandler);
+
+//saving jobs
+jobPostingRoutes.post("/save", saveJobPostingHandler);
+jobPostingRoutes.delete("/save/:id", unsaveJobPostingHandler);
+
 
 //Applications
 jobPostingRoutes.get("/applications/:id", getJobPostingApplicationsHandler);

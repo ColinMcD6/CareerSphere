@@ -3,13 +3,17 @@ import e, { NextFunction, Request, Response } from "express";
 import catchErrors from "../utils/catchErrors";
 import { 
     createJobPosting, 
-    getJobPosting, 
+    getJobPosting,
+    getJobPostingImproved,
     getAllJobPostings,
     getAllJobPostingsQuery,
     addJobPostingApplication,
     deleteJobPostingApplication,
     getJobPostingApplications,
-    getJobPostingApplicationsQuery
+    getJobPostingApplicationsQuery,
+    saveJobPosting,
+    unsaveJobPosting,
+    getAllJobPostingsQueryWithSaved
 } from "../services/jobPostings.services";
 import { CREATED, OK } from "../constants/http";
 import {v4 as uuidv4} from 'uuid';
@@ -40,6 +44,11 @@ const jobPostingsZModel = z.object({
     status: z.string().min(1).max(225), // Change to open/close later
     startingDate: z.string(), // I am not sure what to do about this right now, but this should be a date
     jobType: z.enum(['Full-time', 'Part-time', 'Temporary', 'Internship'])
+})
+
+const saveJobPostingModel = z.object({
+    job_id: z.string().min(1).max(225),
+    candidate_id: z.string().min(1).max(225)
 })
 
 const jobApplicationModel = z.object({
@@ -77,8 +86,10 @@ export const addJobPostingHandler = catchErrors(async (req: Request, res: Respon
 
 export const getJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    const user = await getJobPosting(id);
-    res.status(OK).json(user);
+    const candidate_id = req.query.candidate_id
+
+    const jobPosting = await getJobPostingImproved(id, candidate_id);
+    res.status(OK).json(jobPosting);
 })
 
 // Is this Defunct now ??
@@ -95,7 +106,7 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
 
     // Extract query fields from the request query but removes page and limit
     const query = queryFieldNames.reduce((acc, key) => {
-        if (key !== 'page' && key !== 'limit') {
+        if (key !== 'page' && key !== 'limit' && key !== 'saved_posting_candidate_id') {
             acc[key] = req.query[key];
         }
         return acc;
@@ -105,9 +116,33 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
     
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
-    const jobPostings = await getAllJobPostingsQuery(query, page, limit);
+    const saved_posting_candidate_id = req.query.saved_posting_candidate_id ? req.query.saved_posting_candidate_id as string : null;
+
+    const jobPostings = await getAllJobPostingsQueryWithSaved(query, page, limit, saved_posting_candidate_id);
+    console.log(jobPostings);
     res.status(OK).json(jobPostings);
 })
+
+// SAVING JOBS ----------------------------------------------
+export const saveJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Received a request to save a job posting");
+    
+    const saved_posting = {
+        job_id: req.body.job_id,
+        candidate_id: req.body.candidate_id,
+    }
+    const request = saveJobPostingModel.parse(saved_posting);
+    const savedJob = await saveJobPosting(request);
+    res.status(CREATED).json(savedJob);
+});
+
+export const unsaveJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const saved_posting = await unsaveJobPosting(id);
+    res.status(OK).json(saved_posting);
+})
+
+
 
 
 //APPLICATIONS----------------------------------------------

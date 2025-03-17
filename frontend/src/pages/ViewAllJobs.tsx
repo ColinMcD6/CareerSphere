@@ -15,6 +15,7 @@ const ViewAllJobs: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
+  const [showSavedJobs, setShowSavedJobs] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +25,10 @@ const ViewAllJobs: React.FC = () => {
       }
       try {
         console.log("Contacting Express server to query jobs");
-        const query = user?.userRole === "Employer" ? `?employer_id=${user._id}` : "";
+        let query = user?.userRole === "Employer" ? `?employer_id=${user._id}` : "";
+        if(query === ""){
+          query = showSavedJobs ? `?saved_posting_candidate_id=${user._id}` : "";
+        }
         const response = await getAllJobPostings(query);
         console.log("Received response from express server with all jobs");
         setJobs(response.jobPostings);
@@ -36,7 +40,7 @@ const ViewAllJobs: React.FC = () => {
       }
     };
     fetchData();
-  }, [user]);
+  }, [user, showSavedJobs]);
 
   const viewJobPosting = (id: string) => {
     navigate(`/view-job-posting?ID=${id}`);
@@ -70,6 +74,11 @@ const ViewAllJobs: React.FC = () => {
         {user.userRole === "Employer" && (
           <button className="btn btn-success" onClick={createJobPosting}>
             <FaPlus/> Create
+          </button>
+        )}
+        {user.userRole === "Candidate" && (
+          <button className="btn btn-primary" onClick={() => setShowSavedJobs(!showSavedJobs)}>
+            {showSavedJobs ? "Show All Jobs" : "Show Saved Jobs"}
           </button>
         )}
       </div>
