@@ -6,9 +6,11 @@ import {
   applyforJob,
   getIndividualJobPosting,
   checkwhoApplied,
+  getAllQuizzesForJob
 } from "../lib/api";
 import useUser from "../hooks/user";
 import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();
@@ -17,10 +19,13 @@ const ViewJobPosting = () => {
   const [showModal, setShowModal] = useState(false);
   const [application, setApplication] = useState<FormData | null>(null);
   const [isApplied, setIsApplied] = useState<boolean>(false); // New state for tracking application submission
+  const [quizzes, setQuizzes] = useState <quizInterface[]> ([]);
   const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
   const [jobNotFound, setJobNotFound] = useState<boolean>(false); // Define the type for job
-  const [appliedApplications, setAppliedApplications] = useState<SingleApplication[]>([]);
-
+  const [appliedApplications, setAppliedApplications] = useState<
+    SingleApplication[]
+  >([]);
+  
   interface SingleApplication {
     username: string;
   }
@@ -44,11 +49,19 @@ const ViewJobPosting = () => {
     status: string;
   }
 
+  interface quizInterface {
+    _id: string;
+    quizName: string
+  }
+
+  const navigate = useNavigate();
+
   // Query to get job posting ----------------------------------------------------
   useEffect(() => {
     if (jobId !== undefined && jobId !== null) {
       console.log("Fetching the job post");
       fetchJobPosting(jobId);
+      fetchQuizzes(jobId)
     } else {
       setJobNotFound(true);
     }
@@ -74,6 +87,8 @@ const ViewJobPosting = () => {
     };
     queryForApplications();
   }, [user, jobId, data]);
+
+  
 
   // Send Application ----------------------------------------------------
   useEffect(() => {
@@ -144,6 +159,31 @@ const ViewJobPosting = () => {
     }
   };
 
+   // Function to call when fetching jobs
+   const fetchQuizzes = async (id: string) => {
+    try {
+      console.log(
+        "Contacting Express server to get all quizzes for job post"
+      );
+      const response = await getAllQuizzesForJob(id); // Wait for the promise to resolve
+      console.log("successfully received quizzes");
+      console.log(response)
+      setQuizzes(response.quizzes);
+
+    } catch (error: any) {
+      if (error.status == 409) {
+        console.log("No quizzes for job posting could be found!");
+      } else {
+        console.log("Unknown Error occurred when requesting quizzes from server");
+        console.error(error);
+      }
+    }
+  };
+
+  const takeQuizLink = (quizId: string) => {
+    navigate(`/Take-Quiz?ID=${jobId}&quizId=${quizId}`);
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -166,13 +206,14 @@ const ViewJobPosting = () => {
     );
   }
 
-  const DateToString = (time : string) =>
-  {
-    if ( time === "" || time === undefined)
-      return "Not listed"
-    else 
-      return time;
-  }
+  const createQuizPage = (id: string | null) => {
+    navigate(`/Create-Quiz-For-Job?ID=${id}`);
+  };
+
+  const DateToString = (time: string) => {
+    if (time === "" || time === undefined) return "Not listed";
+    else return time;
+  };
 
   // This needs to be below and separate from the isLoading div
   if (!data) {
@@ -229,12 +270,10 @@ const ViewJobPosting = () => {
                 <strong>Status:</strong> {data.status}
               </p>
               <p className="card-text">
-                <strong>Date Posted:</strong>{" "}
-                {DateToString(data.datePosted)}
+                <strong>Date Posted:</strong> {DateToString(data.datePosted)}
               </p>
               <p className="card-text">
-                <strong>Deadline:</strong>{" "}
-                {DateToString(data.dueDate)}
+                <strong>Deadline:</strong> {DateToString(data.dueDate)}
               </p>
               <p className="card-text">
                 <strong>Starting Date For Job:</strong>{" "}
@@ -293,13 +332,24 @@ const ViewJobPosting = () => {
               </div>
             </FormModalPopupComponent>
           </div>
+          <h6> Available Quizzes!</h6>
+          <div className="list-group">
+          {quizzes.map((quiz) => (
+            <div  key={quiz._id} className="list-group-item d-flex justify-content-between align-items-center">
+              <span>{quiz.quizName}</span>
+              <button className="btn btn-primary"  onClick={() => takeQuizLink(quiz._id)}>
+                  Take Quiz
+              </button>
+            </div>
+          ))}
+          </div>
         </div>
         {user?.userRole == "Employer" && (
           <div className="container mt-4">
             <h2 className="mb-4">Applications</h2>
             <p className="text-muted mt-4">
-              You have <strong>{appliedApplications?.length}</strong> Applications
-              to this job post!
+              You have <strong>{appliedApplications?.length}</strong>{" "}
+              Applications to this job post!
             </p>
             <ul className="list-group">
               {appliedApplications?.map((application, index) => (
@@ -311,10 +361,8 @@ const ViewJobPosting = () => {
                       </h5>
                     </div>
                     <div>
-                    {"Status:  "}  
-                    <span className={`badge bg-success`} >
-                      Open
-                    </span>
+                      {"Status:  "}
+                      <span className={`badge bg-success`}>Open</span>
                     </div>
                   </div>
                 </li>
@@ -322,6 +370,10 @@ const ViewJobPosting = () => {
             </ul>
           </div>
         )}
+
+        <button className="btn btn-primary" onClick={() => createQuizPage(jobId)} >
+            Create Quiz for job Posting
+        </button>
       </div>
     </div>
   );

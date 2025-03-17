@@ -99,13 +99,19 @@ export const getspecificquizHandler = catchErrors(async (req: Request, res: Resp
     ]
   }
 */
+
 /* Example to add candidate response: */
 export const addquizCandiateResponse = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
   try {
+    console.log("Received request to add quiz candidate")
     const { quizId } = req.params;
-    const { candidateId, responses } = req.body;
+    const { responses } = req.body;
+    const candidateId = req.candidateId;
+  
 
     if (!candidateId || !responses || !Array.isArray(responses)) {
+      console.log(candidateId);
+      console.log(responses);
       return res.status(400).json({ message: "Invalid submission data" });
     }
 

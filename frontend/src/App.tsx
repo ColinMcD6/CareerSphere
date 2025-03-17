@@ -12,6 +12,9 @@ import ViewJobPosting from "./pages/ViewJobPosting.tsx"
 import ViewAllJobs from "./pages/ViewAllJobs.tsx"
 import { CareerSphereApp } from "./components/careersphereApp";
 import NavBar from "./pages/NavigationBar.tsx";
+import CreateQuiz from "./pages/CreateQuiz.tsx";
+import TakeQuiz from "./pages/TakeQuiz.tsx";
+
 
 function App() {
   return (
@@ -33,6 +36,8 @@ function App() {
         <Route path="/create-job-posting" element={<CreateJobPost />} />
         <Route path="/view-all-jobs" element={<ViewAllJobs />} />
         <Route path="/view-job-posting" element={<ViewJobPosting />} />
+        <Route path="/Create-Quiz-For-Job" element={<CreateQuiz />} />
+        <Route path="/Take-Quiz" element={<TakeQuiz />} />
       </Routes>
     </>
   );
