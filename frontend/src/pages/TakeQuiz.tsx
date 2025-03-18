@@ -113,7 +113,7 @@ const TakeQuiz: React.FC = () => {
       console.log("Quiz successfully created!");
       const WAIT_TIME = 3000;
       // Show success toast
-      toast.success("You sucesfully submitted quiz answers!!", {
+      toast.success("You successfully submitted quiz answers!", {
         position: "top-center",
         autoClose: WAIT_TIME,
       });

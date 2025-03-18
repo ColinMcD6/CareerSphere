@@ -29,15 +29,15 @@ const CreateQuiz: React.FC = () => {
   const jobId = searchParams.get("ID");
   const navigate = useNavigate(); // For redirection
   const { user, isLoading } = useUser();
-
+  const [disableInput, setDisableInput] = useState<boolean>(false);
 
   // If the user is not logged in, redirect them away from this page
   useEffect(() => {
     if (!isLoading && !user) {
       window.location.href = "/login";
     }
-    if ( !isLoading && user?.userRole !== "Employer") // If they are not an employer, redirect them to home
-    {
+    if (!isLoading && user?.userRole !== "Employer") {
+      // If they are not an employer, redirect them to home
       window.location.href = "/";
     }
   }, [user, isLoading]);
@@ -67,13 +67,13 @@ const CreateQuiz: React.FC = () => {
   ) => {
     const newQuestions = [...questions];
     newQuestions[questionIndex].correctAnswerIndex = answerIndex;
-    newQuestions[questionIndex].correctAnswer =
-      newQuestions[questionIndex].options[answerIndex];
+    newQuestions[questionIndex].correctAnswer =  newQuestions[questionIndex].options[answerIndex];
     setQuestions(newQuestions);
   };
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
+    setDisableInput(true);
     e.preventDefault();
 
     for (let i = 0; i < questions.length; i++) {
@@ -84,31 +84,47 @@ const CreateQuiz: React.FC = () => {
       } = questions[i];
       if (!question.trim()) {
         alert(`Please enter a question for Question ${i + 1}.`);
+        setDisableInput(false);
         return;
       }
       if (answers.some((answer) => !answer.trim())) {
         alert(`Please fill in all answer fields for Question ${i + 1}.`);
+        setDisableInput(false);
         return;
       }
       if (correctAnswerIndex === null) {
         alert(`Please mark the correct answer for Question ${i + 1}.`);
+        setDisableInput(false);
         return;
       }
     }
 
+    if (questions.length <= 0) {
+      alert("Must have at least one question!");
+      setDisableInput(false);
+      return;
+    }
+
     if (jobId !== null) {
       console.log("Sending a create quiz request to backend");
+
+     const questionSubmit : Question[] = [...questions]
+      for ( const question of questionSubmit)
+        if (question.correctAnswerIndex !== null)
+          question.correctAnswer = question.options[question.correctAnswerIndex];
+
       const data = {
         jobId: jobId,
         body: {
-          questions: questions,
+          questions: questionSubmit,
           quizName: quizName,
         },
       };
+      setQuestions(questionSubmit);
       try {
         const response = await createQuizForJobPosting(data);
         console.log("Quiz successfully created!");
-        const WAIT_TIME = 3000;
+        const WAIT_TIME = 4500;
         // Show success toast
         toast.success("Quiz successfully created and added to job posting!", {
           position: "top-center",
@@ -119,6 +135,7 @@ const CreateQuiz: React.FC = () => {
           navigate(`/view-job-posting?ID=${jobId}`);
         }, WAIT_TIME);
       } catch (error: any) {
+        setDisableInput(false);
         console.log("Received an error from server");
         console.log(error);
         alert(error.message);
@@ -144,9 +161,8 @@ const CreateQuiz: React.FC = () => {
     ]);
   };
 
-  if (isLoading || user?.userRole !== "Employer")
-  {
-    return(<div> Loading content</div>);
+  if (isLoading || user?.userRole !== "Employer") {
+    return <div> Loading content</div>;
   }
 
   return (
@@ -161,6 +177,7 @@ const CreateQuiz: React.FC = () => {
                 Enter a Name for the quiz
               </label>
               <input
+                disabled={disableInput}
                 name="quizNameInput"
                 id="quizNameInput"
                 value={quizName}
@@ -170,7 +187,6 @@ const CreateQuiz: React.FC = () => {
                 required
               />
             </div>
-
             {questions.map((questionData, questionIndex) => (
               <div
                 key={questionIndex}
@@ -184,6 +200,7 @@ const CreateQuiz: React.FC = () => {
                     Question {questionIndex + 1}
                   </label>
                   <button
+                    disabled={disableInput}
                     type="button"
                     className="btn btn-link text-danger float-end"
                     onClick={() => deleteQuestion(questionIndex)}
@@ -192,6 +209,7 @@ const CreateQuiz: React.FC = () => {
                     <i className="bi bi-trash "></i>
                   </button>
                   <input
+                    disabled={disableInput}
                     type="text"
                     id={`question-${questionIndex}`}
                     className="form-control text-center"
@@ -218,6 +236,7 @@ const CreateQuiz: React.FC = () => {
                             </label>
                             <div className="input-group">
                               <input
+                                disabled={disableInput}
                                 type="text"
                                 id={`answer-${questionIndex}-${answerIndex}`}
                                 className="form-control"
@@ -234,6 +253,7 @@ const CreateQuiz: React.FC = () => {
                               />
                               <div className="input-group-text">
                                 <input
+                                  disabled={disableInput}
                                   type="radio"
                                   name={`correct-answer-${questionIndex}`}
                                   className="form-check-input"
@@ -263,10 +283,15 @@ const CreateQuiz: React.FC = () => {
               type="button"
               className="btn btn-success mb-3"
               onClick={addQuestion}
+              disabled={disableInput}
             >
               Add Another Question
             </button>
-            <button type="submit" className="btn btn-primary w-100">
+            <button
+              type="submit"
+              className="btn btn-primary w-100"
+              disabled={disableInput}
+            >
               Create Quiz
             </button>
           </form>
