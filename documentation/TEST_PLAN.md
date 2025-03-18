@@ -5,6 +5,7 @@
 | 1.0     |Feb 23, 2025 | Colin McDonell | Create initial test plan |
 | 1.1     |Feb 27, 2025 | Sukhmeet Singh Hora | Added unit tests for Signup, Login, Logout, Reset password, Verify Code and View Applicants |
 | 1.2     |Feb 28, 2025 | Colin McDonell | Documented all unit and acceptance tests for sprint 2 |
+| 1.3     |Mar 17, 2025 | Sukhmeet Singh Hora | Added unit tests for Quizzing for Job Screening Process: creating quiz, getting quiz, submitting response and getting candidate response with score |
 
 ## 1 Introduction
 ### 1.1 Scope
@@ -169,6 +170,26 @@ Will be implemented in Sprint 3
 
 7. View Application Status 
     - A Candidate checks "My Applications" and sees their status: "Pending," "Accepted". 
+
+#### 4. Quizzing for Job Screening Process
+##### Unit Tests
+
+1. Creating a Quiz and Updating Job Posting: The test verifies that a quiz is successfully created and linked to a job posting. It checks that the response status is CREATED, the success message is returned, and the job posting is updated with the new quiz.
+2. Handling Empty Quiz Questions: This test ensures that an attempt to create a quiz without questions results in a BAD_REQUEST response. It confirms that no quiz is added to the database and that the job posting remains unchanged.
+3. Retrieving Quizzes for a Job Posting: The test verifies that when valid job ID is provided, all quizzes associated with that job are successfully retrieved. The response contains the correct quizzes, and the status is OK.
+4. Handling Missing Quizzes for a Job: When a job posting exists but has no quizzes, this test confirms that the response status is NOT_FOUND, and the appropriate message is returned, ensuring proper error handling.
+5. Retrieving a Specific Quiz: The test confirms that a specific quiz can be retrieved by providing a valid job ID and quiz ID. The response contains the correct quiz details, and the status is OK.
+6. Submitting a Quiz and Calculating Score: A candidate submits quiz responses, and the test checks that the submission is recorded correctly, the score is calculated, and a CREATED response with the correct details is returned.
+7. Handling Missing Candidate ID or Responses: This test ensures that if the candidate ID or responses are missing in the submission, the request is rejected with a BAD_REQUEST status and an appropriate error message.
+8. Preventing Duplicate Quiz Submissions: The test verifies that a candidate cannot submit responses for the same quiz more than once. If a duplicate submission is attempted, a BAD_REQUEST response is returned with a relevant error message.
+9. Retrieving Quiz Submissions: This test ensures that when a valid quiz ID is provided, all candidate submissions for that quiz are retrieved successfully, including usernames and scores, with a response status of OK.
+10. Handling No Quiz Submissions: If a quiz exists but has no submissions, this test confirms that the response is an empty array with a status of OK, ensuring the system properly handles cases where no candidates have taken the quiz yet.
+
+##### Integration Tests
+
+
+##### Acceptance Tests
+
 
 ### Non-functional Feature
 - Implemented in later sprint (For load testing, when design the load, make sure at least twos request associated with
