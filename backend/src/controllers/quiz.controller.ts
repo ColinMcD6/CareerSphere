@@ -103,15 +103,11 @@ export const getspecificquizHandler = catchErrors(async (req: Request, res: Resp
 /* Example to add candidate response: */
 export const addquizCandiateResponse = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("Received request to add quiz candidate")
     const { quizId } = req.params;
     const { responses } = req.body;
-    const candidateId = req.candidateId;
-  
+    const candidateId = req.userId;
 
     if (!candidateId || !responses || !Array.isArray(responses)) {
-      console.log(candidateId);
-      console.log(responses);
       return res.status(400).json({ message: "Invalid submission data" });
     }
 
@@ -126,6 +122,7 @@ export const addquizCandiateResponse = catchErrors(async (req: Request, res: Res
       return res.status(404).json({ message: "Quiz not found" });
     }
 
+    console.log(candidateId);
     // Check if the candidate has already submitted
     const existingSubmission = quiz.submissions.find(sub => sub.candidateId === candidateId);
     if (existingSubmission) {
@@ -150,7 +147,6 @@ export const addquizCandiateResponse = catchErrors(async (req: Request, res: Res
 
 export const getquizSubmissions = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("TRYING TO GET QUIZ SUBMISSION ");
     const { quizId } = req.params;
     const quiz = await Quiz.findById(quizId);
     

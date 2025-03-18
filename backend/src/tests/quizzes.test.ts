@@ -315,9 +315,9 @@ describe("addquizHandler Unit Tests", () => {
         const mReq: Partial<Request> = {
             params: { quizId: quiz._id?.toString() || "" },
             body: {
-                candidateId: candidate._id?.toString() || "",
                 responses: ["A", "B"],
             },
+            userId: candidate._id?.toString()
         };
 
         const mJson = jest.fn().mockImplementation(() => null);
@@ -425,9 +425,9 @@ describe("addquizHandler Unit Tests", () => {
         const mReq: Partial<Request> = {
             params: { quizId: quiz._id?.toString() || "" },
             body: {
-                candidateId: candidate._id?.toString() || "",
                 responses: ["A"],
             },
+            userId: candidate._id?.toString()
         };
 
         const mJson = jest.fn().mockImplementation(() => null);
