@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import FormModalPopupComponent from "../components/popup";
+import ApplicationPopupComponent from "../components/applicantPopup";
 import useUser from "../hooks/user";
 import {
   addResume,
@@ -28,11 +29,21 @@ const ViewJobPosting = () => {
   const [isSavedID, setIsSavedID] = useState<string>("");
   const [applicationStatus, setApplicationStatus] = useState<string>("");
 
+  //Below is used for Employer
+  const [showApplicantPopup, setShowApplicantPopup] = useState<boolean>(false);
+  const [applicantIndex, setApplicantIndex] = useState<number>(0);
+  //const [applicantData, setApplicantData] = useState<SingleApplication | null>(null);
+
 
   interface SingleApplication {
     candidate_id: string;
     username: string;
     status: string;
+    email: string;
+    experience: string[];
+    education: string[];
+    skills: string[];
+    resume_id: string;
   }
   interface JobPosting {
     _id: string;
@@ -61,7 +72,7 @@ const ViewJobPosting = () => {
     } else {
       setJobNotFound(true);
     }
-  }, [user]);
+  }, [user, isApplied]);
 
   useEffect(() => {
     const queryForSavedJobs = async () => {
@@ -72,8 +83,9 @@ const ViewJobPosting = () => {
           console.log(response);
           if(response !== null)
           {
+
             setIsSaved(true);
-            setIsSavedID(response?.data._id);
+            setIsSavedID(response?._id);
           }
           console.log("Received job posting");
         } catch (error) {
@@ -138,6 +150,9 @@ const ViewJobPosting = () => {
             console.log(applicationResponse.data);
 
             setIsApplied(true);
+            if(!isSaved){
+              saveJobPosting();
+            }
           } catch (error) {
             console.error("Error submitting application:", error);
           }
@@ -149,7 +164,7 @@ const ViewJobPosting = () => {
     }
   }, [application, isApplied]);
 
-  // Handler to submit form
+  // Handler to submit form Makes sure the user applies for a job
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -185,10 +200,12 @@ const ViewJobPosting = () => {
     }
   };
 
-  //Save Job Posting
+  //Save Job Posting. For Save Button
   const saveJobPosting = async () => {
     if(isSaved)
     {
+      console.log("Unsaving job");
+      console.log(isSavedID);
       unsaveJob(isSavedID);
       setIsSaved(false);
     }
@@ -202,6 +219,12 @@ const ViewJobPosting = () => {
         setIsSaved(true);
       }
     }
+  }
+
+  // View Applicant Handler
+  const viewApplicantHandler = (index : number) => {
+    setApplicantIndex(index);
+    setShowApplicantPopup(true);
   }
 
   if (isLoading) {
@@ -369,7 +392,11 @@ const ViewJobPosting = () => {
           <ul className="list-group">
             {appliedApplications?.map((application, index) => (
               <li key={index} className="list-group-item">
-                <div className="d-flex justify-content-between align-items-center">
+                <div 
+                  className="d-flex justify-content-between align-items-center"
+                  onClick = {() => viewApplicantHandler(index)}
+                  style = {{cursor: "pointer"}}
+                  >
                   <div>
                     <h5 className="mb-1">
                       User : <strong>{application.username}</strong>
@@ -387,6 +414,24 @@ const ViewJobPosting = () => {
           </ul>
         </div>
       )}
+    {
+      user?.userRole == "Employer" && (
+        <ApplicationPopupComponent
+          show={showApplicantPopup}
+          username={appliedApplications[applicantIndex].username}
+          email={appliedApplications[applicantIndex].email}
+          experience={appliedApplications[applicantIndex].experience}
+          education={appliedApplications[applicantIndex].education}
+          skills={appliedApplications[applicantIndex].skills}
+          resume_id={appliedApplications[applicantIndex].resume_id}
+          editStatusApplicationHandler = {() => {}}
+          onClose = {() => setShowApplicantPopup(false)}
+          showResumeHandler = {() => {}}
+        >
+        </ApplicationPopupComponent>
+      )
+    }
+    
     </div>
   );
 };

@@ -82,11 +82,18 @@ export const applyforJob = async(data: any) =>
 export const checkwhoApplied = async(data: { emp_id: string, job_id: string}) : Promise <ApplicationsResponse>=> 
   API.get(`/job/applications/all/query?employer_id=${data.emp_id}&job_id=${data.job_id}`)
 
-export const saveJob = async(data: { job_id: string, candidate_id: string}) =>
+
+interface SavedJobsResponse {
+  _id: string;
+  job_id: string;
+  candidate_id: string;
+}
+
+export const saveJob = async(data: { job_id: string, candidate_id: string}) : Promise<any> =>
   API.post("/job/save", data)
 
 export const unsaveJob = async(id: string) =>
   API.delete(`/job/save/${id}`)
 
-export const getSavedJobs = async(candidate_id: string, job_id: string) => 
+export const getSavedJobs = async(candidate_id: string, job_id: string): Promise<SavedJobsResponse> => 
   API.get(`/job/save/query?candidate_id=${candidate_id}&job_id=${job_id}`)

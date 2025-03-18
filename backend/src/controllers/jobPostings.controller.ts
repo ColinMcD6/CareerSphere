@@ -136,6 +136,7 @@ export const saveJobPostingHandler = catchErrors(async (req: Request, res: Respo
 
 export const unsaveJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
+    console.log("Received a request to unsave a job posting");
     const saved_posting = await unsaveJobPosting(id);
     res.status(OK).json(saved_posting);
 })

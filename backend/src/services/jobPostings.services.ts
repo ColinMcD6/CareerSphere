@@ -199,6 +199,10 @@ export const getJobPostingApplicationsQuery = async (
             return {
                 ...application.toObject(),
                 username: user ? user.username : null,
+                email: user ? user.email : null,
+                experience: user ? user.experience : null,
+                education: user ? user.education : null,
+                skills: user ? user.skills : null,
             };
         })
     );
