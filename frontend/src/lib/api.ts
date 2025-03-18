@@ -63,6 +63,11 @@ interface ResumeResponse {
   };
 }
 
+interface ResumeResponse2 {
+  pdf_name: string;
+  file_name: string;
+}
+
 interface ApplicationsResponse {
   applications : [];
 }
@@ -76,11 +81,17 @@ export const getIndividualJobPosting = async( id : string, candidate_id: any ) :
 export const addResume = async(application: any) : Promise<ResumeResponse> =>
   API.post("/resume/add", application)
 
+export const getResumeName = async(id: string) : Promise<ResumeResponse2> =>
+  API.get(`/resume/${id}`)
+
 export const applyforJob = async(data: any) =>
   API.post("/job/applications/apply", data)
 
 export const checkwhoApplied = async(data: { emp_id: string, job_id: string}) : Promise <ApplicationsResponse>=> 
   API.get(`/job/applications/all/query?employer_id=${data.emp_id}&job_id=${data.job_id}`)
+
+export const editJobApplicationStatus = async(data: { id: string, status: string}) =>
+  API.put(`/job/applications/edit/${data.id}`, data)
 
 
 interface SavedJobsResponse {

@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { 
+import {
     addResumeHandler,
-    getResumeHandler
- } from "../controllers/resume.controller";
+    getResumeDownloadHandler,
+    getResumeNameHandler
+} from "../controllers/resume.controller";
 
+import fs from "fs";
 import multer from "multer";
-import fs from "fs"
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -30,6 +31,7 @@ const resumeRoutes = Router();
 
 //prefix: /resume
 resumeRoutes.post("/add", upload.single('resume'), addResumeHandler);
-resumeRoutes.get("/:id", getResumeHandler);
+resumeRoutes.get("/download/:id", getResumeDownloadHandler);
+resumeRoutes.get("/:id", getResumeNameHandler);
 
 export default resumeRoutes;

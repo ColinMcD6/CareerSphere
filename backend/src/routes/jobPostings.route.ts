@@ -3,6 +3,7 @@ import {
     addJobPostingApplicationHandler,
     addJobPostingHandler,
     deleteJobPostingApplicationHandler,
+    editJobPostingApplicationStatusHandler,
     getAllJobPostingsQueryHandler,
     getJobPostingApplicationsHandler,
     getJobPostingApplicationsQueryHandler,
@@ -30,6 +31,8 @@ jobPostingRoutes.get("/save/query", getSavedJobPostingsHandler);
 //Applications
 jobPostingRoutes.get("/applications/:id", getJobPostingApplicationsHandler);
 jobPostingRoutes.get("/applications/all/query", getJobPostingApplicationsQueryHandler);
+
+jobPostingRoutes.put("/applications/edit/:id", editJobPostingApplicationStatusHandler);
 
 jobPostingRoutes.post("/applications/apply/", addJobPostingApplicationHandler);
 

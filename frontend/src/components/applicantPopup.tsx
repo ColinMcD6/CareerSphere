@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button, Container } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 
 interface ApplicationPopupComponentProps {
     show: boolean;
@@ -16,7 +16,7 @@ interface ApplicationPopupComponentProps {
 }
 
 
-const ApplicationPopupComponent: React.FC<ApplicationPopupComponentProps> = ({show, username, email, experience, education, skills, resume_id, onClose, showResumeHandler}) => {
+const ApplicationPopupComponent: React.FC<ApplicationPopupComponentProps> = ({show, username, email, experience, education, skills, resume_id, onClose, showResumeHandler, editStatusApplicationHandler}) => {
   return (
     <Modal show={show} onHide={onClose}>
         <Modal.Dialog>
@@ -30,11 +30,12 @@ const ApplicationPopupComponent: React.FC<ApplicationPopupComponentProps> = ({sh
             <p>Experience: {experience.join(", ")}</p>
             <p>Education: {education.join(", ")}</p>
             <p>Skills: {skills.join(", ")}</p>
+            <Button onClick={() => showResumeHandler(resume_id)} variant="primary">View Resume</Button>
             </Modal.Body>
     
             <Modal.Footer>
-            <Button variant="secondary">Close</Button>
-            <Button onClick={() => showResumeHandler(resume_id)} variant="primary">View Resume</Button>
+            <Button onClick={() => editStatusApplicationHandler("Accepted")} variant="success">Accept</Button>
+            <Button onClick={() => editStatusApplicationHandler("Rejected")} variant="danger">Reject</Button>
             </Modal.Footer>
         </Modal.Dialog>
     </Modal>

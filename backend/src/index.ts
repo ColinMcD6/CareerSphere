@@ -1,15 +1,15 @@
-import express from "express";
-import cors from "cors";
 import cookieParser from "cookie-parser";
+import cors from "cors";
+import express from "express";
 import connectToDatabase from "./config/db";
-import { NODE_ENV, PORT, APP_ORIGIN } from "./constants/env";
-import errorHandler from "./middleware/errorHandler";
+import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env";
 import { OK } from "./constants/http";
-import userRoutes from "./routes/user.route";
+import authenticate from "./middleware/authenticate";
+import errorHandler from "./middleware/errorHandler";
+import authRoutes from "./routes/auth.route";
 import jobPostingRoutes from "./routes/jobPostings.route";
 import resumeRoutes from "./routes/resume.routes";
-import authRoutes from "./routes/auth.route";
-import authenticate from "./middleware/authenticate";
+import userRoutes from "./routes/user.route";
 
 const app = express();
 
@@ -21,6 +21,8 @@ app.use(
         credentials: true,
     })
 );
+
+app.use('/resume/uploads', express.static('resume/uploads'));
 
 app.use(cookieParser());
 

@@ -167,6 +167,12 @@ export const addJobPostingApplication = async (data: any) => {
     };
 };
 
+export const editJobPostingApplicationStatus = async (id: any, status: any) => {
+    const jobApplication = await ApplicationModel.findByIdAndUpdate(id, { status: status }, { new: true });
+    return jobApplication;
+
+};
+
 export const deleteJobPostingApplication = async (id: any) => {
     const jobPosting = await ApplicationModel.findByIdAndDelete(id);
     appAssert(jobPosting, CONFLICT, "Application does not exist!");

@@ -1,14 +1,14 @@
-import e, { Request, Response } from 'express';
+import e from 'express';
+import fs from "fs";
 import multer from 'multer';
-import * as db from './db'
+import path from "path";
+import request from 'supertest';
 import {
     addResumeHandler,
-    getResumeHandler,
+    getResumeNameHandler,
 } from '../controllers/resume.controller';
 import ResumeModel from '../models/resume.model';
-import request from 'supertest';
-import fs from "fs";
-import path from "path";
+import * as db from './db';
 
 const app = e();
 const storage = multer.diskStorage({
@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 app.post("/add", upload.single('resume'), addResumeHandler);
-app.get("/resume/:id", getResumeHandler);
+app.get("/resume/:id", getResumeNameHandler);
 
 
 

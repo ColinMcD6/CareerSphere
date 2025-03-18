@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
-import FormModalPopupComponent from "../components/popup";
 import ApplicationPopupComponent from "../components/applicantPopup";
+import FormModalPopupComponent from "../components/popup";
 import useUser from "../hooks/user";
 import {
   addResume,
   applyforJob,
   checkwhoApplied,
+  editJobApplicationStatus,
   getIndividualJobPosting,
+  getResumeName,
   getSavedJobs,
   saveJob,
   unsaveJob
@@ -36,6 +38,7 @@ const ViewJobPosting = () => {
 
 
   interface SingleApplication {
+    _id: string;
     candidate_id: string;
     username: string;
     status: string;
@@ -227,6 +230,28 @@ const ViewJobPosting = () => {
     setShowApplicantPopup(true);
   }
 
+  const changeApplicantStatusHandler = (newStatus: string) => {
+    if(user?.userRole === "Employer" && appliedApplications[applicantIndex])
+    {
+      editJobApplicationStatus({id: appliedApplications[applicantIndex]._id, status: newStatus});
+      setShowApplicantPopup(false);
+      appliedApplications[applicantIndex].status = newStatus;
+    }
+  }
+
+  const showResumeHandler = (resume_id:string) => {
+    const showResume = async () => {
+      const response = await getResumeName(resume_id);
+      console.log(response);
+      
+      if(response !== null){
+        window.open(import.meta.env.VITE_API_URL + `/resume/uploads/${response.file_name}`);
+      }
+    }
+    showResume();
+  
+  }
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -415,7 +440,7 @@ const ViewJobPosting = () => {
         </div>
       )}
     {
-      user?.userRole == "Employer" && (
+      user?.userRole == "Employer" && appliedApplications.length > 0 && (
         <ApplicationPopupComponent
           show={showApplicantPopup}
           username={appliedApplications[applicantIndex].username}
@@ -424,9 +449,9 @@ const ViewJobPosting = () => {
           education={appliedApplications[applicantIndex].education}
           skills={appliedApplications[applicantIndex].skills}
           resume_id={appliedApplications[applicantIndex].resume_id}
-          editStatusApplicationHandler = {() => {}}
+          editStatusApplicationHandler = {changeApplicantStatusHandler}
           onClose = {() => setShowApplicantPopup(false)}
-          showResumeHandler = {() => {}}
+          showResumeHandler = {showResumeHandler}
         >
         </ApplicationPopupComponent>
       )

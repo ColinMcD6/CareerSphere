@@ -5,6 +5,7 @@ import {
     addJobPostingApplication,
     createJobPosting,
     deleteJobPostingApplication,
+    editJobPostingApplicationStatus,
     getAllJobPostings,
     getAllJobPostingsQueryWithSaved,
     getJobPostingApplications,
@@ -166,6 +167,14 @@ export const addJobPostingApplicationHandler = catchErrors(async (req: Request, 
     const request = jobApplicationModel.parse(jobApplication);
     const application = await addJobPostingApplication(request);
     res.status(CREATED).json(application);
+})
+
+export const editJobPostingApplicationStatusHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const status = req.body.status;
+    const application = await editJobPostingApplicationStatus(id, status);
+    res.status(OK).json(application);
+
 })
 
 export const deleteJobPostingApplicationHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
