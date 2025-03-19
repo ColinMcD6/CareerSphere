@@ -5,6 +5,7 @@ import {
     getJobPostingApplicationsHandler,
     getJobPostingApplicationsQueryHandler,
     deleteJobPostingApplicationHandler,
+    editJobPostingApplicationStatusHandler,
 } from '../controllers/jobPostings.controller';
 
 
@@ -460,6 +461,43 @@ describe('Test adding Application', () => {
         expect(mRes.status).toHaveBeenCalledWith(200);
         expect(findApplication2).toBeNull();
         expect(finalAll).toHaveLength(1);
+    })
+
+    test('Edit Application Status', async () => {
+        const newApplication = {
+            job_id: "123",
+            employer_id: "123",
+            candidate_id: "123",
+            resume_id: "123",
+            dateApplied: new Date(),
+            status: "Pending",
+        };
+        const application = await ApplicationModel.create(newApplication);
+        const mReq: Partial<Request> = {
+            params: {
+                id: application._id as string,
+            },
+            body: {
+                status: "Accepted",
+            },
+        };
+
+        const findApplication = await ApplicationModel.findById(application._id).exec();
+        expect(findApplication?.status).toBe("Pending");
+
+        const mJson = jest.fn().mockImplementation(() => null)
+        const mStatus = jest.fn().mockImplementation(() => ({ json: mJson }));
+        const mRes: Partial<Response> = {
+            status: mStatus,
+        };
+        const mNext = jest.fn();
+        await editJobPostingApplicationStatusHandler(mReq as Request, mRes as Response, mNext);
+
+        const findApplication2 = await ApplicationModel.findById(application._id).exec();
+        expect(mRes.status).toHaveBeenCalledWith(200);
+        expect(findApplication2?.status).toBe("Accepted");
+        
+        
     })
 
 
