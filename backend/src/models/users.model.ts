@@ -1,9 +1,5 @@
-import mongoose, { Int32 } from "mongoose";
+import mongoose from "mongoose";
 import { comparePass, hashPass } from "../utils/auth_helpers/bcrypt";
-import { Category } from "./jobPostings.model";
-import appAssert from "../utils/appAssert";
-import { UNAUTHORIZED } from "../constants/http";
-
 
 export interface UserDocument extends mongoose.Document {
     username: string;
