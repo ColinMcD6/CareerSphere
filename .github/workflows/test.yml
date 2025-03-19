@@ -1,6 +1,8 @@
 name: Run Jest Tests
 
 on: 
+  push:
+    - AccImprove_quizzingFeature
   pull_request:
     branches:
       - development
