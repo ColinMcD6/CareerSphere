@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "pretest": "sudo docker rm -f test-mongo || true && sudo docker run --rm -d -p 3000:27017 --name test-mongo mongo:latest && npx wait-port 3000",
+    "pretest": "node ./docker-util-run.js start && npx wait-port 3000",
     "test": "cross-env MONGO_URI=mongodb://localhost:3000/testdb jest --runInBand --forceExit",
     "posttest": "docker stop test-mongo",
     "dev": "ts-node-dev --files src/index.ts index.d.ts",

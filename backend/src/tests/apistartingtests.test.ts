@@ -1,8 +1,6 @@
 import request from "supertest";
 import app from "../index";
 
-
-
 const email = "testemail@gmail.com"
 const password = "password1234"
 const roll = "Employer"
@@ -38,32 +36,27 @@ describe("Test job posting API", () => {
       .send({
         email: email,
         password: password,
-        user_role: roll,
       })
       .set("Accept", "application/json");
 
-    // Check if the login was successful
-    expect(loginResponse.statusCode).toBe(200);
+     expect(loginResponse.statusCode).toBe(200);
 
-    // Ensure cookies is treated as an array
-    const cookies = Array.isArray(loginResponse.headers["set-cookie"])
+     const cookies = Array.isArray(loginResponse.headers["set-cookie"])
       ? loginResponse.headers["set-cookie"]
       : [loginResponse.headers["set-cookie"]];
 
-    // Extract tokens from the Set-Cookie header
-    accessToken = cookies.find((cookie: string) =>
+     accessToken = cookies.find((cookie: string) =>
       cookie.startsWith("accessToken=")
     );
     refreshToken = cookies.find((cookie: string) =>
       cookie.startsWith("refreshToken=")
     );
 
-    // Ensure tokens were extracted successfully
-    expect(accessToken).toBeDefined();
+     expect(accessToken).toBeDefined();
     expect(refreshToken).toBeDefined();
   });
 
-  test("Add a job posting", async () => {
+  test("Add a job posting by using API", async () => {
 
     const jobPosting = {
         title: "Job to do fun things",
