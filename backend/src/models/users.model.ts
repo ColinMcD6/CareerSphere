@@ -14,7 +14,7 @@ export interface UserDocument extends mongoose.Document {
     companyDetails?: string;
     createdAt: Date;
     updatedAt: Date;
-    preferences: Int32Array;
+    preferences: number[];
     checkPassword(val: string): Promise<boolean>;
     removePassword(): Pick<UserDocument, "_id" | "email" | "verified" | "userRole" | "createdAt" | "updatedAt">;
 }
@@ -82,8 +82,8 @@ const userSchema = new mongoose.Schema<UserDocument>(
             },
         },
         preferences: {
-            type: [Int32Array],
-            default: [0, 0, 0, 0, 0],
+            type: [Number],
+            default: [0, 0, 0, 0, 0, 0],
         },
     },
     { timestamps: true }

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"; // Add useNavigate for redirecti
 import { createJobPosting } from "../lib/api";
 import useUser from "../hooks/user";
 import { Navigate } from "react-router-dom";
+import { Category } from "../../../backend/src/models/jobPostings.model"
 
 const CreateJobPost: React.FC = () => {
   const [postingTitle, setPostingTitle] = useState<string>("");
@@ -21,6 +22,7 @@ const CreateJobPost: React.FC = () => {
   >("do-not-disclose");
   const [compensationAmount, setCompensationAmount] = useState<number>(0);
   const [jobType, setJobType] = useState<string>("");
+  const [category, setCategory] = useState<number>(Category.Other);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false); // Track submission state
   const navigate = useNavigate(); // For redirection
   const { user, isLoading } = useUser();
@@ -66,9 +68,11 @@ const CreateJobPost: React.FC = () => {
       startingDate: startDate,
       status: "Open",
       jobType: jobType,
+      category: category,
     };
 
     console.log(`Sending a create job post request to ${BACK_END_URL}/job/add`);
+    console.log(formData);
 
     try {
 
@@ -332,6 +336,77 @@ const CreateJobPost: React.FC = () => {
                   ? ""
                   : "Employment type is required!"}
               </div>
+            </div>
+            <div className="mb-3">
+              <div
+                className={`d-flex justify-content-center align-items-center  ${
+                  getErrorForField("category") === undefined ? "" : "is-invalid"
+                }`}
+              >
+                <div className={`form-label`}>
+                  <label className={`form-label`}>
+                    What category does your job best fall under?
+                  </label>
+                  <div>
+                    {[
+                      {
+                        id: "technology",
+                        value: Category.Technology,
+                        label: "Technology",
+                      },
+                      {
+                        id: "agriculture",
+                        value: Category.Agriculture,
+                        label: "Agriculture",
+                      },
+                      {
+                        id: "service",
+                        value: Category.Service,
+                        label: "Service",
+                      },
+                      {
+                        id: "business",
+                        value: Category.Business,
+                        label: "Business",
+                      },
+                      {
+                        id: "engineering",
+                        value: Category.Engineering,
+                        label: "Engineering",
+                      },
+                      {
+                        id: "other",
+                        value: Category.Other,
+                        label: "Other",
+                      },
+                    ].map(({ id, value, label }) => (
+                      <div
+                        key={id}
+                        className="form-check d-flex align-items-center gap-2"
+                      >
+                        <input
+                          type="radio"
+                          className="form-check-input"
+                          id={id}
+                          name="category"
+                          value={value}
+                          checked={category === value}
+                          onChange={(e) => setCategory(Number(e.target.value))}
+                          disabled={isSubmitting}
+                        />
+                        <label className="form-check-label mb-0" htmlFor={id}>
+                          {label}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              {/* <div className="invalid-feedback">
+                {getErrorForField("category") === undefined
+                  ? ""
+                  : "Category is required!"}
+              </div> */}
             </div>
             <button
               type="submit"
