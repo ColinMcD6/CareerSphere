@@ -14,9 +14,9 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: us-central1-docker.pkg.dev/GOOGLE_PROJECT/docker-career-sphere/frontend:latest
+        image: us-central1-docker.pkg.dev/careersphere/docker-career-sphere/frontend:latest
         ports:
-        - containerPort: FRONTEND_PORT
+        - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
@@ -27,6 +27,6 @@ spec:
     app: frontend
   ports:
     - protocol: TCP
-      port: FRONTEND_PORT
-      targetPort: FRONTEND_PORT
+      port: 80
+      targetPort: 80
   type: LoadBalancer # Exposes frontend to the internet

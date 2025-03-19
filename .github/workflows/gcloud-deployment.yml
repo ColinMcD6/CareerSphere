@@ -54,18 +54,9 @@ jobs:
 
     - name: deploy backend to gke
       run: |
-        sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" ./backend/backend-deployment.yml
-        sed -i "s/BACKEND_PORT/$BACKEND_PORT/g" ./backend/backend-deployment.yml
-        sed -i "s/MONGODB_USER/$MONGODB_USER/g" ./backend/backend-deployment.yml
-        sed -i "s/MONGODB_PASS/$MONGODB_PASS/g" ./backend/backend-deployment.yml
-        sed -i "s/JWT_SECRET_VALUE/$JWT_SECRET_VALUE/g" ./backend/backend-deployment.yml
-        sed -i "s/JWTREFRESH_SECRET_VALUE/$JWTREFRESH_SECRET_VALUE/g" ./backend/backend-deployment.yml
-        sed -i "s/RESEND_API_KEY_VALUE/$RESEND_API_KEY_VALUE/g" ./backend/backend-deployment.yml
         kubectl apply -f ./backend/backend-deployment.yml
 
     - name: deploy frontend to gke
       run: |
-        sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" ./frontend/frontend-deployment.yml
-        sed -i "s/FRONTEND_PORT/$FRONTEND_PORT/g" ./frontend/frontend-deployment.yml
         kubectl apply -f ./frontend/frontend-deployment.yml
 
