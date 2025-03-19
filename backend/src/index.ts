@@ -52,3 +52,5 @@ app.listen(
     console.error("Server failed to start:", error);
     process.exit(1); // Exit the process with a failure code
 });
+
+export default app;
