@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest --runInBand --forceExit",
+    "pretest": "sudo docker rm -f test-mongo || true && sudo docker run --rm -d -p 3000:27017 --name test-mongo mongo:latest && npx wait-port 3000",
+    "test": "cross-env MONGO_URI=mongodb://localhost:3000/testdb jest --runInBand --forceExit",
+    "posttest": "docker stop test-mongo",
     "dev": "ts-node-dev --files src/index.ts index.d.ts",
     "build": "tsc && cp ./package.json ./dist",
     "start": "node ./dist/index.js"
@@ -37,6 +39,7 @@
     "@types/multer": "^1.4.12",
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^10.0.0",
+    "cross-env": "^7.0.3",
     "jest": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
     "resend": "^4.1.2",
