@@ -1,5 +1,9 @@
-import mongoose from "mongoose";
+import mongoose, { Int32 } from "mongoose";
 import { comparePass, hashPass } from "../utils/auth_helpers/bcrypt";
+import { Category } from "./jobPostings.model";
+import appAssert from "../utils/appAssert";
+import { UNAUTHORIZED } from "../constants/http";
+
 
 export interface UserDocument extends mongoose.Document {
     username: string;
@@ -14,6 +18,7 @@ export interface UserDocument extends mongoose.Document {
     companyDetails?: string;
     createdAt: Date;
     updatedAt: Date;
+    preferences: Int32Array;
     checkPassword(val: string): Promise<boolean>;
     removePassword(): Pick<UserDocument, "_id" | "email" | "verified" | "userRole" | "createdAt" | "updatedAt">;
 }
@@ -80,6 +85,10 @@ const userSchema = new mongoose.Schema<UserDocument>(
                 message: "Only Employers can have hiringDetails.",
             },
         },
+        preferences: {
+            type: [Int32Array],
+            default: [0, 0, 0, 0, 0],
+        },
     },
     { timestamps: true }
 );
@@ -99,6 +108,17 @@ userSchema.methods.checkPassword = async function (val: string) {
 userSchema.methods.removePassword = function () {
     const user = this.toObject();
     delete user.password;
+    return user;
+};
+
+userSchema.methods.updatePreference = function (category: number) {
+    const user = this.toObject();
+    //is there a way to check the length of Category so that we don't just need a try catch?
+    try {
+        user.preferences[category] += 1;
+    } catch (error) {
+        console.log(error);
+    }
     return user;
 };
 

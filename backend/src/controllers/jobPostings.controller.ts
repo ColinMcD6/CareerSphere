@@ -42,7 +42,8 @@ const jobPostingsZModel = z.object({
     education: z.array(z.string()),
     status: z.string().min(1).max(225), // Change to open/close later
     startingDate: z.string(), // I am not sure what to do about this right now, but this should be a date
-    jobType: z.enum(['Full-time', 'Part-time', 'Temporary', 'Internship'])
+    jobType: z.enum(['Full-time', 'Part-time', 'Temporary', 'Internship']),
+    category: z.enum(['Technology', 'Agriculture', 'Service', 'Business', 'Engineering'])
 })
 
 const saveJobPostingModel = z.object({
@@ -76,7 +77,8 @@ export const addJobPostingHandler = catchErrors(async (req: Request, res: Respon
         skills: req.body.skills,
         education: req.body.education,
         status: req.body.status,
-        startingDate: req.body.startingDate
+        startingDate: req.body.startingDate,
+        category: req.body.category
     }
     const request = jobPostingsZModel.parse(job);
     const user = await createJobPosting(request);
