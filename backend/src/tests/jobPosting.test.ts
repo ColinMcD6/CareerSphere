@@ -1,24 +1,23 @@
-import e, { query, Request, Response } from 'express';
-import * as db from './db'
 import {
     getAllJobPostingsQueryHandler,
     saveJobPostingHandler,
-    unsaveJobPostingHandler,
-    getSavedJobPostingsHandler
+    unsaveJobPostingHandler
 } from '../controllers/jobPostings.controller';
+import * as db from './db';
 
 
-import SaveJobPostingsModel from '../models/saveJobPostings.model';
-import UserModel from '../models/users.model';
-import JobPostingsModel from '../models/jobPostings.model';
-import supertest = require('supertest');
 import express from 'express';
 import request from 'supertest';
+import JobPostingsModel from '../models/jobPostings.model';
+import SaveJobPostingsModel from '../models/saveJobPostings.model';
+import UserModel from '../models/users.model';
+import supertest = require('supertest');
 
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
 app.get("/job", getAllJobPostingsQueryHandler);
 app.post("/job/save", saveJobPostingHandler);
 app.delete("/job/unsave/:id", unsaveJobPostingHandler);

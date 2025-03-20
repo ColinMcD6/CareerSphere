@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { createQuizForJobPosting } from "../lib/api";
-import { useSearchParams } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import "react-toastify/dist/ReactToastify.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import { useNavigate } from "react-router-dom"; // Add useNavigate for redirection
+import "react-toastify/dist/ReactToastify.css";
 import useUser from "../hooks/user";
+import { createQuizForJobPosting } from "../lib/api";
 
 interface Question {
   questionText: string;
