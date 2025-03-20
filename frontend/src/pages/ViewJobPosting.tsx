@@ -247,8 +247,8 @@ const ViewJobPosting = () => {
     return <div>Loading...</div>;
   }
   return (
-    <div className="mt-5 pt-1">
-      <div className="container mt-5">
+    <div className="pt-1">
+      <div className="container">
         <div className="card mb-4 shadow">
           <h2 className="card-header bg-primary text-white">{data.title}</h2>
           <div className="card-body">

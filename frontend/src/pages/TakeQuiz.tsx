@@ -6,7 +6,7 @@ import { BiQuestionMark } from "react-icons/bi";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom"; // Add useNavigate for redirection
-
+import useUser from "../hooks/user";
 
 interface Question {
   questionText: string;
@@ -29,8 +29,19 @@ const TakeQuiz: React.FC = () => {
   const [searchParams] = useSearchParams();
   const jobId = searchParams.get("ID");
   const quizId = searchParams.get("quizId");
+  const { user, isLoading } = useUser();
   const navigate = useNavigate(); // For redirection
 
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      window.location.href = "/login";
+    }
+    if (!isLoading && user?.userRole !== "Candidate") {
+      // If they are not an candidate, redirect them to home
+      window.location.href = "/";
+    }
+  }, [user, isLoading]);
 
   useEffect(() => {
     if (jobId !== undefined && quizId !== null) {
@@ -128,9 +139,22 @@ const TakeQuiz: React.FC = () => {
     }
   };
 
-  if (quiz == null) {
-    return <div> Loading Quiz</div>;
+  if (isLoading || user?.userRole !== "Candidate") {
+    return (
+      <div className="mt-5">
+        <h1> Loading content</h1>
+      </div>
+    );
   }
+
+  if (quiz == null) {
+    return (
+      <div className="mt-5">
+        <h1> Loading Quiz</h1>
+      </div>
+    );
+  }
+
   return (
     <div className="container mt-5">
       <ToastContainer aria-label={undefined} />

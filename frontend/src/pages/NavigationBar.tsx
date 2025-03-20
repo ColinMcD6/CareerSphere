@@ -4,6 +4,7 @@ import { FaHome, FaBriefcase } from "react-icons/fa";
 
 const NavBar = () => {
   return (
+    <div>
     <Navbar bg="dark" variant="dark" fixed="top" className="shadow">
       <Container>
         <Nav className="ms-auto d-flex gap-4">
@@ -26,6 +27,10 @@ const NavBar = () => {
         </Nav>
       </Container>
     </Navbar>
+     {/* Add a spacer div with inline styles */}
+     <div style={{ marginTop: "70px" }}>
+      </div>
+    </div>
   );
 };
 
