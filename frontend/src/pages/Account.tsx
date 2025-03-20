@@ -46,7 +46,8 @@ const Account = () => {
         education: educ,
         skills: userSkills,
         hiringDetails: hireDetails,
-        companyDetails: compDetails
+        companyDetails: compDetails,
+        preference: -1
       });
       // clear the cache so that user details are fetched again from database when user press submits and updates db value
       queryClient.invalidateQueries({ queryKey: [USER] });

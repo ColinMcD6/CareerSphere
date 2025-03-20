@@ -16,6 +16,7 @@ import {
     unsaveJobPosting
 } from "../services/jobPostings.services";
 import catchErrors from "../utils/catchErrors";
+import { Category } from "../models/jobPostings.model";
 
 
 
@@ -42,7 +43,8 @@ const jobPostingsZModel = z.object({
     education: z.array(z.string()),
     status: z.string().min(1).max(225), // Change to open/close later
     startingDate: z.string(), // I am not sure what to do about this right now, but this should be a date
-    jobType: z.enum(['Full-time', 'Part-time', 'Temporary', 'Internship'])
+    jobType: z.enum(['Full-time', 'Part-time', 'Temporary', 'Internship']),
+    category: z.nativeEnum(Category)
 })
 
 const saveJobPostingModel = z.object({
@@ -76,7 +78,8 @@ export const addJobPostingHandler = catchErrors(async (req: Request, res: Respon
         skills: req.body.skills,
         education: req.body.education,
         status: req.body.status,
-        startingDate: req.body.startingDate
+        startingDate: req.body.startingDate,
+        category: req.body.category
     }
     const request = jobPostingsZModel.parse(job);
     const user = await createJobPosting(request);
@@ -105,7 +108,7 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
 
     // Extract query fields from the request query but removes page and limit
     const query = queryFieldNames.reduce((acc, key) => {
-        if (key !== 'page' && key !== 'limit' && key !== 'saved_posting_candidate_id') {
+        if (key !== 'page' && key !== 'limit' && key !== 'saved_posting_candidate_id' && key !== 'user_id') {
             acc[key] = req.query[key];
         }
         return acc;
@@ -116,8 +119,8 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
     const saved_posting_candidate_id = req.query.saved_posting_candidate_id ? req.query.saved_posting_candidate_id as string : null;
-
-    const jobPostings = await getAllJobPostingsQueryWithSaved(query, page, limit, saved_posting_candidate_id);
+    const user_id = req.query.user_id ? req.query.user_id as any: null;
+    const jobPostings = await getAllJobPostingsQueryWithSaved(query, page, limit, saved_posting_candidate_id, user_id);
     console.log(jobPostings);
     res.status(OK).json(jobPostings);
 })

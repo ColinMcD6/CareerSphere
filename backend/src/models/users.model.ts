@@ -14,8 +14,10 @@ export interface UserDocument extends mongoose.Document {
     companyDetails?: string;
     createdAt: Date;
     updatedAt: Date;
+    preferences: number[];
     checkPassword(val: string): Promise<boolean>;
     removePassword(): Pick<UserDocument, "_id" | "email" | "verified" | "userRole" | "createdAt" | "updatedAt">;
+    updatePreference(val: number):Promise<void>;
 }
 
 const userSchema = new mongoose.Schema<UserDocument>(
@@ -80,6 +82,10 @@ const userSchema = new mongoose.Schema<UserDocument>(
                 message: "Only Employers can have hiringDetails.",
             },
         },
+        preferences: {
+            type: [Number],
+            default: [0, 0, 0, 0, 0, 0],
+        },
     },
     { timestamps: true }
 );
@@ -101,6 +107,7 @@ userSchema.methods.removePassword = function () {
     delete user.password;
     return user;
 };
+
 
 const UserModel = mongoose.model<UserDocument>("User", userSchema);
 export default UserModel;

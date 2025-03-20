@@ -8,6 +8,7 @@ import { FaPlus } from "react-icons/fa"; // Importing the plus icon
 interface Job {
   _id: string;
   title: string;
+  category: number;
 }
 
 const ViewAllJobs: React.FC = () => {
@@ -28,6 +29,9 @@ const ViewAllJobs: React.FC = () => {
         let query = user?.userRole === "Employer" ? `?employer_id=${user._id}` : "";
         if(query === ""){
           query = showSavedJobs ? `?saved_posting_candidate_id=${user._id}` : "";
+        }
+        if(query === ""){
+          query = `?user_id=${user._id}`;
         }
         const response = await getAllJobPostings(query);
         console.log("Received response from express server with all jobs");

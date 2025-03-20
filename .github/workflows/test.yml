@@ -13,7 +13,7 @@ jobs:
       NODE_ENV: development
       APP_ORIGIN: http://localhost:5173
       MONGO_URI: mongodb://localhost:27017/Comp4350_CareerSphere
-      PORT: 5050
+      PORT: 5500
       JWT_SECRET: myjwtsecret
       JWTREFRESH_SECRET: myjwtrefrestsecret
       SENDER_EMAIL: a
