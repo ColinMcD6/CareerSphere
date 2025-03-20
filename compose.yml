@@ -1,15 +1,8 @@
 services:
   frontend:
-    # image: colinmcd6/frontend:latest
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: colinmcd6/frontend:latest
     ports:
       - "5173:5173"
-    environment:
-      - VITE_API_URL=http://backend:4004
-    env_file:
-      - ./frontend/.env
     depends_on:
       - backend
     networks:

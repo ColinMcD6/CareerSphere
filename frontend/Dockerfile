@@ -13,6 +13,8 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
+ENV VITE_API_URL=http://localhost:4004
+
 # Build the TypeScript code
 RUN npm run build
 
