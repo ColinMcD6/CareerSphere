@@ -117,7 +117,7 @@ export const getAllJobPostingsQueryWithSaved = async (
         if(preferences)
         {
             let jobDisplay: JobPostingsDocument[][] = [];
-            let order = Array.from(preferences.keys()).sort((a, b) => preferences[a] - preferences[b]);
+            let order = Array.from(preferences.keys()).sort((a, b) => preferences[b]- preferences[a]);
             
             for(var i = 0; i < preferences.length; i++){
                 jobDisplay[i] = [];
@@ -129,6 +129,7 @@ export const getAllJobPostingsQueryWithSaved = async (
             }
             for(var i = 0; i < order.length; i++)
             {
+                //console.log(order[i]);
                 for(var j = 0; j < jobDisplay[order[i]].length; j++)
                 {
                     output.push(jobDisplay[order[i]][j]);
@@ -138,11 +139,13 @@ export const getAllJobPostingsQueryWithSaved = async (
         }
         else
         {
+            //console.log("No preferences");
             output = jobPostings;
         }
     }
     else
     {
+        //console.log("No user_id");
         output = jobPostings;
     }
     
