@@ -52,7 +52,9 @@ const errorHandler: ErrorRequestHandler = (
         return;
     }
 
-    res.status(INTERNAL_SERVER_ERROR).send("Internal Server Error");
+
+    console.log("IS THIS RUNNNINNGNGNGNNGNGNGNN????????")
+    res.status(9999).send("Internal Server Error zzzzzzzzzzzzzzzzzzzzzzzzzzz");
 
 };
 
