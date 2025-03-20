@@ -19,11 +19,5 @@ RUN npm run build
 # Install serve to serve the static files
 RUN npm install -g serve
 
-# Set the port environment variable
-ENV PORT=80
-
-# Include this line for deployement in GKE
-ENV VITE_API_URL=http://backend-service:5000
-
 # Start the application
 CMD ["serve", "-s", "dist", "-l", "5173"]
