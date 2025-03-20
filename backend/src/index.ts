@@ -38,16 +38,16 @@ app.use("/user", authenticate, userRoutes);
 app.use(errorHandler);
 
 app.listen(
-    PORT,
-    async () => {
-        console.log(`Server is running on port ${PORT} in ${NODE_ENV} environment.`);
-        try {
-            await connectToDatabase();
-        } catch (error) {
-            console.error("Failed to connect to the database:", error);
-            process.exit(1); // Exit the process with a failure code
-        }
+  PORT,
+  async () => {
+    console.log(`Server is running on port ${PORT} in ${NODE_ENV} environment.`);
+    try {
+      await connectToDatabase();
+    } catch (error) {
+      console.error("Failed to connect to the database:", error);
+      process.exit(1); // Exit the process with a failure code
     }
+  }
 ).on("error", (error) => {
     console.error("Server failed to start:", error);
     process.exit(1); // Exit the process with a failure code

@@ -5,7 +5,7 @@
 | 1.0     |Feb 23, 2025 | Colin McDonell | Create initial test plan |
 | 1.1     |Feb 27, 2025 | Sukhmeet Singh Hora | Added unit tests for Signup, Login, Logout, Reset password, Verify Code and View Applicants |
 | 1.2     |Feb 28, 2025 | Colin McDonell | Documented all unit and acceptance tests for sprint 2 |
-| 1.3     |Mar 17, 2025 | Sukhmeet Singh Hora | Added unit tests for Quizzing for Job Screening Process: creating quiz, getting quiz, submitting response and getting candidate response with score |
+| 1.3     |Mar 17, 2025 | Sukhmeet Singh Hora | Added unit tests for Quizzing for Job Screening Process: creating quiz, getting quiz, submitting response and getting candidate response with score, Also added some integration API Tests for Account Managemnt|
 
 ## 1 Introduction
 ### 1.1 Scope
@@ -41,7 +41,12 @@ Below are the core features and how we plan to test them. More details will be a
 10. Fails to reset the password if the code is inavlid: Verifies that password reset fails without a valid verification code, keeping the user's password unchanged.
 
 ##### Integration Tests
-Will be implemented in Sprint 3
+1. Signup should create a new user and log in successfully with correct credentials: This test verifies that a user can successfully sign up and log in using the correct email and password and tokens are assigned in the cookies. POST /auth/signup and POST /auth/login
+2. Signup and verify user email: This test ensures that after signing up, a user can verify their email address using a verification code. POST /auth/signup and GET /auth/email/verify/:verifycode
+3. Signup should create a new user but log in fails with wrong password: This test checks that login fails when an incorrect password is used for an existing account. POST /auth/signup and POST /auth/login
+4. Signup should create a new user but log in fails with wrong email: This test confirms that login fails when an incorrect email is provided. POST /auth/signup and POST /auth/login
+5. Signup, login successfully, and logout: This test verifies that a user can sign up, log in, and successfully log out and clear the tokens in the cookies. POST /auth/signup, POST /auth/login and GET /auth/logout
+6. Signup, Login, Reset password, and Login successfully again: This test checks that after signing up and logging in, a user can reset their password and log in again with the new password. POST /auth/signup, POST /auth/login and POST /auth/password/reset
 
 ##### Acceptance Tests
 1. Successful Account Creation
