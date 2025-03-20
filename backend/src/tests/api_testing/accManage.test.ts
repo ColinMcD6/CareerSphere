@@ -126,6 +126,8 @@ describe('API Routes', () => {
         };
         
         const loginResponse = await request(app).post('/auth/login').send(loginData).set("Accept", "application/json");
+        console.log(loginResponse)
+
         expect(loginResponse.status).toBe(500); // FIX LATER
         expect(loginResponse.body).toHaveProperty('message', "Invalid email or Password !");
         //const cookies = loginResponse.headers['set-cookie'];
