@@ -5,11 +5,9 @@ on:
     branches:
       - development
       - main
-      - test_bryce
       - AccImprove_quizzingFeature
   push:
     branches:
-      - test_bryce
       - new_test_bryce
 
 jobs:
