@@ -3,7 +3,7 @@ name: Build Backend
 on:
   push:
     branches:
-    - 'deployment'
+    - 'NOTdeployment'
 
 env:
   GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}

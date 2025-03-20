@@ -26,4 +26,4 @@ ENV PORT=80
 ENV VITE_API_URL=http://backend-service:5000
 
 # Start the application
-CMD ["serve", "-s", "dist", "-l", "80"]
+CMD ["serve", "-s", "dist", "-l", "5173"]

@@ -1,0 +1,32 @@
+services:
+  # frontend:
+  #   image: colinmcd6/frontend:latest
+  #   ports:
+  #     - "5173:5173"
+  #   environment:
+  #     - VITE_API_URL=http://backend:4004
+  #   env_file:
+  #     - ./frontend/.env
+
+  backend:
+    image: colinmcd6/backend:latest
+    ports:
+      - "4004:4004"
+    environment:
+      - NODE_ENV=production
+      - APP_ORIGIN=http://localhost:5173
+      - PORT=4004
+      - MONGO_URI=mongodb://mongo:27017/test_db
+    env_file:
+      - ./backend/.env
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    command: ["mongod", "--quiet", "--logpath", "/dev/null"]
+
+volumes:
+  mongo-data:
