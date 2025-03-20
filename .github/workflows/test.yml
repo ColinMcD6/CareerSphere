@@ -1,13 +1,15 @@
 name: Run Jest Tests
 
-on: 
-  push:
-    branches:
-      - AccImprove_quizzingFeature
+on:
   pull_request:
     branches:
       - development
       - main
+      - test_bryce
+      - AccImprove_quizzingFeature
+  push:
+    branches:
+      - test_bryce
 
 jobs:
   test:
@@ -32,6 +34,16 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
+
+      - name: Install Docker
+        run: |
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sudo sh get-docker.sh
+
+      - name: Start MongoDB Docker Container
+        run: |
+          sudo docker run -d --name test-mongo -p 27017:27017 mongo:latest
+          sudo docker ps -a
 
       - name: Install Dependencies
         run: npm install --prefix backend

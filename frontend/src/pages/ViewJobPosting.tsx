@@ -288,34 +288,13 @@ const ViewJobPosting = () => {
                 </p>
                 <p className="card-text">
                   <strong>Deadline:</strong>{" "}
-                  {new Date(data.dueDate).toLocaleDateString()}
+                  {DateToString(data.dueDate)}
                 </p>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <p className="card-text">
-                <strong>Status:</strong> {data.status}
-              </p>
-              <p className="card-text">
-                <strong>Date Posted:</strong> {DateToString(data.datePosted)}
-              </p>
-              <p className="card-text">
-                <strong>Deadline:</strong> {DateToString(data.dueDate)}
-              </p>
-              <p className="card-text">
+                <p className="card-text">
                 <strong>Starting Date For Job:</strong>{" "}
                 {DateToString(data.startDate)}
               </p>
-            </div>
-            <div className="mb-3">
-              <h6>Skills:</h6>
-              <ul className="list-group">
-                {data.skills.map((skill, index) => (
-                  <li key={index} className="list-group-item">
-                    {skill}
-                  </li>
-                ))}
-              </ul>
+              </div>
             </div>
             <div className="mb-3">
               <h6>Education:</h6>
@@ -389,7 +368,6 @@ const ViewJobPosting = () => {
             </div>
           )}
         </div>
-
         {user?.userRole == "Employer" && (
           <div className="container mt-4">
             <h2 className="mb-4">Applications</h2>
@@ -416,7 +394,6 @@ const ViewJobPosting = () => {
             </ul>
           </div>
         )}
-
         {user?.userRole == "Employer" && (
           <div className="container mt-3 ">
             <h3 className="mb-3 ">Quizz Section</h3>
