@@ -5,11 +5,10 @@ on:
     branches:
       - development
       - main
-      - test_bryce
       - AccImprove_quizzingFeature
   push:
     branches:
-      - test_bryce
+      - new_test_bryce
 
 jobs:
   test:
@@ -32,18 +31,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22.12.0
           cache: 'npm'
-
-      - name: Install Docker
-        run: |
-          curl -fsSL https://get.docker.com -o get-docker.sh
-          sudo sh get-docker.sh
-
-      - name: Start MongoDB Docker Container
-        run: |
-          sudo docker run -d --name test-mongo -p 27017:27017 mongo:latest
-          sudo docker ps -a
+      - name: Set NODE_ENV to test
+        run: echo "NODE_ENV=test" >> $GITHUB_ENV
 
       - name: Install Dependencies
         run: npm install --prefix backend
