@@ -53,12 +53,13 @@ export const getAllJobPostingsQuery = async (
         .exec();
 
     const total = await JobPostingsModel.countDocuments();
+    const pages = Math.ceil(total / limit);
 
     return {
         jobPostings,
         total,
-        page,
-        pages: Math.ceil(total / limit),
+        page: page <= pages ? page : pages,
+        pages: pages,
     };
 };
 
@@ -146,14 +147,14 @@ export const getAllJobPostingsQueryWithSaved = async (
     }
     
     const total = jobPostings.length;
-    console.log
-    
+    const pages = Math.ceil(total / limit);
+
 
     return {
         jobPostings: output,
         total,
-        page,
-        pages: Math.ceil(total / limit),
+        page: page <= pages ? page : pages,
+        pages: pages,
     };
 };
 
