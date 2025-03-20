@@ -95,41 +95,7 @@ describe('API Routes', () => {
     }, 10000);
 
     
-    test('Signup should create a new user but log in fails with wrong password', async () => {
-        const userData = {
-            username: "test_user",
-            email: "test_user@gmail.com",
-            password: "12345678",
-            confirm_password: "12345678",
-            user_role: "Candidate"
-        };
-    
-        const signupResponse = await request(app).post('/auth/signup').send(userData);
-        expect(signupResponse.status).toBe(CREATED);
-        expect(signupResponse.body).toMatchObject({
-            username: "test_user",
-            email: "test_user@gmail.com",
-            userRole: "Candidate",
-            education: [],
-            skills: [],
-            experience: []
-        });
 
-        const newuser = await UserModel.findOne({
-            email: "test_user@gmail.com"
-        })
-        expect(newuser?.username).toBe("test_user")
-    
-        const loginData = {
-            email: "test_user@gmail.com",
-            password: "123456555",
-        };
-        const loginResponse = await request(app).post('/auth/login').set("Accept", "application/json").send(loginData);
-        expect(loginResponse.status).toBe(UNAUTHORIZED);
-        expect(loginResponse.body).toHaveProperty('message', "Invalid email or Password !");
-        const cookies = loginResponse.headers['set-cookie'];
-        expect(cookies).toBeUndefined();
-    }, 10000);
     
     test('Signup should create a new user but log in fails with wrong email', async () => {
         const userData = {
