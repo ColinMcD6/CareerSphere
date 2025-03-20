@@ -95,11 +95,26 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
 
     // Extract query fields from the request query but removes page and limit
     const query = queryFieldNames.reduce((acc, key) => {
-        if (key !== 'page' && key !== 'limit') {
+        if (key !== 'page' && key !== 'limit' && key !== 'search') {
             acc[key] = req.query[key];
         }
         return acc;
     }, {} as Record<string, any>);
+
+    // Handle the search query paramete
+    if (req.query.search) {
+        const searchTerm = req.query.search.toString();
+        const searchRegex = new RegExp(searchTerm, "i");
+        // Look for the search term in these fields.
+        query.$or = [
+          { title: { $regex: searchRegex } },
+          { positionTitle: { $regex: searchRegex } },
+          { description: { $regex: searchRegex } },
+          { employer: { $regex: searchRegex } },
+          { location: { $regex: searchRegex } },
+          { skills: { $elemMatch: { $regex: searchRegex } } },
+        ];
+    }
 
     console.log("Received a request to get all job posts");
     
