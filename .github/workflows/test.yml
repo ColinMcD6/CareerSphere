@@ -38,11 +38,6 @@ jobs:
       - name: Set NODE_ENV to test
         run: echo "NODE_ENV=test" >> $GITHUB_ENV
 
-      - name: Start MongoDB Docker Container
-        run: |
-          sudo docker run -d --name test-mongo -p 27017:27017 mongo:latest
-          sudo docker ps -a
-
       - name: Install Dependencies
         run: npm install --prefix backend
 
