@@ -1,9 +1,11 @@
-import e, { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import catchErrors from "../utils/catchErrors";
 import Quiz from "../models/quiz.model";
 import JobPostingsModel from "../models/jobPostings.model";
-import { Mongoose } from "mongoose";
+import mongoose from "mongoose";
 import UserModel from "../models/users.model";
+import { BAD_REQUEST, CONFLICT, CREATED, NOT_FOUND, OK } from "../constants/http";
+import appAssert from "../utils/appAssert";
 
 /* Example fo sending requesting from fronend to this is :
     post request to /job/{job_id}/quizzes
@@ -25,28 +27,29 @@ import UserModel from "../models/users.model";
 
 export const addquizHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const jobId = req.params.id
+        const jobId = req.params.id;
         const { quizName, questions } = req.body;
-        if (!jobId || !questions || !Array.isArray(questions) || questions.length === 0) {
-            return res.status(400).json({ message: "Invalid quiz data" });
-        }
-        const newQuiz = new Quiz({
-            jobId,
-            quizName,
-            questions,
-        });
+
+        // Validate jobId
+        appAssert(mongoose.isValidObjectId(jobId), BAD_REQUEST, "Invalid data");
+
+        appAssert(quizName, BAD_REQUEST, "Invalid data")
+
+        appAssert(questions && Array.isArray(questions) && questions.length > 0, BAD_REQUEST, "Invalid data")
+
+        // Find the job posting
+        const jobPosting = await JobPostingsModel.findById(jobId);
+        appAssert(jobPosting, NOT_FOUND, "Job not found!");
+
+        // Create a new quiz
+        const newQuiz = new Quiz({ jobId, quizName, questions });
         await newQuiz.save();
 
-        // Update the Job Posting with the new quiz ID
-        const jobPosting = await JobPostingsModel.findById(jobId);
-        if (jobPosting) {
-        if (!jobPosting.quizzes.includes(newQuiz._id?.toString() || "")) {
-            jobPosting.quizzes.push(newQuiz._id?.toString() || "");
-            await jobPosting.save();
-        }
-        }
+        // Link the new quiz to the job posting
+        jobPosting.quizzes.push(newQuiz._id?.toString() || "");
+        await jobPosting.save();
 
-        res.status(201).json({ message: "Quiz created successfully", quiz: newQuiz });
+        res.status(CREATED).json({ message: "Quiz created successfully", quiz: newQuiz });
     } catch (error) {
         next(error);
     }
@@ -59,13 +62,12 @@ export const addquizHandler = catchErrors(async (req: Request, res: Response, ne
 export const getquizHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const jobId = req.params.id;
+      appAssert(mongoose.isValidObjectId(jobId),BAD_REQUEST, "Invalid Data")
+
       const quizzes = await Quiz.find({ jobId });
-      
-      if (!quizzes.length) {
-        return res.status(404).json({ message: "No quizzes found for this job" });
-      }
+      appAssert(!(quizzes.length == 0), NOT_FOUND, "No quizzes found for this job")
   
-      res.status(200).json({ quizzes });
+      res.status(OK).json({ quizzes });
     } catch (error) {
       next(error);
     }
@@ -78,13 +80,12 @@ export const getquizHandler = catchErrors(async (req: Request, res: Response, ne
 export const getspecificquizHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id: jobId, quizId } = req.params;
+      appAssert((mongoose.isValidObjectId(jobId) && mongoose.isValidObjectId(quizId)),BAD_REQUEST, "Invalid Data")
+
       const quiz = await Quiz.findOne({ _id: quizId, jobId });
-      
-      if (!quiz) {
-        return res.status(404).json({ message: "Quiz not found for this job" });
-      }
+      appAssert(quiz, NOT_FOUND, "Quiz Not found")
   
-      res.status(200).json({ quiz });
+      res.status(OK).json({ quiz });
     } catch (error) {
       next(error);
     }
@@ -107,27 +108,24 @@ export const addquizCandiateResponse = catchErrors(async (req: Request, res: Res
     const { responses } = req.body;
     const candidateId = req.userId;
 
-    if (!candidateId || !responses || !Array.isArray(responses)) {
-      return res.status(400).json({ message: "Invalid submission data" });
-    }
+    console.log(candidateId)
+
+    appAssert(mongoose.isValidObjectId(candidateId), BAD_REQUEST, "Invalid Data")
+
+    appAssert(mongoose.isValidObjectId(quizId), BAD_REQUEST, "Invalid Data")
+
+    appAssert(responses, BAD_REQUEST, "Invalid Data")
 
     const user = await UserModel.findById(candidateId);
-    if (!user) {
-      return res.status(400).json({ message: "User Not Found"});
-    }
+    appAssert(user, NOT_FOUND, "Not Found")
+    
     const candidateUsername = user?.username || "";
-
     const quiz = await Quiz.findById(quizId);
-    if (!quiz) {
-      return res.status(404).json({ message: "Quiz not found" });
-    }
+    appAssert(quiz, NOT_FOUND, "Quiz not found")
 
-    console.log(candidateId);
     // Check if the candidate has already submitted
     const existingSubmission = quiz.submissions.find(sub => sub.candidateId === candidateId);
-    if (existingSubmission) {
-      return res.status(400).json({ message: "Candidate has already submitted this quiz" });
-    }
+    appAssert(!existingSubmission, CONFLICT, "Candidate has already submitted this quiz")
 
     let score = 0;
     quiz.questions.forEach((question, index) => {
@@ -139,7 +137,7 @@ export const addquizCandiateResponse = catchErrors(async (req: Request, res: Res
     quiz.submissions.push({ candidateId, candidateUsername, score });
     await quiz.save();
 
-    res.status(201).json({ message: "Submission recorded successfully", candidateUsername, score });
+    res.status(CREATED).json({ message: "Submission recorded successfully", candidateUsername, score });
   } catch (error) {
     next(error);
   }
@@ -148,13 +146,12 @@ export const addquizCandiateResponse = catchErrors(async (req: Request, res: Res
 export const getquizSubmissions = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { quizId } = req.params;
-    const quiz = await Quiz.findById(quizId);
-    
-    if (!quiz) {
-      return res.status(404).json({ message: "Quiz not found" });
-    }
+    appAssert(mongoose.isValidObjectId(quizId), BAD_REQUEST, "Invalid Data")
 
-    res.status(200).json({ submissions: quiz.submissions });
+    const quiz = await Quiz.findById(quizId);
+    appAssert(quiz, NOT_FOUND, "Quiz not found")
+
+    res.status(OK).json({ submissions: quiz.submissions });
   } catch (error) {
     next(error);
   }

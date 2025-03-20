@@ -8,7 +8,7 @@ on:
       - AccImprove_quizzingFeature
   push:
     branches:
-      - new_test_bryce
+      - AccImprove_quizzingFeature
 
 jobs:
   test:
