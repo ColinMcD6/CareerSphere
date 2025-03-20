@@ -25,42 +25,17 @@ const ViewAllJobs: React.FC = () => {
         return;
       }
       try {
-        let preferencesEnabled = false;
         console.log("Contacting Express server to query jobs");
         let query = user?.userRole === "Employer" ? `?employer_id=${user._id}` : "";
         if(query === ""){
           query = showSavedJobs ? `?saved_posting_candidate_id=${user._id}` : "";
         }
         if(query === ""){
-          preferencesEnabled = true;
+          query = `?user_id=${user._id}`;
         }
         const response = await getAllJobPostings(query);
         console.log("Received response from express server with all jobs");
-        if(!preferencesEnabled){
-          setJobs(response.jobPostings);
-        }
-        else{
-          let jobDisplay: Job[][] = [];
-          let counters: number[] = [];
-          let test = [3, 15, 2, 1, 0, 0];// TODO get rid of this and replace with users.preferences once thats figured out|||||||||||||||||||
-          let order = Array.from(test.keys()).sort((a, b) => test[a] - test[b]);
-          
-          for(var i = 0; i < user.preferences.length; i++){
-            jobDisplay[i] = [];
-          }
-          for(var i = 0; i < response.jobPostings.length; i++)
-          {
-            let parseJob: Job = response.jobPostings[i];
-            jobDisplay[parseJob.category][counters[parseJob.category]] = parseJob;
-            counters[parseJob.category] += 1;
-          }
-          let output: Job[] = [];
-          for(var i = 0; i < order.length; i++)
-          {
-            output = output.concat(jobDisplay[order[i]]);
-          }
-          setJobs(output);
-        }
+        setJobs(response.jobPostings);
       } catch (error) {
         console.error("Error fetching all job postings : ", error);
         setError(true);

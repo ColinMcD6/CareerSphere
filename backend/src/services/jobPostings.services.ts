@@ -1,6 +1,6 @@
 import { CONFLICT } from "../constants/http";
 import ApplicationModel from "../models/application.model";
-import JobPostingsModel from "../models/jobPostings.model";
+import JobPostingsModel, { JobPostingsDocument } from "../models/jobPostings.model";
 import SaveJobPostingsModel from "../models/saveJobPostings.model";
 import UserModel from "../models/users.model";
 import appAssert from "../utils/appAssert";
@@ -66,7 +66,8 @@ export const getAllJobPostingsQueryWithSaved = async (
     query: any,
     page: number,
     limit: number,
-    saved_posting_candidate_id: any
+    saved_posting_candidate_id: any,
+    user_id: any
 ) => {
 
     //The default aggregation rules
@@ -103,13 +104,49 @@ export const getAllJobPostingsQueryWithSaved = async (
         )
     }
 
-    const jobPostings = await JobPostingsModel.aggregate(aggregation_rules);
+    let jobPostings = await JobPostingsModel.aggregate(aggregation_rules);
+    let output: JobPostingsDocument[] = [];
 
+    //organize
+    if(user_id)
+    {
+        const user = await UserModel.findById(user_id)
+        const preferences = user?.preferences;
+        
+        if(preferences)
+        {
+            let jobDisplay: JobPostingsDocument[][] = [];
+            let counters: number[] = [];
+            let order = Array.from(preferences.keys()).sort((a, b) => preferences[a] - preferences[b]);
+            
+            for(var i = 0; i < preferences.length; i++){
+            jobDisplay[i] = [];
+            }
+            for(var i = 0; i < jobPostings.length; i++)
+            {
+            let parseJob: JobPostingsDocument = jobPostings[i];
+            jobDisplay[parseJob.category][counters[parseJob.category]] = parseJob;
+            counters[parseJob.category] += 1;
+            }
+            for(var i = 0; i < order.length; i++)
+            {
+                output = output.concat(jobDisplay[order[i]]);
+            }
+        }
+        else
+        {
+            output = jobPostings;
+        }
+    }
+    else
+    {
+        output = jobPostings;
+    }
    
     const total = jobPostings.length;
 
     return {
-        jobPostings,
+        jobPostings: output,
         total,
         page,
         pages: Math.ceil(total / limit),
