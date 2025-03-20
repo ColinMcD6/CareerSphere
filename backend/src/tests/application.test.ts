@@ -1,12 +1,12 @@
-import e, { Request, Response } from 'express';
-import * as db from './db'
+import { Request, Response } from 'express';
 import {
     addJobPostingApplicationHandler,
-    getJobPostingApplicationsHandler,
-    getJobPostingApplicationsQueryHandler,
     deleteJobPostingApplicationHandler,
     editJobPostingApplicationStatusHandler,
+    getJobPostingApplicationsHandler,
+    getJobPostingApplicationsQueryHandler,
 } from '../controllers/jobPostings.controller';
+import * as db from './db';
 
 
 import ApplicationModel from "../models/application.model";
@@ -51,9 +51,11 @@ describe('Test adding Application', () => {
             json: mJson,
         };
         const mNext = jest.fn();
+
         await addJobPostingApplicationHandler(mReq as Request, mRes as Response, mNext);
 
         const findApplication = await ApplicationModel.find().exec();
+
 
         expect(mRes.status).toHaveBeenCalledWith(201);
         expect(findApplication).toHaveLength(1);

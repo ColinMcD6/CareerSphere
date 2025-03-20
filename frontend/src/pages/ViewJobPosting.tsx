@@ -1,6 +1,7 @@
 
-import { useEffect, useState, useReducer } from "react";
-import { Navigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
+import { Category } from "../../../backend/src/models/jobPostings.model";
 import ApplicationPopupComponent from "../components/applicantPopup";
 import FormModalPopupComponent from "../components/popup";
 import useUser from "../hooks/user";
@@ -10,19 +11,14 @@ import {
   checkwhoApplied,
 
   editJobApplicationStatus,
+  getAllQuizzesForJob,
   getIndividualJobPosting,
   getResumeName,
   getSavedJobs,
   saveJob,
   unsaveJob,
-  updateUser,
-  getAllQuizzesForJob,
-  fetchQuizResults,
+  updateUser
 } from "../lib/api";
-import { Category } from "../../../backend/src/models/jobPostings.model";
-import useUser from "../hooks/user";
-import { Navigate } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();
@@ -189,12 +185,16 @@ const ViewJobPosting = () => {
             console.error("Error submitting application:", error);
           }
         };
-        updateUser({experience: user?.experience || [],
+        updateUser({
+          experience: user?.experience || [],
           education: user?.education || [],
           skills: user?.skills || [],
           hiringDetails: user?.hiringDetails || [],
           companyDetails: user?.companyDetails || "",
-          preference: data.category});
+          preference: data.category,
+          phoneNumber: user?.phoneNumber || "",
+          userlink: user?.userlink || ""
+        });
         submitApplication();
       }
     } catch (error) {
@@ -369,7 +369,7 @@ const ViewJobPosting = () => {
     return <div>Loading...</div>;
   }
   return (
-<div className="pt-1">
+  <div className="pt-1">
     <div className="container mt-5">
       <div className="card mb-4 shadow">
         <h2 className="card-header bg-primary text-white">
@@ -378,7 +378,8 @@ const ViewJobPosting = () => {
             <span className={`badge bg-warning float-start`}>
               {applicationStatus}
             </span>
-          )}
+            )
+          }
 
           {data.title}
          
@@ -390,7 +391,8 @@ const ViewJobPosting = () => {
             >
               {isSaved ? "Unsave" : "Save"}
             </button>
-          )}
+            )
+          }
             
         </h2>
         <div className="card-body">
@@ -417,7 +419,8 @@ const ViewJobPosting = () => {
                   <p className="card-text">
                     <strong>Salary:</strong> ${data.salary}
                   </p>
-                )}
+                  )
+                }
                 <p className="card-text">
                   <strong>Job Type:</strong> {data.jobType}
                 </p>
@@ -453,7 +456,7 @@ const ViewJobPosting = () => {
                   <li key={index} className="list-group-item">
                     {edu}
                   </li>
-                ))}
+                  ))}
               </ul>
             </div>
             {user.userRole === "Candidate" && (
@@ -466,7 +469,8 @@ const ViewJobPosting = () => {
                   {isApplied ? "Applied" : "Apply"} {/* Change text */}
                 </button>
               </div>
-            )}
+              )
+            }
             <FormModalPopupComponent
               show={showModal}
               handleClose={() => setShowModal(false)}
@@ -488,7 +492,7 @@ const ViewJobPosting = () => {
               </div>
             </FormModalPopupComponent>
           </div>
-          {user?.userRole == "Candidate" && (
+          {(user?.userRole == "Candidate" && quizzes.length > 0) && (
             <div className="mt-3">
               <h6> Available Quizzes!</h6>
               <div className="list-group">
@@ -518,44 +522,6 @@ const ViewJobPosting = () => {
             </div>
           )}
         </div>
-        {user?.userRole == "Employer" && (
-          <div className="container mt-4">
-            <h2 className="mb-4">Applications</h2>
-            <p className="text-muted mt-4">
-              You have <strong>{appliedApplications?.length}</strong>{" "}
-              Applications to this job post!
-            </p>
-            <ul className="list-group">
-              {appliedApplications?.map((application, index) => (
-                <li key={index} className="list-group-item">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <div>
-                      <h5 className="mb-1">
-                        User : <strong>{application.username}</strong>
-                      </h5>
-                    </div>
-                    <div>
-                      {"Status:  "}
-                      <span className={`badge bg-success`}>Open</span>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {user.userRole === "Candidate" && (
-            <div>
-              <button
-                className="btn btn-primary"
-                onClick={() => setShowModal(true)}
-                disabled={isApplied} // Disable the button if already applied
-              >
-                {isApplied ? "Applied" : "Apply"} {/* Change text */}
-              </button>
-
-            </div>
-          )}
           <FormModalPopupComponent
             show={showModal}
             handleClose={() => setShowModal(false)}
@@ -574,7 +540,8 @@ const ViewJobPosting = () => {
                 accept=".pdf , .docx"
                 required
               />
-        )}
+            </div>
+          </FormModalPopupComponent>
         {user?.userRole == "Employer" && (
           <div className="container mt-3 ">
             <h3 className="mb-3 ">Quizz Section</h3>
@@ -655,7 +622,7 @@ const ViewJobPosting = () => {
                     </h5>
                   </div>
                   <div>
-                   {"Status:  "}  
+                   {"Status:  "}
                   <span className={`badge bg-success`} >
                     {application.status}
                   </span>
@@ -666,25 +633,25 @@ const ViewJobPosting = () => {
           </ul>
         </div>
       )}
-    {
-      user?.userRole == "Employer" && appliedApplications.length > 0 && (
-        <ApplicationPopupComponent
-          show={showApplicantPopup}
-          username={appliedApplications[applicantIndex].username}
-          email={appliedApplications[applicantIndex].email}
-          experience={appliedApplications[applicantIndex].experience}
-          education={appliedApplications[applicantIndex].education}
-          skills={appliedApplications[applicantIndex].skills}
-          resume_id={appliedApplications[applicantIndex].resume_id}
-          editStatusApplicationHandler = {changeApplicantStatusHandler}
-          onClose = {() => setShowApplicantPopup(false)}
-          showResumeHandler = {showResumeHandler}
-        >
-        </ApplicationPopupComponent>
-      )
-    }
-
+      {
+        user?.userRole == "Employer" && appliedApplications.length > 0 && (
+          <ApplicationPopupComponent
+            show={showApplicantPopup}
+            username={appliedApplications[applicantIndex].username}
+            email={appliedApplications[applicantIndex].email}
+            experience={appliedApplications[applicantIndex].experience}
+            education={appliedApplications[applicantIndex].education}
+            skills={appliedApplications[applicantIndex].skills}
+            resume_id={appliedApplications[applicantIndex].resume_id}
+            editStatusApplicationHandler = {changeApplicantStatusHandler}
+            onClose = {() => setShowApplicantPopup(false)}
+            showResumeHandler = {showResumeHandler}
+          >
+          </ApplicationPopupComponent>
+        )
+      }
     </div>
+    
   );
 };
 
