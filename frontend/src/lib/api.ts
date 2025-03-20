@@ -10,6 +10,8 @@ interface UserResponse {
   skills: string[];
   hiringDetails: string[];
   companyDetails: string;
+  phoneNumber: string;
+  userlink: string;
 }
 
 export const getUser = async (): Promise<UserResponse> =>
@@ -20,7 +22,9 @@ export const updateUser = async(data: {
   education: string[],
   skills: string[],
   hiringDetails: string[],
-  companyDetails: string
+  companyDetails: string,
+  phoneNumber: string,
+  userlink: string,
 }) => 
   API.put("/user/update", data);
 
@@ -81,3 +85,18 @@ export const applyforJob = async(data: any) =>
 
 export const checkwhoApplied = async(data: { emp_id: string, job_id: string}) : Promise <ApplicationsResponse>=> 
   API.get(`/job/applications/all/query?employer_id=${data.emp_id}&job_id=${data.job_id}`)
+
+export const createQuizForJobPosting = async( data: { jobId: string, body: {}}) : Promise <any>=> 
+  API.post(`job/${data.jobId}/quizzes`, data.body)
+
+export const getAllQuizzesForJob = async( jobId : string) : Promise <any>=> 
+  API.get(`job/${jobId}/quizzes`)
+
+export const getSpecificQuiz = async(  data: { jobId: string, quizId: string}) : Promise <any>=> 
+  API.get(`job/${data.jobId}/quizzes/${data.quizId}`)
+
+export const submitQuizResponse = async(  data: { jobId: string, quizId: string, body: {}}) : Promise <any>=> 
+  API.post(`job/${data.jobId}/quizzes/${data.quizId}/submissions`, data.body)
+
+export const fetchQuizResults = async(  data: { jobId: string, quizId: string}) : Promise <any>=> 
+  API.get(`job/${data.jobId}/quizzes/${data.quizId}/submissions`)

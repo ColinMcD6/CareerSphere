@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Container, Row, Col, Form } from "react-bootstrap";
+import { Button, Container, Row, Col, Form, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { checklogIn } from "../lib/api";
 
@@ -9,9 +9,11 @@ const LogIn = () => {
     email: "",
     password: "",
   });
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError(null); // Clear error when user starts typing
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -20,12 +22,11 @@ const LogIn = () => {
       await checklogIn({ email: formData.email, password: formData.password });
       navigate("/");
     } catch (error: any) {
-      const message = error.message
-      alert(`Invalid email or password. Please try again. ${message}`);
+      setError("Invalid email or password. Please try again.");
     }
   };
 
-  // Email validation using a simple regex pattern
+  // Email validation
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
   const isPasswordValid = formData.password.length >= 8;
   const isFormValid = isEmailValid && isPasswordValid;
@@ -35,15 +36,17 @@ const LogIn = () => {
       <Row className="w-100">
         <Col xs={12} md={6} lg={4} className="mx-auto">
           <h3 className="text-center mb-4">Log In</h3>
+          {/* General error message */}
+          {error && <Alert variant="danger" className="text-center">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="inputEmail">
               <Form.Label>Email address</Form.Label>
-              <Form.Control 
-                type="email" 
-                name="email" 
-                placeholder="Enter email" 
-                value={formData.email} 
-                onChange={handleChange} 
+              <Form.Control
+                type="email"
+                name="email"
+                placeholder="Enter email"
+                value={formData.email}
+                onChange={handleChange}
                 required
                 isInvalid={formData.email.length > 0 && !isEmailValid}
               />
@@ -53,12 +56,12 @@ const LogIn = () => {
             </Form.Group>
             <Form.Group className="mb-2" controlId="inputPassword">
               <Form.Label>Password</Form.Label>
-              <Form.Control 
-                type="password" 
-                name="password" 
-                placeholder="Enter password" 
-                value={formData.password} 
-                onChange={handleChange} 
+              <Form.Control
+                type="password"
+                name="password"
+                placeholder="Enter password"
+                value={formData.password}
+                onChange={handleChange}
                 required
                 isInvalid={formData.password.length > 0 && !isPasswordValid}
               />
@@ -67,20 +70,14 @@ const LogIn = () => {
               </Form.Control.Feedback>
             </Form.Group>
             <div className="text-end mb-3">
-              <Button 
-                variant="link" 
-                className="p-0" 
-                onClick={() => navigate("/password/forgot")}>
+              <Button variant="link" className="p-0" onClick={() => navigate("/password/forgot")}>
                 Forgot Password?
               </Button>
             </div>
             <Button variant="primary" type="submit" className="w-100" disabled={!isFormValid}>
               Log In
             </Button>
-            <Button 
-              variant="outline-secondary" 
-              onClick={() => navigate("/signup")} 
-              className="w-100 mt-2">
+            <Button variant="outline-secondary" onClick={() => navigate("/signup")} className="w-100 mt-2">
               Need to Create Account?
             </Button>
           </Form>
