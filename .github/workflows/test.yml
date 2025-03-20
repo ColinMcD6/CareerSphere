@@ -10,6 +10,7 @@ on:
   push:
     branches:
       - test_bryce
+      - new_test_bryce
 
 jobs:
   test:
@@ -34,11 +35,8 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-
-      - name: Install Docker
-        run: |
-          curl -fsSL https://get.docker.com -o get-docker.sh
-          sudo sh get-docker.sh
+      - name: Set NODE_ENV to test
+        run: echo "NODE_ENV=test" >> $GITHUB_ENV
 
       - name: Start MongoDB Docker Container
         run: |
