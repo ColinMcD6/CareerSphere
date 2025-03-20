@@ -124,7 +124,7 @@ describe('API Routes', () => {
             email: "test_user@gmail.com",
             password: "123456555",
         };
-        const loginResponse = await request(app).post('/auth/login').send(loginData);
+        const loginResponse = await request(app).post('/auth/login').set("Accept", "application/json").send(loginData);
         expect(loginResponse.status).toBe(UNAUTHORIZED);
         expect(loginResponse.body).toHaveProperty('message', "Invalid email or Password !");
         const cookies = loginResponse.headers['set-cookie'];
