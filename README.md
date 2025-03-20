@@ -19,4 +19,44 @@ User Friendly Career Platform that connects job seekers and employers through fe
 ### Architecture Diagram
 
 * [Architecture_Diagram](https://github.com/ColinMcD6/CareerSphere/blob/main/documentation/COMP4350_CareerSphere_ArchitechtureDiagram.png)
+
+### Testing Plan
+
+* [Testing Plan](documentation/TEST_PLAN.md)
+
+### Sequence Diagrams
+
+* [Sequence Diagrams](https://github.com/ColinMcD6/CareerSphere/wiki/Sequence-Diagrams)
  
+### Running Application
+1. Run the command npm install on the root of the project and then follow the backend and frontend instructions below.
+
+##### Backend
+1. Add ```.env``` file to backend folder with the following values populated:
+```
+NODE_ENV=development
+# frontend url
+APP_ORIGIN=http://localhost:{FRONTEND PORT}
+MONGO_URI=mongodb://localhost:27017/{DB_NAME}
+PORT={BACKEND PORT}
+JWT_SECRET=myjwtsecret
+JWTREFRESH_SECRET=myjwtrefrestsecret
+SENDER_EMAIL=aa
+API_RESEND=bb
+RESEND_API_KEY={API_KEY}
+```
+2. Go to https://resend.com/home -> create an account -> create an API_KEY and copy that api to .env for RESED_API_KEY'
+3. From ```backend``` directory run ```npm install```
+4. To run application in development mode (every change to file will update server): ```npm run dev```
+5. To run application in production mode: ```npm build; npm run start```
+
+##### Frontend
+1. Add ```.env``` file to frontend folder with the following values populated: ```VITE_API_URL=http://localhost:{BACKEND PORT}```
+2. From ```backend``` directory run ```npm install```
+3. To run application: ```npm run dev```
+
+### MongoDB 
+1. Install MongoDB and start the service before running the app.
+    1. Refer to this https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/ for steps. 
+    2. I used the command: brew services stop mongodb-community@8.0 to start on Mac
+2. Can also install MongoDB Compass to visualize the database created.

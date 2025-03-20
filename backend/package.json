@@ -1,0 +1,47 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --runInBand --detectOpenHandles --forceExit",
+    "dev": "ts-node-dev --files src/index.ts index.d.ts",
+    "build": "tsc && cp ./package.json ./dist",
+    "start": "node ./dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "fileconfig": "^4.0.0",
+    "mongodb-memory-server": "^10.1.4",
+    "mongoose": "^8.10.0",
+    "multer": "^1.4.5-lts.1",
+    "supertest": "^7.0.0",
+    "uuid": "^11.1.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.8",
+    "@types/cors": "^2.8.17",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
+    "@types/jsonwebtoken": "^9.0.8",
+    "@types/mongoose": "^5.11.96",
+    "@types/multer": "^1.4.12",
+    "@types/supertest": "^6.0.2",
+    "@types/uuid": "^10.0.0",
+    "jest": "^29.7.0",
+    "jsonwebtoken": "^9.0.2",
+    "resend": "^4.1.2",
+    "ts-jest": "^29.2.5",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.3"
+  }
+}
