@@ -47,6 +47,9 @@ Below are the core features and how we plan to test them. More details will be a
 4. Signup should create a new user but log in fails with wrong email: This test confirms that login fails when an incorrect email is provided. POST /auth/signup and POST /auth/login
 5. Signup, login successfully, and logout: This test verifies that a user can sign up, log in, and successfully log out and clear the tokens in the cookies. POST /auth/signup, POST /auth/login and GET /auth/logout
 6. Signup, Login, Reset password, and Login successfully again: This test checks that after signing up and logging in, a user can reset their password and log in again with the new password. POST /auth/signup, POST /auth/login and POST /auth/password/reset
+7. Create an account, login, get the JWT token in the cookie, and then access user information via /user route. Tests that information can be retreived, and response it ok
+8. Create an account, and then try to access user information via /user route WITHOUT sending JWT tokens. Tests that information cannot be retreived without proper authentication.
+9. Create an account, login, get JWT token, then update user information via /user/update route, then request user information via /user. Tests that user information can be updated via routes.
 
 ##### Acceptance Tests
 1. Successful Account Creation
