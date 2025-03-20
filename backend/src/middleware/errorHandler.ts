@@ -42,7 +42,7 @@ const errorHandler: ErrorRequestHandler = (
         clearCookies(res);
     }
 
-    if (error.name === "AppError") {
+    if (error instanceof AppError) {
         handleAppError(res, error);
         return;
     }
@@ -52,9 +52,7 @@ const errorHandler: ErrorRequestHandler = (
         return;
     }
 
-
-    console.log("IS THIS RUNNNINNGNGNGNNGNGNGNN????????")
-    res.status(9999).send("Internal Server Error zzzzzzzzzzzzzzzzzzzzzzzzzzz");
+    res.status(INTERNAL_SERVER_ERROR).send("Internal Server Error");
 
 };
 
