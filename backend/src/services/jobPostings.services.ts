@@ -104,7 +104,7 @@ export const getAllJobPostingsQueryWithSaved = async (
         )
     }
 
-    let jobPostings = await JobPostingsModel.aggregate(aggregation_rules);
+    const jobPostings = await JobPostingsModel.aggregate(aggregation_rules);
     let output: JobPostingsDocument[] = [];
 
     //organize
@@ -116,21 +116,23 @@ export const getAllJobPostingsQueryWithSaved = async (
         if(preferences)
         {
             let jobDisplay: JobPostingsDocument[][] = [];
-            let counters: number[] = [];
             let order = Array.from(preferences.keys()).sort((a, b) => preferences[a] - preferences[b]);
             
             for(var i = 0; i < preferences.length; i++){
-            jobDisplay[i] = [];
+                jobDisplay[i] = [];
             }
             for(var i = 0; i < jobPostings.length; i++)
             {
-            let parseJob: JobPostingsDocument = jobPostings[i];
-            jobDisplay[parseJob.category][counters[parseJob.category]] = parseJob;
-            counters[parseJob.category] += 1;
+                let parseJob: JobPostingsDocument = jobPostings[i];
+                jobDisplay[parseJob.category].push(parseJob);
             }
             for(var i = 0; i < order.length; i++)
             {
-                output = output.concat(jobDisplay[order[i]]);
+                for(var j = 0; j < jobDisplay[order[i]].length; j++)
+                {
+                    output.push(jobDisplay[order[i]][j]);
+                }
+                
             }
         }
         else
@@ -142,8 +144,10 @@ export const getAllJobPostingsQueryWithSaved = async (
     {
         output = jobPostings;
     }
-   
+    
     const total = jobPostings.length;
+    console.log
+    
 
     return {
         jobPostings: output,

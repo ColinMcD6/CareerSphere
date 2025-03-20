@@ -32,7 +32,8 @@ app.get("/", (req, res, next) => {
     });
 });
 
-app.use("/job", authenticate, jobPostingRoutes); // As of right now this does not differentiate between employee and candidates, as it just uses the authenticate middleware 
+//app.use("/job", authenticate, jobPostingRoutes); // As of right now this does not differentiate between employee and candidates, as it just uses the authenticate middleware 
+app.use("/job", jobPostingRoutes);//replace this before merge
 app.use("/resume", resumeRoutes);
 app.use("/auth", authRoutes);
 // to get info about user accounts - protected routes
