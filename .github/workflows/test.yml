@@ -49,6 +49,3 @@ jobs:
 
       - name: Run Jest Tests
         run: npm test --prefix backend
-
-      - name: Stop MongoDB Docker Container
-        run: sudo docker stop test-mongo && sudo docker rm test-mongo
