@@ -54,6 +54,7 @@ const Account = () => {
         skills: userSkills,
         hiringDetails: hireDetails,
         companyDetails: compDetails,
+        preference: -1,
         phoneNumber: phoneNumber,
         userlink: userLink,
       });

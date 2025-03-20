@@ -1,15 +1,15 @@
-import express from "express";
-import cors from "cors";
 import cookieParser from "cookie-parser";
+import cors from "cors";
+import express from "express";
 import connectToDatabase from "./config/db";
-import { NODE_ENV, PORT, APP_ORIGIN } from "./constants/env";
-import errorHandler from "./middleware/errorHandler";
+import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env";
 import { OK } from "./constants/http";
-import userRoutes from "./routes/user.route";
+import authenticate from "./middleware/authenticate";
+import errorHandler from "./middleware/errorHandler";
+import authRoutes from "./routes/auth.route";
 import jobPostingRoutes from "./routes/jobPostings.route";
 import resumeRoutes from "./routes/resume.routes";
-import authRoutes from "./routes/auth.route";
-import authenticate from "./middleware/authenticate";
+import userRoutes from "./routes/user.route";
 
 const app = express();
 
@@ -22,6 +22,8 @@ app.use(
   })
 );
 
+app.use('/resume/uploads', express.static('resume/uploads'));
+
 app.use(cookieParser());
 
 app.get("/", (req, res, next) => {
@@ -30,7 +32,9 @@ app.get("/", (req, res, next) => {
   });
 });
 
-app.use("/job", authenticate, jobPostingRoutes); // As of right now this does not differentiate between employee and candidates, as it just uses the authenticate middleware
+
+app.use("/job", authenticate, jobPostingRoutes); // As of right now this does not differentiate between employee and candidates, as it just uses the authenticate middleware 
+
 app.use("/resume", resumeRoutes);
 app.use("/auth", authRoutes);
 // to get info about user accounts - protected routes

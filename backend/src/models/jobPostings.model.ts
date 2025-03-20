@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+import mongoose, { Int32 } from "mongoose";
+import { number } from "zod";
 
 // Job Posting Model
 export interface JobPostingsDocument extends mongoose.Document {
@@ -18,7 +19,9 @@ export interface JobPostingsDocument extends mongoose.Document {
     startDate: string,
     dueDate: string,
     status: string,
+    category: number,
     quizzes: string[];
+
 }
 
 const TimeNow = (): string => {
@@ -32,7 +35,10 @@ const TimeNow = (): string => {
     const formattedDate = `${year}-${month}-${day}`; // Format as yyyy-mm-dd
 
     return formattedDate;
+
 }
+
+export enum Category {Technology = 0, Agriculture = 1, Service = 2, Business = 3, Engineering = 4, Other = 5}
 
 const jobPostingsSchema = new mongoose.Schema<JobPostingsDocument>({
     title: { type: String, required: true },
@@ -51,12 +57,15 @@ const jobPostingsSchema = new mongoose.Schema<JobPostingsDocument>({
     dueDate: { type: String, required: false },
     startDate: { type: String, required: false },
     status: { type: String, enum: ["Open", "Close"], required: true },
+    category: {type: Number, enum: [0, 1, 2, 3, 4, 5]},
     quizzes: { type: [String], default: [] },
+
 })
 
 const JobPostingsModel = mongoose.model<JobPostingsDocument>("JobPostings", jobPostingsSchema);
 export default JobPostingsModel;
 // END Job Posting Model
+
 
 
 

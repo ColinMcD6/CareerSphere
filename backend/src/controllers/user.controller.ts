@@ -3,6 +3,7 @@ import catchErrors from "../utils/catchErrors";
 import { NOT_FOUND, OK, UNAUTHORIZED } from "../constants/http";
 import UserModel from "../models/users.model";
 import appAssert from "../utils/appAssert";
+import { Category } from "../models/jobPostings.model";
 
 export const getUserHandler = catchErrors(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -14,7 +15,7 @@ export const getUserHandler = catchErrors(
 
 export const updateUserDetails = catchErrors(
     async (req: Request, res: Response, next: NextFunction) => {
-        const { education, skills, experience, hiringDetails, companyDetails, phoneNumber, userlink } = req.body;
+        const { education, skills, experience, hiringDetails, companyDetails, preference, phoneNumber, userlink } = req.body;
 
         // Find user by ID
         const user = await UserModel.findById(req.userId);
@@ -33,6 +34,11 @@ export const updateUserDetails = catchErrors(
             if (hiringDetails) user.hiringDetails = hiringDetails;
         }
 
+        let category = preference as number;
+        if(category >= 0 && category <= Category.Other)
+        {
+            user.preferences[preference] += 1;
+        }
         // Save updated user details
         await user.save();
         res.status(200).json({ message: "User details updated successfully", user });
