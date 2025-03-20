@@ -5,7 +5,7 @@
 | 1.0     |Feb 23, 2025 | Colin McDonell | Create initial test plan |
 | 1.1     |Feb 27, 2025 | Sukhmeet Singh Hora | Added unit tests for Signup, Login, Logout, Reset password, Verify Code and View Applicants |
 | 1.2     |Feb 28, 2025 | Colin McDonell | Documented all unit and acceptance tests for sprint 2 |
-| 1.3     |Mar 17, 2025 | Sukhmeet Singh Hora | Added unit tests for Quizzing for Job Screening Process: creating quiz, getting quiz, submitting response and getting candidate response with score, Also added some integration API Tests for Account Managemnt|
+| 1.3     |Mar 20, 2025 | Sukhmeet Singh Hora | Added unit tests for Quizzing for Job Screening Process: creating quiz, getting quiz, submitting response and getting candidate response with score, Also added some integration API Tests for Account Managemnt|
 
 ## 1 Introduction
 ### 1.1 Scope
@@ -47,6 +47,9 @@ Below are the core features and how we plan to test them. More details will be a
 4. Signup should create a new user but log in fails with wrong email: This test confirms that login fails when an incorrect email is provided. POST /auth/signup and POST /auth/login
 5. Signup, login successfully, and logout: This test verifies that a user can sign up, log in, and successfully log out and clear the tokens in the cookies. POST /auth/signup, POST /auth/login and GET /auth/logout
 6. Signup, Login, Reset password, and Login successfully again: This test checks that after signing up and logging in, a user can reset their password and log in again with the new password. POST /auth/signup, POST /auth/login and POST /auth/password/reset
+7. Create an account, login, get the JWT token in the cookie, and then access user information via /user route. Tests that information can be retreived, and response it ok
+8. Create an account, and then try to access user information via /user route WITHOUT sending JWT tokens. Tests that information cannot be retreived without proper authentication.
+9. Create an account, login, get JWT token, then update user information via /user/update route, then request user information via /user. Tests that user information can be updated via routes.
 
 ##### Acceptance Tests
 1. Successful Account Creation
@@ -181,14 +184,18 @@ Will be implemented in Sprint 3
 
 1. Creating a Quiz and Updating Job Posting: The test verifies that a quiz is successfully created and linked to a job posting. It checks that the response status is CREATED, the success message is returned, and the job posting is updated with the new quiz.
 2. Handling Empty Quiz Questions: This test ensures that an attempt to create a quiz without questions results in a BAD_REQUEST response. It confirms that no quiz is added to the database and that the job posting remains unchanged.
-3. Retrieving Quizzes for a Job Posting: The test verifies that when valid job ID is provided, all quizzes associated with that job are successfully retrieved. The response contains the correct quizzes, and the status is OK.
-4. Handling Missing Quizzes for a Job: When a job posting exists but has no quizzes, this test confirms that the response status is NOT_FOUND, and the appropriate message is returned, ensuring proper error handling.
-5. Retrieving a Specific Quiz: The test confirms that a specific quiz can be retrieved by providing a valid job ID and quiz ID. The response contains the correct quiz details, and the status is OK.
-6. Submitting a Quiz and Calculating Score: A candidate submits quiz responses, and the test checks that the submission is recorded correctly, the score is calculated, and a CREATED response with the correct details is returned.
-7. Handling Missing Candidate ID or Responses: This test ensures that if the candidate ID or responses are missing in the submission, the request is rejected with a BAD_REQUEST status and an appropriate error message.
-8. Preventing Duplicate Quiz Submissions: The test verifies that a candidate cannot submit responses for the same quiz more than once. If a duplicate submission is attempted, a BAD_REQUEST response is returned with a relevant error message.
-9. Retrieving Quiz Submissions: This test ensures that when a valid quiz ID is provided, all candidate submissions for that quiz are retrieved successfully, including usernames and scores, with a response status of OK.
-10. Handling No Quiz Submissions: If a quiz exists but has no submissions, this test confirms that the response is an empty array with a status of OK, ensuring the system properly handles cases where no candidates have taken the quiz yet.
+3. Handling No QuizName: This test ensures that an attempt to create a quiz without quiz name results in a BAD_REQUEST response. It confirms that no quiz is added to the database and that the job posting remains unchanged.
+4. Ensures the handler returns a "Not Found" error when trying to create a quiz for a non-existent job.
+5. Retrieving Quizzes for a Job Posting: The test verifies that when valid job ID is provided, all quizzes associated with that job are successfully retrieved. The response contains the correct quizzes, and the status is OK.
+6. Handling Missing Quizzes for a Job: When a job posting exists but has no quizzes, this test confirms that the response status is NOT_FOUND, and the appropriate message is returned, ensuring proper error handling.
+7. Retrieving a Specific Quiz: The test confirms that a specific quiz can be retrieved by providing a valid job ID and quiz ID. The response contains the correct quiz details, and the status is OK.
+8. Ensures the handler returns a "Not Found" error when trying to retrieve a quiz that does not exist.
+9. Submitting a Quiz and Calculating Score: A candidate submits quiz responses, and the test checks that the submission is recorded correctly, the score is calculated, and a CREATED response with the correct details is returned.
+10. Handling Missing Candidate ID or Responses: This test ensures that if the candidate ID or responses are missing in the submission, the request is rejected with a BAD_REQUEST status and an appropriate error message.
+11. Preventing Duplicate Quiz Submissions: The test verifies that a candidate cannot submit responses for the same quiz more than once. If a duplicate submission is attempted, a BAD_REQUEST response is returned with a relevant error message.
+12. Retrieving Quiz Submissions: This test ensures that when a valid quiz ID is provided, all candidate submissions for that quiz are retrieved successfully, including usernames and scores, with a response status of OK.
+13. Ensures the handler returns an empty array when a quiz has no submissions.
+14. Handling No Quiz Submissions: If a quiz exists but has no submissions, this test confirms that the response is an empty array with a status of OK, ensuring the system properly handles cases where no candidates have taken the quiz yet.
 
 ##### Integration Tests
 

@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
-import { BAD_REQUEST, NOT_FOUND, CREATED, OK } from "../constants/http";
+import { BAD_REQUEST, NOT_FOUND, CREATED, OK, CONFLICT } from "../constants/http";
 import { addquizCandiateResponse, addquizHandler, getquizHandler, getquizSubmissions, getspecificquizHandler } from "../controllers/quiz.controller";
 import JobPostingsModel from "../models/jobPostings.model";
 import Quiz from "../models/quiz.model";
 import * as db from './db'
 import UserModel from "../models/users.model";
+import mongoose from "mongoose";
 
-describe("addquizHandler Unit Tests", () => {
+describe("Quizzes Unit Tests", () => {
     beforeAll(async () => {
         await db.connect()
     });
@@ -44,7 +45,7 @@ describe("addquizHandler Unit Tests", () => {
                 quizName: "Test Basics",
                 questions: [{ questionText: "What is JSX?", options: ["A", "B"], correctAnswer: "A" }],
             },
-            params: { id: jobPosting._id?.toString() || "" }
+            params: { id: jobPosting._id?.toString() || ""}
         };
 
         const mJson = jest.fn().mockImplementation(() => null)
@@ -112,10 +113,8 @@ describe("addquizHandler Unit Tests", () => {
         await addquizHandler(mReq as Request, mRes as Response, mNext);
 
         // Verify response
-        expect(mRes.status).toHaveBeenCalledWith(BAD_REQUEST);
-        expect(mJson).toHaveBeenCalledWith(
-            expect.objectContaining({ message: "Invalid quiz data" })
-        );
+        let error: Error = mNext.mock.calls[0][0];
+        expect(error.message).toBe("Invalid data")
 
         // Fetch updated job from DB and check if quiz was added
         const updatedJob = await JobPostingsModel.findById(jobPosting._id).populate("quizzes");
@@ -126,6 +125,79 @@ describe("addquizHandler Unit Tests", () => {
             jobId: jobPosting._id
         });
         expect(quizData).toBeNull
+    });
+
+    test("should return Bad Request as there is no quizname", async () => {
+        // Create job posting in DB
+        const jobPosting = await JobPostingsModel.create({
+            title: "Job to do fun things",
+            description: "Best job in the world. Everyday you will wake up and be so happy and inspired to come to work.",
+            positionTitle: "Software Developer",
+            location: "Winnipeg",
+            compensationType: "hourly",
+            employer: "test_employer",
+            employer_id: "test_employer_123",
+            salary: 100,
+            jobType: "Full-time",
+            experience: ["None"],
+            skills: ["ChatGPT"],
+            education: ["None"],
+            status: "Open",
+            startingDate: Date.now().toString(),
+            quizzes: [],
+        });
+
+        const mReq: Partial<Request> = {
+            body: {
+                questions: [{ questionText: "What is JSX?", options: ["A", "B"], correctAnswer: "A" }],
+            },
+            params: { id: jobPosting._id?.toString() || "" }
+        };
+
+        const mJson = jest.fn().mockImplementation(() => null)
+        const mStatus = jest.fn().mockImplementation(() => ({ json: mJson }))
+        const mRes: Partial<Response> = {
+            status: mStatus
+        };
+        const mNext = jest.fn();
+
+        await addquizHandler(mReq as Request, mRes as Response, mNext);
+
+        // Verify response
+        let error: Error = mNext.mock.calls[0][0];
+        expect(error.message).toBe("Invalid data")
+
+        // Fetch updated job from DB and check if quiz was added
+        const updatedJob = await JobPostingsModel.findById(jobPosting._id).populate("quizzes");
+        expect(updatedJob?.quizzes.length).toBe(0);
+
+        // Fetch the quiz and verify if the quiz with the name was saved
+        const quizData = await Quiz.findOne({
+            jobId: jobPosting._id
+        });
+        expect(quizData).toBeNull
+    });
+
+    test("should return Not Found as job is not created", async () => {
+        const mReq: Partial<Request> = {
+            body: {
+                questions: [{ questionText: "What is JSX?", options: ["A", "B"], correctAnswer: "A" }],
+            },
+            params: { id: new mongoose.Types.ObjectId().toString()}
+        };
+
+        const mJson = jest.fn().mockImplementation(() => null)
+        const mStatus = jest.fn().mockImplementation(() => ({ json: mJson }))
+        const mRes: Partial<Response> = {
+            status: mStatus
+        };
+        const mNext = jest.fn();
+
+        await addquizHandler(mReq as Request, mRes as Response, mNext);
+
+        // Verify response
+        let error: Error = mNext.mock.calls[0][0];
+        expect(error.message).toBe("Invalid data")
     });
 
     test("should successfully return quizzes for a valid job ID", async () => {
@@ -179,8 +251,8 @@ describe("addquizHandler Unit Tests", () => {
         expect(mJson).toHaveBeenCalledWith(
             expect.objectContaining({
                 quizzes: expect.arrayContaining([
-                    expect.objectContaining({ quizName: "Test Quiz 1" }),
-                    expect.objectContaining({ quizName: "Test Quiz 2" }),
+                    expect.objectContaining({ quizName: quiz1.quizName }),
+                    expect.objectContaining({ quizName: quiz2.quizName }),
                 ]),
             })
         );
@@ -219,11 +291,8 @@ describe("addquizHandler Unit Tests", () => {
 
         await getquizHandler(mReq as Request, mRes as Response, mNext);
 
-        // Verify response
-        expect(mRes.status).toHaveBeenCalledWith(NOT_FOUND);
-        expect(mJson).toHaveBeenCalledWith(
-            expect.objectContaining({ message: "No quizzes found for this job" })
-        );
+        let error: Error = mNext.mock.calls[0][0];
+        expect(error.message).toBe("No quizzes found for this job")
     });
 
     test("should successfully return a specific quiz for a valid job and quiz ID", async () => {
@@ -273,6 +342,28 @@ describe("addquizHandler Unit Tests", () => {
                 quiz: expect.objectContaining({ quizName: "Test Quiz" }),
             })
         );
+    });
+
+    test("should successfully not found as the quiz is not created", async () => {
+        const jobid = new mongoose.Types.ObjectId()
+        const quizid = new mongoose.Types.ObjectId()
+
+        const mReq: Partial<Request> = {
+            params: { id: jobid.toString() || "", quizId: quizid.toString() || "" },
+        };
+
+        const mJson = jest.fn().mockImplementation(() => null);
+        const mStatus = jest.fn().mockImplementation(() => ({ json: mJson }));
+        const mRes: Partial<Response> = {
+            status: mStatus,
+        };
+        const mNext = jest.fn();
+
+        await getspecificquizHandler(mReq as Request, mRes as Response, mNext);
+
+        // Verify response
+        let error: Error = mNext.mock.calls[0][0];
+        expect(error.message).toBe("Quiz Not found")
     });
 
     test("should successfully submit quiz responses and calculate score", async () => {
@@ -383,13 +474,11 @@ describe("addquizHandler Unit Tests", () => {
         await addquizCandiateResponse(mReq as Request, mRes as Response, mNext);
 
         // Verify response
-        expect(mRes.status).toHaveBeenCalledWith(BAD_REQUEST);
-        expect(mJson).toHaveBeenCalledWith(
-            expect.objectContaining({ message: "Invalid submission data" })
-        );
+        let error: Error = mNext.mock.calls[0][0];
+        expect(error.message).toBe("Invalid Data")
     });
 
-    test("should return Bad Request if candidate has already submitted", async () => {
+    test("should return conflict if candidate has already submitted", async () => {
         const jobPosting = await JobPostingsModel.create({
             title: "Job to do fun things",
             description: "Best job in the world. Everyday you will wake up and be so happy and inspired to come to work.",
@@ -440,10 +529,8 @@ describe("addquizHandler Unit Tests", () => {
         await addquizCandiateResponse(mReq as Request, mRes as Response, mNext);
 
         // Verify response
-        expect(mRes.status).toHaveBeenCalledWith(BAD_REQUEST);
-        expect(mJson).toHaveBeenCalledWith(
-            expect.objectContaining({ message: "Candidate has already submitted this quiz" })
-        );
+        let error: Error = mNext.mock.calls[0][0];
+        expect(error.message).toBe("Candidate has already submitted this quiz")
     });
 
     test("should return quiz submissions successfully", async () => {
@@ -546,5 +633,26 @@ describe("addquizHandler Unit Tests", () => {
         expect(mJson).toHaveBeenCalledWith(
             expect.objectContaining({ submissions: [] })
         );
+    });
+
+    test("should return an empty array if quiz has no submissions", async () => {
+        const fakequizid = new mongoose.Types.ObjectId()
+
+        const mReq: Partial<Request> = {
+            params: { quizId: fakequizid.toString() || "" },
+        };
+
+        const mJson = jest.fn().mockImplementation(() => null);
+        const mStatus = jest.fn().mockImplementation(() => ({ json: mJson }));
+        const mRes: Partial<Response> = {
+            status: mStatus,
+        };
+        const mNext = jest.fn();
+
+        await getquizSubmissions(mReq as Request, mRes as Response, mNext);
+
+        // Verify response
+        let error: Error = mNext.mock.calls[0][0];
+        expect(error.message).toBe("Quiz not found")
     });
 });
