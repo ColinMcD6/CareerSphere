@@ -3,6 +3,7 @@ import catchErrors from "../utils/catchErrors";
 import { NOT_FOUND, OK, UNAUTHORIZED } from "../constants/http";
 import UserModel from "../models/users.model";
 import appAssert from "../utils/appAssert";
+import { Category } from "../models/jobPostings.model";
 
 export const getUserHandler = catchErrors(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -19,7 +20,6 @@ export const updateUserDetails = catchErrors(
         // Find user by ID
         const user = await UserModel.findById(req.userId);
         appAssert(user, NOT_FOUND, "User account does not exist!");
-
         // Check user role
         if (user.userRole === "Candidate") {
             if (education) user.education = education;
@@ -30,9 +30,10 @@ export const updateUserDetails = catchErrors(
             if (hiringDetails) user.hiringDetails = hiringDetails;
         }
 
-        if(preference)
+        let category = preference as number;
+        if(category >= 0 && category <= Category.Other)
         {
-            user.updatePreference(preference);
+            user.preferences[preference] += 1;
         }
         // Save updated user details
         await user.save();

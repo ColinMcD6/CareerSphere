@@ -108,16 +108,6 @@ userSchema.methods.removePassword = function () {
     return user;
 };
 
-userSchema.methods.updatePreference = function (category: number) {
-    const user = this.toObject();
-    //is there a way to check the length of Category so that we don't just need a try catch?
-    try {
-        user.preferences[category] += 1;
-    } catch (error) {
-        console.log(error);
-    }
-    return user;
-};
 
 const UserModel = mongoose.model<UserDocument>("User", userSchema);
 export default UserModel;
