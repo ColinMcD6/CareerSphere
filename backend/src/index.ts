@@ -38,7 +38,8 @@ app.use("/user", authenticate, userRoutes);
 app.use(errorHandler);
 
 if (process.env.NODE_ENV !== "test") {
-  app.listen(PORT, async () => {
+  app
+    .listen(PORT, async () => {
       console.log(
         `Server is running on port ${PORT} in ${NODE_ENV} environment.`
       );
