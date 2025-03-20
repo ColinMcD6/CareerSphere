@@ -12,8 +12,10 @@ import {
   getResumeName,
   getSavedJobs,
   saveJob,
-  unsaveJob
+  unsaveJob,
+  updateUser
 } from "../lib/api";
+import { Category } from "../../../backend/src/models/jobPostings.model";
 
 const ViewJobPosting = () => {
   const [searchParams] = useSearchParams();
@@ -65,6 +67,7 @@ const ViewJobPosting = () => {
     datePosted: Date;
     deadline: Date;
     status: string;
+    category: number;
   }
 
   // Query to get job posting ----------------------------------------------------
@@ -160,6 +163,12 @@ const ViewJobPosting = () => {
             console.error("Error submitting application:", error);
           }
         };
+        updateUser({experience: user?.experience || [],
+          education: user?.education || [],
+          skills: user?.skills || [],
+          hiringDetails: user?.hiringDetails || [],
+          companyDetails: user?.companyDetails || "",
+          preference: data.category});
         submitApplication();
       }
     } catch (error) {
@@ -327,6 +336,9 @@ const ViewJobPosting = () => {
               )}
               <p className="card-text">
                 <strong>Job Type:</strong> {data.jobType}
+              </p>
+              <p className="card-text">
+                <strong>Job Category:</strong> {Category[data.category]}
               </p>
             </div>
             <div className="col-md-6">

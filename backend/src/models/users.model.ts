@@ -17,6 +17,7 @@ export interface UserDocument extends mongoose.Document {
     preferences: number[];
     checkPassword(val: string): Promise<boolean>;
     removePassword(): Pick<UserDocument, "_id" | "email" | "verified" | "userRole" | "createdAt" | "updatedAt">;
+    updatePreference(val: number):Promise<void>;
 }
 
 const userSchema = new mongoose.Schema<UserDocument>(

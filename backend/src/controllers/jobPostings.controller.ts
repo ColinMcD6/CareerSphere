@@ -16,6 +16,7 @@ import {
     unsaveJobPosting
 } from "../services/jobPostings.services";
 import catchErrors from "../utils/catchErrors";
+import { Category } from "../models/jobPostings.model";
 
 
 
@@ -43,7 +44,7 @@ const jobPostingsZModel = z.object({
     status: z.string().min(1).max(225), // Change to open/close later
     startingDate: z.string(), // I am not sure what to do about this right now, but this should be a date
     jobType: z.enum(['Full-time', 'Part-time', 'Temporary', 'Internship']),
-    category: z.enum(['Technology', 'Agriculture', 'Service', 'Business', 'Engineering'])
+    category: z.nativeEnum(Category)
 })
 
 const saveJobPostingModel = z.object({

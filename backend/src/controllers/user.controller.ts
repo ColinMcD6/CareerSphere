@@ -14,7 +14,7 @@ export const getUserHandler = catchErrors(
 
 export const updateUserDetails = catchErrors(
     async (req: Request, res: Response, next: NextFunction) => {
-        const { education, skills, experience, hiringDetails, companyDetails } = req.body;
+        const { education, skills, experience, hiringDetails, companyDetails, preference } = req.body;//note that preference is a job category not the preferences array
 
         // Find user by ID
         const user = await UserModel.findById(req.userId);
@@ -30,6 +30,10 @@ export const updateUserDetails = catchErrors(
             if (hiringDetails) user.hiringDetails = hiringDetails;
         }
 
+        if(preference)
+        {
+            user.updatePreference(preference);
+        }
         // Save updated user details
         await user.save();
         res.status(200).json({ message: "User details updated successfully", user });
