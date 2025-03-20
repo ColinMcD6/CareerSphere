@@ -124,9 +124,10 @@ describe('API Routes', () => {
             email: "test_user@gmail.com",
             password: "123456555",
         };
-        const loginResponse = await request(app).post('/auth/login').set("Accept", "application/json").send(loginData);
+        
+        const loginResponse = await request(app).post('/auth/login').send(loginData).set("Accept", "application/json");
         expect(loginResponse.status).toBe(500); // FIX LATER
-        //expect(loginResponse.body).toHaveProperty('message', "Invalid email or Password !");
+        expect(loginResponse.body).toHaveProperty('message', "Invalid email or Password !");
         //const cookies = loginResponse.headers['set-cookie'];
        // expect(cookies).toBeUndefined();
     }, 10000);
