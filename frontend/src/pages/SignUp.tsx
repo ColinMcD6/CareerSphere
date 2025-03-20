@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Button, Container, Row, Col, Form } from "react-bootstrap";
+import { Button, Container, Row, Col, Form, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../lib/api";
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [candidate, setCandidate] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -15,6 +17,7 @@ const SignUp = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,12 +30,11 @@ const SignUp = () => {
       navigate("/login");
     } catch (error: any) {
       console.error("Error registering user:", error);
-      const message = error.message
-      alert(`Registration failed. ${message}`);
+      setError("Registration failed. Please try again.");
     }
   };
 
-  // Email validation using a basic regex pattern
+  // Email validation
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
   const isPasswordValid = formData.password.length >= 8;
   const doPasswordsMatch = formData.password === formData.confirm_password;
@@ -41,11 +43,12 @@ const SignUp = () => {
   return (
     <Container
       className="d-flex justify-content-center align-items-center"
-      style={{ minHeight: "100vh" }}
-    >
+      style={{ minHeight: "100vh" }}>
       <Row className="w-100">
         <Col xs={12} md={6} lg={4} className="mx-auto">
           <h3 className="text-center mb-4">Sign Up</h3>
+          {/* General Error Display */}
+          {error && <Alert variant="danger" className="text-center">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="inputUsername">
               <Form.Label>Username</Form.Label>
@@ -108,7 +111,7 @@ const SignUp = () => {
               <div className="d-flex gap-3">
                 <Form.Check
                   type="radio"
-                  label="Candidate (default)"
+                  label="Candidate"
                   name="roleRadio"
                   checked={candidate}
                   onChange={() => setCandidate(true)}
@@ -130,7 +133,7 @@ const SignUp = () => {
             variant="secondary"
             onClick={() => navigate("/login")}
             className="w-100 mt-3">
-            Sign In To Existing Account !
+            Sign In To Existing Account!
           </Button>
         </Col>
       </Row>

@@ -15,6 +15,7 @@ import {
     saveJobPosting,
     unsaveJobPosting
 } from "../services/jobPostings.services";
+
 import catchErrors from "../utils/catchErrors";
 import { Category } from "../models/jobPostings.model";
 
@@ -52,6 +53,8 @@ const saveJobPostingModel = z.object({
     candidate_id: z.string().min(1).max(225)
 })
 
+import JobPostingValidation from "../common/JobPostingValidation"
+  
 const jobApplicationModel = z.object({
     job_id: z.string().min(1).max(225),
     employer_id: z.string().min(1).max(225),
@@ -78,10 +81,12 @@ export const addJobPostingHandler = catchErrors(async (req: Request, res: Respon
         skills: req.body.skills,
         education: req.body.education,
         status: req.body.status,
-        startingDate: req.body.startingDate,
-        category: req.body.category
+        category: req.body.category,
+        dueDate: req.body.dueDate,
+        startDate: req.body.startDate
     }
-    const request = jobPostingsZModel.parse(job);
+
+    const request = JobPostingValidation.parse(job);
     const user = await createJobPosting(request);
     res.status(CREATED).json(request);
 });
@@ -213,4 +218,3 @@ export const getJobPostingApplicationsQueryHandler = catchErrors(async (req: Req
         res.status(OK).json(applications);
     
 })
-

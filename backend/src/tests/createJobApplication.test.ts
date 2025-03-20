@@ -45,8 +45,7 @@ describe('Test candidate and employer portals', () => {
             experience: ["None"],
             skills: ["ChatGPT"],
             education: ["None"],
-            status: "Open",
-            startingDate: Date.now().toString()
+            status: "Open"
         }
         let jobs = await JobPostingsModel.find();
         expect(jobs.length).toBe(0);
@@ -63,7 +62,6 @@ describe('Test candidate and employer portals', () => {
                 skills: jobPosting.skills,
                 education: jobPosting.education,
                 status: jobPosting.status,
-                startingDate: jobPosting.startingDate
             },
             userId: "" + employer._id,
         };
