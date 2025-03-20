@@ -42,7 +42,7 @@ const errorHandler: ErrorRequestHandler = (
         clearCookies(res);
     }
 
-    if (error instanceof AppError) {
+    if (error.name === "AppError") {
         handleAppError(res, error);
         return;
     }
