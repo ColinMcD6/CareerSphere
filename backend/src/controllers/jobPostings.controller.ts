@@ -17,7 +17,7 @@ import {
 } from "../services/jobPostings.services";
 
 import catchErrors from "../utils/catchErrors";
-import { Category } from "../common/Category";
+import { Category } from "../models/jobPostings.model";
 
 
 
@@ -53,7 +53,7 @@ const saveJobPostingModel = z.object({
     candidate_id: z.string().min(1).max(225)
 })
 
-import JobPostingValidation from "../common/JobPostingValidation"
+import JobPostingValidation from "../services/JobPostingValidation"
   
 const jobApplicationModel = z.object({
     job_id: z.string().min(1).max(225),

@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom"; // Add useNavigate for redirecti
 import { createJobPosting } from "../lib/api";
 import useUser from "../hooks/user";
 import { Navigate } from "react-router-dom";
-import { Category } from "../../../backend/src/common/Category";
+
+export enum Category {Technology = 0, Agriculture = 1, Service = 2, Business = 3, Engineering = 4, Other = 5}
 
 /*
 const CreateJobPost: React.FC = () => {
@@ -25,7 +26,7 @@ const CreateJobPost: React.FC = () => {
   const [jobType, setJobType] = useState<string>("");
   const [category, setCategory] = useState<number>(Category.Other);
   */
-import JobPostingValidation from "../../../backend/src/common/JobPostingValidation";
+import JobPostingValidation from "../../../backend/src/services/JobPostingValidation";
 
 interface JobPostingInterface {
   title: string;
