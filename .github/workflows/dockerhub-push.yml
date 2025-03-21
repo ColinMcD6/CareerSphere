@@ -1,6 +1,9 @@
 name: Build and Push Docker Images
 
 on:
+  push:
+    branches:
+      - fix-deployment
   pull_request:
     branches:
       - development
@@ -29,7 +32,7 @@ jobs:
 
       - name: Build and Push Frontend Image
         run: |
-          docker build -t colinmcd6/frontend:latest ./frontend
+          docker build -t colinmcd6/frontend:latest -f frontend/Dockerfile .
           docker push colinmcd6/frontend:latest
 
       - name: Build and Push Backend Image

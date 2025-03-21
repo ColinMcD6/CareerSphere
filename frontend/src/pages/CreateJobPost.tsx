@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"; // Add useNavigate for redirecti
 import { createJobPosting } from "../lib/api";
 import useUser from "../hooks/user";
 import { Navigate } from "react-router-dom";
-import { Category } from "../../../backend/src/models/jobPostings.model";
+import { Category } from "../../../backend/src/common/Category";
 
 /*
 const CreateJobPost: React.FC = () => {

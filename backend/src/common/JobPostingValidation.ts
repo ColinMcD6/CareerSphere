@@ -1,4 +1,4 @@
-import { literal, number, record, z } from "zod";
+import z from "zod";
 
 const MIN_TITLE_LENGTH = 10;
 const MAX_TITLE_LENGTH = 150;

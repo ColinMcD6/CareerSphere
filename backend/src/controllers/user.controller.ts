@@ -3,7 +3,7 @@ import catchErrors from "../utils/catchErrors";
 import { NOT_FOUND, OK, UNAUTHORIZED } from "../constants/http";
 import UserModel from "../models/users.model";
 import appAssert from "../utils/appAssert";
-import { Category } from "../models/jobPostings.model";
+import { Category } from "../common/Category";
 
 export const getUserHandler = catchErrors(
     async (req: Request, res: Response, next: NextFunction) => {

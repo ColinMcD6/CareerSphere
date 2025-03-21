@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
-import { Category } from "../../../backend/src/models/jobPostings.model";
+import { Category } from "../../../backend/src/common/Category";
 import ApplicationPopupComponent from "../components/applicantPopup";
 import FormModalPopupComponent from "../components/popup";
 import useUser from "../hooks/user";
@@ -286,7 +286,7 @@ const ViewJobPosting = () => {
   
   }
 
-  const viewResults = async (quizId: string, index: number) => {
+  const viewResults = async (index: number) => {
     const newQuiz: quizInterface[] = [...quizzes];
     newQuiz[index].expanded = !newQuiz[index].expanded;
     setQuizzes(newQuiz);
@@ -560,7 +560,7 @@ const ViewJobPosting = () => {
                           className={`btn ${
                             quiz.expanded ? "btn-warning" : "btn-success"
                           }`}
-                          onClick={() => viewResults(quiz._id, index)}
+                          onClick={() => viewResults(index)}
                         >
                           {quiz.expanded ? "Hide results ▲" : "View results ▼"}
                         </button>

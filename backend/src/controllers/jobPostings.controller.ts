@@ -17,7 +17,7 @@ import {
 } from "../services/jobPostings.services";
 
 import catchErrors from "../utils/catchErrors";
-import { Category } from "../models/jobPostings.model";
+import { Category } from "../common/Category";
 
 
 
