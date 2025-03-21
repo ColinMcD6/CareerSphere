@@ -202,6 +202,27 @@ Will be implemented in Sprint 3
 
 ##### Acceptance Tests
 
+#### 5. Recommendation Engine
+##### Unit Tests
+
+1. Check if updateUserDetails will update single preference correctly: test creates a user and updates one preference one time, checks that only that category has been set to 1, all others remain 0
+2. Check if updateUserDetails will update multiple preferences correctly: test creates a user and updates multiple preferences once, checks that all correct preferences are 1, and incorrect are still 0
+3. Check if updateUserDetails will update preference multiple times: creates a user and updates one preference multiple times, checks that preference stores the correct value and all others remain 0
+4. Ensure updateUserDetails will not update negative preferences: creates a user and attempts to pass negative values, ensures no values are updated and no crash occurs
+5. Ensure updateUserDetails will not update out of bounds preferences: creates a user and attempts to pass out of bound values, ensures no values are updated and no crash occurs
+6. Ensure updateUserDetails will not update on char input: creates a user and attempts to pass chars instead of numbers, ensures no values are updated and no crash occurs
+7. Ensure updateUserDetails will not update on String input: creates a user and attempts to pass strings instead of numbers, ensures no values are updated and no crash occurs
+8. Ensure updateUserDetails will not update on null input: creates a user and attempts to pass null, ensures no values are updated and no crash occurs
+9. Make sure user preferences are individual: creates multiple users, updates the preferences of one and makes sure that only that user was changed
+10. See if multiple accounts can be updated in concert: creates multiple users and updates both of them multiple times, makes sure both accounts have correct preference values
+
+##### Integration Tests
+1. Check if sort behaves OK on single job: creates a single job and a single user with no preference updates. Calls api to get all jobs and passes user id, ensures that the status is 200, only one job is returned and that it is unchanged
+2. Check if jobs get sorted correctly based on no preferences: creates multiple jobs and a single user with no preference updates. Calls api to get all jobs and passes user id, ensures that the status is 200, the correct number of jobs are returned and that they are sorted in ascending order by category
+3. Check if jobs get sorted correctly based on existing preferences: creates multiple jobs and a single user with preference updates. Calls api to get all jobs and passes user id, ensures that the status is 200, the correct number of jobs are returned and that they are sorted according to the preferences of the user (which does not align with ascending category)
+
+##### Acceptance Tests
+
 
 ### Non-functional Feature
 - Implemented in later sprint (For load testing, when design the load, make sure at least twos request associated with
