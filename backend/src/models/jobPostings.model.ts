@@ -1,5 +1,4 @@
-import mongoose, { Int32 } from "mongoose";
-import { number } from "zod";
+import mongoose from "mongoose";
 
 // Job Posting Model
 export interface JobPostingsDocument extends mongoose.Document {
@@ -24,6 +23,8 @@ export interface JobPostingsDocument extends mongoose.Document {
 
 }
 
+export enum Category {Technology = 0, Agriculture = 1, Service = 2, Business = 3, Engineering = 4, Other = 5}
+
 const TimeNow = (): string => {
     const timestamp = Date.now();
     const date = new Date(timestamp);
@@ -37,8 +38,6 @@ const TimeNow = (): string => {
     return formattedDate;
 
 }
-
-export enum Category {Technology = 0, Agriculture = 1, Service = 2, Business = 3, Engineering = 4, Other = 5}
 
 const jobPostingsSchema = new mongoose.Schema<JobPostingsDocument>({
     title: { type: String, required: true },

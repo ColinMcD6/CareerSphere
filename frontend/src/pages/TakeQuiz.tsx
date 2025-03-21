@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { getSpecificQuiz, submitQuizResponse } from "../lib/api";
 import { useSearchParams } from "react-router-dom";
-import { BiQuestionMark } from "react-icons/bi";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom"; // Add useNavigate for redirection
@@ -56,7 +55,7 @@ const TakeQuiz: React.FC = () => {
       console.log(
         `Fetching the quiz with id : ${quizId} for job post with id: ${jobId}`
       );
-      const data = { jobId: jobId, quizId: quizId };
+      const data = { jobId: jobId as string, quizId: quizId as string};
       const response = await getSpecificQuiz(data); // Wait for the promise to resolve
       console.log("successfully received quiz response");
       console.log(response);
@@ -106,21 +105,21 @@ const TakeQuiz: React.FC = () => {
     const responses: string[] = [];
 
     if (quiz != null) {
-      quiz.questions.map((question, index) => {
+      quiz.questions.map((question, _) => {
         if (question.chosenAnswer !== null)
           responses.push(question.options[question.chosenAnswer]);
         else responses.push("");
       });
     }
     const data = {
-      jobId: jobId,
-      quizId: quizId,
+      jobId: jobId as string,
+      quizId: quizId as string,
       body: {
         responses: responses,
       },
     };
     try {
-      const response = await submitQuizResponse(data);
+      await submitQuizResponse(data);
       console.log("Quiz successfully created!");
       const WAIT_TIME = 3000;
       // Show success toast

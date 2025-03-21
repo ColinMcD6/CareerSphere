@@ -53,7 +53,7 @@ const saveJobPostingModel = z.object({
     candidate_id: z.string().min(1).max(225)
 })
 
-import JobPostingValidation from "../common/JobPostingValidation"
+import JobPostingValidation from "../services/JobPostingValidation"
   
 const jobApplicationModel = z.object({
     job_id: z.string().min(1).max(225),

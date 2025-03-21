@@ -104,7 +104,7 @@ const ViewAllJobs: React.FC = () => {
             <h1>
               {user.userRole === "Employer"
                 ? "My Job Postings"
-                : "All Job Postings"}
+                : showSavedJobs ? "My Saved Job Postings" : "All Job Postings"}
             </h1>
           </div>
           {user.userRole === "Employer" && (
