@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
-import { Category } from "../../../backend/src/common/Category";
+import { Category } from "./CreateJobPost";
 import ApplicationPopupComponent from "../components/applicantPopup";
 import FormModalPopupComponent from "../components/popup";
 import useUser from "../hooks/user";
