@@ -1,13 +1,11 @@
+import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
-import e, { NextFunction, Request, Response } from "express";
-import catchErrors from "../utils/catchErrors";
+import { OK } from "../constants/http";
 import {
-    createResume, 
-    getResume 
+    createResume,
+    getResume
 } from "../services/resume.services";
-import { CREATED, OK } from "../constants/http";
-import UserModel from "../models/users.model";
-import multer from "multer";
+import catchErrors from "../utils/catchErrors";
 
 
 const resumeSchema = z.object({
@@ -33,7 +31,7 @@ export const addResumeHandler = catchErrors(async (req: Request, res: Response, 
     res.status(OK).json(resume_result);
 });
 
-export const getResumeHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+export const getResumeDownloadHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
         const id = req.params.id;
         const resume = await getResume(id);
         const directory = 'resume\\uploads\\' + resume.file_name;
@@ -43,6 +41,12 @@ export const getResumeHandler = catchErrors(async (req: Request, res: Response, 
             }
         });
     
+})
+
+export const getResumeNameHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const resume = await getResume(id);
+    res.status(OK).json(resume);
 })
 
 

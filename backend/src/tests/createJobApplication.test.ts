@@ -46,7 +46,7 @@ describe('Test candidate and employer portals', () => {
             skills: ["ChatGPT"],
             education: ["None"],
             status: "Open",
-            startingDate: Date.now().toString()
+            category: 1
         }
         let jobs = await JobPostingsModel.find();
         expect(jobs.length).toBe(0);
@@ -63,7 +63,7 @@ describe('Test candidate and employer portals', () => {
                 skills: jobPosting.skills,
                 education: jobPosting.education,
                 status: jobPosting.status,
-                startingDate: jobPosting.startingDate
+                category: 1
             },
             userId: "" + employer._id,
         };
@@ -94,6 +94,7 @@ describe('Test candidate and employer portals', () => {
             experience: undefined,
             companyDetails: "Fun, fun, fun",
             hiringDetails: [],
+            category: 1
         });
         const jobPosting = {
             title: "Job",
@@ -110,6 +111,7 @@ describe('Test candidate and employer portals', () => {
             education: ["None"],
             status: "Open",
             startingDate: Date.now().toString()
+            ,category: 1
         }
         const mReq: Partial<Request> = {
             body: {
@@ -124,7 +126,8 @@ describe('Test candidate and employer portals', () => {
                 skills: jobPosting.skills,
                 education: jobPosting.education,
                 status: jobPosting.status,
-                startingDate: jobPosting.startingDate
+                startingDate: jobPosting.startingDate,
+                category: 1
             },
             userId: "" + employer._id,
         };
@@ -163,6 +166,7 @@ describe('Test candidate and employer portals', () => {
             experience: undefined,
             companyDetails: "Fun, fun, fun",
             hiringDetails: [],
+            category: 1
         });
         const jobPosting = {
             title: "Job that is the most fun",
@@ -178,7 +182,8 @@ describe('Test candidate and employer portals', () => {
             skills: ["ChatGPT"],
             education: ["None"],
             status: "Open",
-            startingDate: Date.now().toString()
+            startingDate: Date.now().toString(),
+            category: 1
         }
         const mReq: Partial<Request> = {
             body: {
@@ -193,7 +198,8 @@ describe('Test candidate and employer portals', () => {
                 skills: jobPosting.skills,
                 education: jobPosting.education,
                 status: jobPosting.status,
-                startingDate: jobPosting.startingDate
+                startingDate: jobPosting.startingDate,
+                category: 1
             },
             userId: "" + employer._id,
         };
@@ -232,6 +238,7 @@ describe('Test candidate and employer portals', () => {
             experience: undefined,
             companyDetails: "Fun, fun, fun",
             hiringDetails: [],
+            category: 1
         });
         const jobPosting = {
             title: "Job that is the most fun",
@@ -247,7 +254,8 @@ describe('Test candidate and employer portals', () => {
             skills: ["ChatGPT"],
             education: ["None"],
             status: "Open",
-            startingDate: Date.now().toString()
+            startingDate: Date.now().toString(),
+            category: 1
         }
         const mReq: Partial<Request> = {
             body: {
@@ -262,7 +270,8 @@ describe('Test candidate and employer portals', () => {
                 skills: jobPosting.skills,
                 education: jobPosting.education,
                 status: jobPosting.status,
-                startingDate: jobPosting.startingDate
+                startingDate: jobPosting.startingDate,
+                category: 1
             },
             userId: "" + employer._id,
         };
