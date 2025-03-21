@@ -17,8 +17,6 @@ const resumeSchema = z.object({
 
 export const addResumeHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     console.log("Adding resume");
-    console.log(req.body);
-    console.log(req.file);
     const resume = {
         pdf_name: req.file?.originalname,
         file_name: req.file?.filename,
@@ -27,7 +25,6 @@ export const addResumeHandler = catchErrors(async (req: Request, res: Response, 
     };
     const request = resumeSchema.parse(resume);    
     const resume_result = await createResume(request);
-    console.log(resume_result);
     res.status(OK).json(resume_result);
 });
 

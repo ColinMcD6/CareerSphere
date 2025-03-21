@@ -142,7 +142,6 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
     const saved_posting_candidate_id = req.query.saved_posting_candidate_id ? req.query.saved_posting_candidate_id as string : null;
     const user_id = req.query.user_id ? req.query.user_id as any: null;
     const jobPostings = await getAllJobPostingsQueryWithSaved(query, page, limit, saved_posting_candidate_id, user_id);
-    console.log(jobPostings);
     res.status(OK).json(jobPostings);
 })
 
@@ -230,7 +229,6 @@ export const getJobPostingApplicationsQueryHandler = catchErrors(async (req: Req
         const page = req.query.page ? parseInt(req.query.page as string) : 1;
         const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
         const applications = await getJobPostingApplicationsQuery(query, page, limit);
-        console.log(applications);
         res.status(OK).json(applications);
     
 })
