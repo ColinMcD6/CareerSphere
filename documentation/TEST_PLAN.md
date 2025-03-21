@@ -153,9 +153,23 @@ Will be implemented in Sprint 3
 13. Getting a job application with query 3. Checks whether function is querying for specific applications correctly. Only has paging.
 14. Deleting a job application. Checks whether function deletes the correct
 15. Test adding resume. Test whether a pdf file is successfully added to the db.
+16. Test if you can saved job postings
+17. Test if you can save a job posting
+18. Test if you can unsave a job postings
 
 ##### Integration Tests
-Will be implemented in Sprint 3
+
+1. Look for all Job Posting then look for saved job postings. Then used both the user's and job posting information to retrieve records that show case that a specific job posting is saved by the user
+2. Unsave a job and check if it correctly effects the query that showcases saved jobs
+3. Save a job and check if it correctly effects the query that showcases saved jobs
+4. Create multiple applications for a single job and check if you can access each application catered to that specific job. Some applications will have the same Candidate.
+5. Attached a Resume to the request and see if you can download the same resume using the information from the response
+6. Edit an application status and use a GET route which returns a job posting and a application related to the edited application and the user
+7. Unsave all job postings and check if the save job posting query returns an indicator that the search was empty
+8. Save all job postings and check if the number of saved postings match the total amount of job postings
+9. Query Applications using information related to different users and job postings
+10. Check whether or not job postings and saved job postings are empty regardless of query
+
 
 ##### Acceptance Tests
 1. Candidate View  
