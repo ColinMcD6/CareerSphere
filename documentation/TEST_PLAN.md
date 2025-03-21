@@ -222,6 +222,17 @@ Below are the core features and how we plan to test them. More details will be a
 5. Create a job posting, create a quiz, get quizzes for the job, get a specific quiz, submit a response, and retrieve submissions: Validates that quiz submissions are stored and can be accessed by an employer.
 
 ##### Acceptance Tests
+1. Quiz Creation and Association
+    - An employer creates a quiz for a job posting using the quiz creation form.
+    - The quiz is successfully linked to the job posting and a confirmation message is displayed.
+2. Quiz Submission and Scoring
+    - A candidate submits their responses to a quiz.
+    - The system records the submission, calculates the score, and displays a success confirmation.
+3. Duplicate Submission Prevention
+    - A candidate attempts to submit responses for the same quiz more than once.
+    - The system prevents the duplicate submission and displays an error message.
+4. Quiz Retrieval and Display
+    - When a valid job ID and quiz ID are provided, the correct quiz details and all associated submissions (with candidate names and scores) are retrieved and displayed.
 
 #### 5. Recommendation Engine
 ##### Unit Tests
@@ -243,7 +254,40 @@ Below are the core features and how we plan to test them. More details will be a
 3. Check if jobs get sorted correctly based on existing preferences: creates multiple jobs and a single user with preference updates. Calls api to get all jobs and passes user id, ensures that the status is 200, the correct number of jobs are returned and that they are sorted according to the preferences of the user (which does not align with ascending category)
 
 ##### Acceptance Tests
+1. Update Single and Multiple Preferences
+    - A user updates one or more job preference values via the profile update form.
+    - The updated preferences are correctly saved and reflected in the job recommendations.
+2. Invalid Preference Handling
+    - A user attempts to update preferences with invalid inputs (e.g., negative or non-numeric values).
+    - The system rejects the update and displays an appropriate error message without crashing.
+3. Individual and Concurrent Preference Updates
+    - Multiple users update their preferences simultaneously.
+    - Each user's recommendations update correctly and remain isolated from one another.
 
+#### 6. Search Engine
+##### Unit Tests
+1. Verify that when no search parameter is provided, all job postings are returned with a status of OK and the returned array length matches the inserted data.
+2. Verify that a search term matching the job title (e.g., "Senior") returns the corresponding job posting and a status of OK.
+3. Verify that a search term matching the position title (e.g., "Developer") returns the correct postings and a status of OK.
+4. Verify that a search term matching the description (e.g., "high quality") returns the appropriate job posting and a status of OK.
+5. Verify that a search term matching the employer (e.g., "Tech") returns job postings from that employer and a status of OK.
+6. Verify that a search term matching the location (e.g., "San Francisco") returns job postings located in that city and a status of OK.
+7. Verify that a search term matching a skill (e.g., "React") returns the corresponding job posting and a status of OK.
+8. Confirm that the search functionality is case-insensitive by ensuring that queries like "tech corp" match "Tech Corp" and return a status of OK.
+9. Confirm that a non-matching search query (e.g., "nonexistent") returns an empty array and a status of OK.
+10. Confirm that any valid search query (e.g., "Data") returns a response with a status of OK.
+
+##### Acceptance Tests
+1. Display All Job Postings
+    - When the job listings page is loaded with an empty search field, all available job postings are displayed.
+2. Real-Time Search Filtering
+    - As a candidate types a valid search term, the job listings update in real time to show only postings matching the term in the title, position, description, employer, location, or skills.
+3. No Matching Results Message
+    - When a candidate enters a search term that does not match any postings, the message "No available job that matches the search" is displayed.
+4. Case-Insensitive Search
+    - The candidate enters search queries in different cases (e.g., "tech corp" and "Tech Corp") and receives consistent results.
+5. Clearing the Search Input
+    - Clearing the search input restores the full list of job postings on the page.
 
 ### Non-functional Feature
 - Implemented in later sprint (For load testing, when design the load, make sure at least twos request associated with
