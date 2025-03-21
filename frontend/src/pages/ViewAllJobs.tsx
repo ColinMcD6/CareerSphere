@@ -121,26 +121,7 @@ const ViewAllJobs: React.FC = () => {
             </button>
           )}
         </div>
-        <div className="list-group">
-          <div className="list-group">
-            {jobs.map((job) => (
-              <div
-                key={job._id}
-                className="list-group-item d-flex justify-content-between align-items-center"
-              >
-                <span>{job.title}</span>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => viewJobPosting(job._id)}
-                >
-                  View Job Posting
-                </button>
-              </div> // Added closing div for list-group-item
-            ))}{" "}
-            {/* Fixed closing parenthesis for map function */}
-          </div>
-        </div>
-
+     
         <div className="mb-3">
           <input
             type="text"
