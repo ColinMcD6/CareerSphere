@@ -16,6 +16,7 @@ dist
 dist-ssr
 *.local
 backend/coverage
+cloud
 
 # Editor directories and files
 .vscode/*
