@@ -17,6 +17,7 @@ dist-ssr
 *.local
 /backend/coverage
 /backend/resume
+cloud
 
 # Editor directories and files
 .vscode/*
