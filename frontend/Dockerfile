@@ -5,13 +5,13 @@ FROM node:18
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+COPY frontend/package*.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy the rest of the application code
-COPY . .
+COPY frontend .
 
 # Copy the common code from ../backend/common to ../backend/common
 COPY ../backend/src/common ../backend/src/common
