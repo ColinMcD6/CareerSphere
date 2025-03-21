@@ -1,17 +1,17 @@
 name: Build and Push Docker Images
 
 on:
-  push:
-    branches:
-      - 'deployment'
   pull_request:
     branches:
       - development
       - main
+    types:
+      - closed
 
 jobs:
   build-and-push:
     name: Build and Push Docker Images
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     env:

@@ -1,7 +1,6 @@
 name: Run Jest Tests
 
 on: 
-  # push:
   pull_request:
     branches:
       - development
