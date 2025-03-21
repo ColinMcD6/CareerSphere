@@ -13,6 +13,7 @@ const authenticate: RequestHandler = (req, res, next) => {
 
     req.userId = payload.userId;
     req.sessionId = payload.sessionId;
+    req.candidateId = payload.userId; // Change this later, as this is not actually correctly checking that the user is candidate
 
     next()
 }

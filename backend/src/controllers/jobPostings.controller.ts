@@ -1,18 +1,23 @@
-import { literal, number, record, z } from "zod";
-import e, { NextFunction, Request, Response } from "express";
-import catchErrors from "../utils/catchErrors";
-import { 
-    createJobPosting, 
-    getJobPosting, 
-    getAllJobPostings,
-    getAllJobPostingsQuery,
-    addJobPostingApplication,
-    deleteJobPostingApplication,
-    getJobPostingApplications,
-    getJobPostingApplicationsQuery
-} from "../services/jobPostings.services";
+import { NextFunction, Request, Response } from "express";
+import { z } from "zod";
 import { CREATED, OK } from "../constants/http";
-import {v4 as uuidv4} from 'uuid';
+import {
+    addJobPostingApplication,
+    createJobPosting,
+    deleteJobPostingApplication,
+    editJobPostingApplicationStatus,
+    getAllJobPostings,
+    getAllJobPostingsQueryWithSaved,
+    getJobPostingApplications,
+    getJobPostingApplicationsQuery,
+    getJobPostingImproved,
+    getSavedJobPostings,
+    saveJobPosting,
+    unsaveJobPosting
+} from "../services/jobPostings.services";
+
+import catchErrors from "../utils/catchErrors";
+import { Category } from "../models/jobPostings.model";
 
 
 
@@ -39,9 +44,17 @@ const jobPostingsZModel = z.object({
     education: z.array(z.string()),
     status: z.string().min(1).max(225), // Change to open/close later
     startingDate: z.string(), // I am not sure what to do about this right now, but this should be a date
-    jobType: z.enum(['Full-time', 'Part-time', 'Temporary', 'Internship'])
+    jobType: z.enum(['Full-time', 'Part-time', 'Temporary', 'Internship']),
+    category: z.nativeEnum(Category)
 })
 
+const saveJobPostingModel = z.object({
+    job_id: z.string().min(1).max(225),
+    candidate_id: z.string().min(1).max(225)
+})
+
+import JobPostingValidation from "../common/JobPostingValidation"
+  
 const jobApplicationModel = z.object({
     job_id: z.string().min(1).max(225),
     employer_id: z.string().min(1).max(225),
@@ -68,17 +81,22 @@ export const addJobPostingHandler = catchErrors(async (req: Request, res: Respon
         skills: req.body.skills,
         education: req.body.education,
         status: req.body.status,
-        startingDate: req.body.startingDate
+        category: req.body.category,
+        dueDate: req.body.dueDate,
+        startDate: req.body.startDate
     }
-    const request = jobPostingsZModel.parse(job);
+
+    const request = JobPostingValidation.parse(job);
     const user = await createJobPosting(request);
     res.status(CREATED).json(request);
 });
 
 export const getJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    const user = await getJobPosting(id);
-    res.status(OK).json(user);
+    const candidate_id = req.query.candidate_id
+
+    const jobPosting = await getJobPostingImproved(id, candidate_id);
+    res.status(OK).json(jobPosting);
 })
 
 // Is this Defunct now ??
@@ -95,7 +113,8 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
 
     // Extract query fields from the request query but removes page and limit
     const query = queryFieldNames.reduce((acc, key) => {
-        if (key !== 'page' && key !== 'limit' && key !== 'search') {
+
+        if (key !== 'page' && key !== 'limit' && key !== 'saved_posting_candidate_id' && key !== 'user_id' && key !== 'search') {
             acc[key] = req.query[key];
         }
         return acc;
@@ -120,9 +139,42 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
     
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
-    const jobPostings = await getAllJobPostingsQuery(query, page, limit);
+    const saved_posting_candidate_id = req.query.saved_posting_candidate_id ? req.query.saved_posting_candidate_id as string : null;
+    const user_id = req.query.user_id ? req.query.user_id as any: null;
+    const jobPostings = await getAllJobPostingsQueryWithSaved(query, page, limit, saved_posting_candidate_id, user_id);
+    console.log(jobPostings);
     res.status(OK).json(jobPostings);
 })
+
+// SAVING JOBS ----------------------------------------------
+export const saveJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Received a request to save a job posting");
+    
+    const saved_posting = {
+        job_id: req.body.job_id,
+        candidate_id: req.body.candidate_id,
+    }
+    const request = saveJobPostingModel.parse(saved_posting);
+    const savedJob = await saveJobPosting(request);
+    res.status(CREATED).json(savedJob);
+});
+
+export const unsaveJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    console.log("Received a request to unsave a job posting");
+    const saved_posting = await unsaveJobPosting(id);
+    res.status(OK).json(saved_posting);
+})
+
+
+export const getSavedJobPostingsHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+    const candidate_id = req.query.candidate_id;
+    const job_id = req.query.job_id;
+    const savedPostings = await getSavedJobPostings(candidate_id, job_id);
+    res.status(OK).json(savedPostings);
+})
+
+
 
 
 //APPLICATIONS----------------------------------------------
@@ -139,6 +191,14 @@ export const addJobPostingApplicationHandler = catchErrors(async (req: Request, 
     const request = jobApplicationModel.parse(jobApplication);
     const application = await addJobPostingApplication(request);
     res.status(CREATED).json(application);
+})
+
+export const editJobPostingApplicationStatusHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const status = req.body.status;
+    const application = await editJobPostingApplicationStatus(id, status);
+    res.status(OK).json(application);
+
 })
 
 export const deleteJobPostingApplicationHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
@@ -174,4 +234,3 @@ export const getJobPostingApplicationsQueryHandler = catchErrors(async (req: Req
         res.status(OK).json(applications);
     
 })
-
