@@ -100,8 +100,6 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         (jobs[1]._id as unknown as string).toString(),
         (jobs[2]._id as unknown as string).toString()];
 
-    console.log(ids);
-
     const jobApplication1 = {
         job_id: ids[0],
         employer_id: "werwerwerfwerwerwer",
@@ -137,7 +135,6 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
     const requestSaveJob1 = await request(app).post("/job/save").send({...savedJob1}).set('Cookie', accessToken).expect(CREATED);
     const requestSaveJob2 = await request(app).post("/job/save").send({...savedJob2}).set('Cookie', accessToken).expect(CREATED);
 
-    console.log(requestSaveJob1.body);
   }, 10000);
   afterAll(async () => {
     await db.closeDatabase();
@@ -170,10 +167,16 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         expect(requestAllSavedJobs.body.jobPostings[0].title).toEqual("Job test 1");
         expect(requestAllSavedJobs.body.jobPostings[1].title).toEqual("Job test 2");
 
+        const saveJobRecord = await request(app).get("/job/save/query?candidate_id=" + requestUserStuff.body._id + "&job_id=" + requestAllJobs.body.jobPostings[0]._id).set('Cookie', accessToken).expect(OK);
+        const saveJobRecord2 = await request(app).get("/job/save/query?candidate_id=" + requestUserStuff.body._id + "&job_id=" + requestAllJobs.body.jobPostings[1]._id).set('Cookie', accessToken).expect(OK);
+
+        expect(saveJobRecord.body._id).toBeDefined();
+        expect(saveJobRecord2.body._id).toBeDefined();
+
 
     });
 
-    test("Unsave a Job Posting", async () => {
+    test("Unsave a Job Posting and query", async () => {
         const requestAllSavedJobs = await request(app).get("/job/?saved_posting_candidate_id=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
         
         expect(requestAllSavedJobs.body.jobPostings.length).toEqual(2);
@@ -182,9 +185,6 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
 
         const savedJob = requestAllSavedJobs.body.jobPostings[0].saved_posting[0];
         const savedJob2 = requestAllSavedJobs.body.jobPostings[1].saved_posting[0];
-
-        console.log(savedJob);
-        console.log(savedJob2);
 
         const requestUnsaveJob = await request(app).delete("/job/save/" + savedJob._id).set('Cookie', accessToken).expect(OK);
 
@@ -298,8 +298,7 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         const filePath = path.join(__dirname, 'test.pdf');
         const response = await request(app).post('/resume/add').attach('resume', filePath).set('Cookie', accessToken).expect(200);
         // Check if the resume is in the database
-        console.log(response.body);
-        console.log(response.body.resume._id);
+
         const resume = await request(app).get('/resume/' + response.body.resume._id).set('Cookie', accessToken).expect(OK);
 
         expect(resume.body.pdf_name).toBe('test.pdf');
@@ -325,8 +324,6 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         expect(searchForJobTest1.body.jobPostings[0].title).toEqual("Job test 1");
 
         const job = searchForJobTest1.body.jobPostings[0];
-
-        console.log(job._id);
 
         const requestAllApplications = await request(app).get("/job/" + job._id + "?candidate_id="+requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
 
