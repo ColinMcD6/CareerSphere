@@ -27,8 +27,7 @@ const CreateJobPost: React.FC = () => {
 
 import JobPostingValidation from "../lib/JobPostingValidation";
 
-enum Category {Technology = 0, Agriculture = 1, Service = 2, Business = 3, Engineering = 4, Other = 5}
-
+export enum Category {Technology = 0, Agriculture = 1, Service = 2, Business = 3, Engineering = 4, Other = 5}
 
 interface JobPostingInterface {
   title: string;
@@ -116,7 +115,7 @@ const CreateJobPost: React.FC = () => {
     let targetError = undefined;
     if (!result.success) {
       targetError = result.error.errors.find(
-        (error) => error.path[0] === target
+        (error: any) => error.path[0] === target
       );
     }
 
