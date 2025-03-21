@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
-import { Category } from "../../../backend/src/models/jobPostings.model";
+import { Category } from "./CreateJobPost";
 import ApplicationPopupComponent from "../components/applicantPopup";
 import FormModalPopupComponent from "../components/popup";
 import useUser from "../hooks/user";
@@ -219,7 +219,6 @@ const ViewJobPosting = () => {
       
       const response = await getIndividualJobPosting(id, user?._id); // Wait for the promise to resolve
       console.log("successfully received job posting response");
-      console.log(response);
       setJob(response.jobPosting);
       if(user?.userRole === "Candidate" && !jobNotFound && response.application)
       {
@@ -287,7 +286,7 @@ const ViewJobPosting = () => {
   
   }
 
-  const viewResults = async (quizId: string, index: number) => {
+  const viewResults = async (index: number) => {
     const newQuiz: quizInterface[] = [...quizzes];
     newQuiz[index].expanded = !newQuiz[index].expanded;
     setQuizzes(newQuiz);
@@ -319,7 +318,7 @@ const ViewJobPosting = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Loading user information...</div>;
   }
 
   // If no user, redirect to login page
@@ -561,7 +560,7 @@ const ViewJobPosting = () => {
                           className={`btn ${
                             quiz.expanded ? "btn-warning" : "btn-success"
                           }`}
-                          onClick={() => viewResults(quiz._id, index)}
+                          onClick={() => viewResults(index)}
                         >
                           {quiz.expanded ? "Hide results ▲" : "View results ▼"}
                         </button>

@@ -121,7 +121,7 @@ const CreateQuiz: React.FC = () => {
       };
       setQuestions(questionSubmit);
       try {
-        const response = await createQuizForJobPosting(data);
+        await createQuizForJobPosting(data);
         console.log("Quiz successfully created!");
         const WAIT_TIME = 4500;
         // Show success toast
@@ -143,7 +143,7 @@ const CreateQuiz: React.FC = () => {
   };
 
   const deleteQuestion = (index: number) => {
-    const newQuestions = questions.filter((unused, i) => i !== index); // Return all questions that are not index
+    const newQuestions = questions.filter((_, i) => i !== index); // Return all questions that are not index
     setQuestions(newQuestions);
   };
 

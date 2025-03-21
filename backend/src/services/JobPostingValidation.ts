@@ -1,4 +1,4 @@
-import { literal, number, record, z } from "zod";
+import z from "zod";
 
 const MIN_TITLE_LENGTH = 10;
 const MAX_TITLE_LENGTH = 150;
@@ -50,6 +50,7 @@ export const JobPostingValidation = z.object({
   employer_id: z.string().min(1).max(225),
   location: z.string().min(1, "Location must have at least 1 character").max(225),
   compensationType: z.enum(['do-not-disclose', 'hourly', 'salary']),
+  category: z.number(),
   salary: z.number().min(0, "Salary value must be greater than 0"),
   experience: z.array(z.string()),
   skills: z.array(z.string()),

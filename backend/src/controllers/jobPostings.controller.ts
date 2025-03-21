@@ -53,7 +53,7 @@ const saveJobPostingModel = z.object({
     candidate_id: z.string().min(1).max(225)
 })
 
-import JobPostingValidation from "../common/JobPostingValidation"
+import JobPostingValidation from "../services/JobPostingValidation"
   
 const jobApplicationModel = z.object({
     job_id: z.string().min(1).max(225),
@@ -113,11 +113,27 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
 
     // Extract query fields from the request query but removes page and limit
     const query = queryFieldNames.reduce((acc, key) => {
-        if (key !== 'page' && key !== 'limit' && key !== 'saved_posting_candidate_id' && key !== 'user_id') {
+
+        if (key !== 'page' && key !== 'limit' && key !== 'saved_posting_candidate_id' && key !== 'user_id' && key !== 'search') {
             acc[key] = req.query[key];
         }
         return acc;
     }, {} as Record<string, any>);
+
+    // Handle the search query paramete
+    if (req.query.search) {
+        const searchTerm = req.query.search.toString();
+        const searchRegex = new RegExp(searchTerm, "i");
+        // Look for the search term in these fields.
+        query.$or = [
+          { title: { $regex: searchRegex } },
+          { positionTitle: { $regex: searchRegex } },
+          { description: { $regex: searchRegex } },
+          { employer: { $regex: searchRegex } },
+          { location: { $regex: searchRegex } },
+          { skills: { $elemMatch: { $regex: searchRegex } } },
+        ];
+    }
 
     console.log("Received a request to get all job posts");
     
@@ -126,7 +142,6 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
     const saved_posting_candidate_id = req.query.saved_posting_candidate_id ? req.query.saved_posting_candidate_id as string : null;
     const user_id = req.query.user_id ? req.query.user_id as any: null;
     const jobPostings = await getAllJobPostingsQueryWithSaved(query, page, limit, saved_posting_candidate_id, user_id);
-    console.log(jobPostings);
     res.status(OK).json(jobPostings);
 })
 
@@ -214,7 +229,6 @@ export const getJobPostingApplicationsQueryHandler = catchErrors(async (req: Req
         const page = req.query.page ? parseInt(req.query.page as string) : 1;
         const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
         const applications = await getJobPostingApplicationsQuery(query, page, limit);
-        console.log(applications);
         res.status(OK).json(applications);
     
 })

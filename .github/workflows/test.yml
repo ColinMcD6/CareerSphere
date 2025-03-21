@@ -5,10 +5,8 @@ on:
     branches:
       - development
       - main
-      - AccImprove_quizzingFeature
   push:
-    branches:
-      - AccImprove_quizzingFeature
+      
 
 jobs:
   test:

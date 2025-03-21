@@ -50,6 +50,8 @@ Below are the core features and how we plan to test them. More details will be a
 7. Create an account, login, get the JWT token in the cookie, and then access user information via /user route. Tests that information can be retreived, and response it ok
 8. Create an account, and then try to access user information via /user route WITHOUT sending JWT tokens. Tests that information cannot be retreived without proper authentication.
 9. Create an account, login, get JWT token, then update user information via /user/update route, then request user information via /user. Tests that user information can be updated via routes.
+10. Job posting API test. Create multiple jobs through API route /job/add using an Employer account. Make sure the response from the server is ok, and that response includes jobs.
+11. Job posting API test. Create multiple jobs through API route /job/add using an Employer account. Query all jobs, and query individual jobs ( GET /job and job/:id)
 
 ##### Acceptance Tests
 1. Successful Account Creation
@@ -151,9 +153,23 @@ Will be implemented in Sprint 3
 13. Getting a job application with query 3. Checks whether function is querying for specific applications correctly. Only has paging.
 14. Deleting a job application. Checks whether function deletes the correct
 15. Test adding resume. Test whether a pdf file is successfully added to the db.
+16. Test if you can saved job postings
+17. Test if you can save a job posting
+18. Test if you can unsave a job postings
 
 ##### Integration Tests
-Will be implemented in Sprint 3
+
+1. Look for all Job Posting then look for saved job postings. Then used both the user's and job posting information to retrieve records that show case that a specific job posting is saved by the user
+2. Unsave a job and check if it correctly effects the query that showcases saved jobs
+3. Save a job and check if it correctly effects the query that showcases saved jobs
+4. Create multiple applications for a single job and check if you can access each application catered to that specific job. Some applications will have the same Candidate.
+5. Attached a Resume to the request and see if you can download the same resume using the information from the response
+6. Edit an application status and use a GET route which returns a job posting and a application related to the edited application and the user
+7. Unsave all job postings and check if the save job posting query returns an indicator that the search was empty
+8. Save all job postings and check if the number of saved postings match the total amount of job postings
+9. Query Applications using information related to different users and job postings
+10. Check whether or not job postings and saved job postings are empty regardless of query
+
 
 ##### Acceptance Tests
 1. Candidate View  
@@ -199,6 +215,32 @@ Will be implemented in Sprint 3
 
 ##### Integration Tests
 
+1. Create a job posting, create a quiz, and verify results: Tests the ability to create a job posting, add a quiz to it, and verify that the quiz is successfully stored in the database.
+2. Create a job posting, create two quizzes, and get all quizzes for the specific job: Verifies that multiple quizzes can be created for a job and ensures they are correctly retrieved when fetching all quizzes for the job.
+3. Create a job posting, create a quiz, get quizzes for the job, and get a specific quiz: Confirms that a specific quiz can be retrieved from a list of quizzes associated with a job.
+4. Create a job posting, create a quiz, get quizzes for the job, get a specific quiz, and submit a response to the quiz: Ensures that a candidate can submit responses to a quiz and that the score is calculated correctly.
+5. Create a job posting, create a quiz, get quizzes for the job, get a specific quiz, submit a response, and retrieve submissions: Validates that quiz submissions are stored and can be accessed by an employer.
+
+##### Acceptance Tests
+
+#### 5. Recommendation Engine
+##### Unit Tests
+
+1. Check if updateUserDetails will update single preference correctly: test creates a user and updates one preference one time, checks that only that category has been set to 1, all others remain 0
+2. Check if updateUserDetails will update multiple preferences correctly: test creates a user and updates multiple preferences once, checks that all correct preferences are 1, and incorrect are still 0
+3. Check if updateUserDetails will update preference multiple times: creates a user and updates one preference multiple times, checks that preference stores the correct value and all others remain 0
+4. Ensure updateUserDetails will not update negative preferences: creates a user and attempts to pass negative values, ensures no values are updated and no crash occurs
+5. Ensure updateUserDetails will not update out of bounds preferences: creates a user and attempts to pass out of bound values, ensures no values are updated and no crash occurs
+6. Ensure updateUserDetails will not update on char input: creates a user and attempts to pass chars instead of numbers, ensures no values are updated and no crash occurs
+7. Ensure updateUserDetails will not update on String input: creates a user and attempts to pass strings instead of numbers, ensures no values are updated and no crash occurs
+8. Ensure updateUserDetails will not update on null input: creates a user and attempts to pass null, ensures no values are updated and no crash occurs
+9. Make sure user preferences are individual: creates multiple users, updates the preferences of one and makes sure that only that user was changed
+10. See if multiple accounts can be updated in concert: creates multiple users and updates both of them multiple times, makes sure both accounts have correct preference values
+
+##### Integration Tests
+1. Check if sort behaves OK on single job: creates a single job and a single user with no preference updates. Calls api to get all jobs and passes user id, ensures that the status is 200, only one job is returned and that it is unchanged
+2. Check if jobs get sorted correctly based on no preferences: creates multiple jobs and a single user with no preference updates. Calls api to get all jobs and passes user id, ensures that the status is 200, the correct number of jobs are returned and that they are sorted in ascending order by category
+3. Check if jobs get sorted correctly based on existing preferences: creates multiple jobs and a single user with preference updates. Calls api to get all jobs and passes user id, ensures that the status is 200, the correct number of jobs are returned and that they are sorted according to the preferences of the user (which does not align with ascending category)
 
 ##### Acceptance Tests
 
