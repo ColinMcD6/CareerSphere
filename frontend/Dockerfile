@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Copy the common code from ../backend/common to ../backend/common
-COPY ../backend/common ../backend/common
+COPY ../backend/src/common ../backend/src/common
 
 ENV VITE_API_URL=http://localhost:4004
 
