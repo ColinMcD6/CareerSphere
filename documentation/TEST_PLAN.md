@@ -316,4 +316,4 @@ Tests will be run in the following environments:
 - Github Actions
 
 ## 4 Terms/Acronyms
-API - Application Program Interface 
+API - Application Program Interface
