@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getAllJobPostings } from "../lib/api";
 import { Navigate } from "react-router-dom";
 import useUser from "../hooks/user";
-import { FaPlus } from "react-icons/fa"; // Importing the plus icon
+import { FaPlus } from "react-icons/fa";
 
 interface Job {
   _id: string;

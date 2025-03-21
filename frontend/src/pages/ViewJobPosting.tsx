@@ -219,7 +219,6 @@ const ViewJobPosting = () => {
       
       const response = await getIndividualJobPosting(id, user?._id); // Wait for the promise to resolve
       console.log("successfully received job posting response");
-      console.log(response);
       setJob(response.jobPosting);
       if(user?.userRole === "Candidate" && !jobNotFound && response.application)
       {
@@ -319,7 +318,7 @@ const ViewJobPosting = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Loading user information...</div>;
   }
 
   // If no user, redirect to login page
