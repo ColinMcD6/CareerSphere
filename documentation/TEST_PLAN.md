@@ -50,6 +50,8 @@ Below are the core features and how we plan to test them. More details will be a
 7. Create an account, login, get the JWT token in the cookie, and then access user information via /user route. Tests that information can be retreived, and response it ok
 8. Create an account, and then try to access user information via /user route WITHOUT sending JWT tokens. Tests that information cannot be retreived without proper authentication.
 9. Create an account, login, get JWT token, then update user information via /user/update route, then request user information via /user. Tests that user information can be updated via routes.
+10. Job posting API test. Create multiple jobs through API route /job/add using an Employer account. Make sure the response from the server is ok, and that response includes jobs.
+11. Job posting API test. Create multiple jobs through API route /job/add using an Employer account. Query all jobs, and query individual jobs ( GET /job and job/:id)
 
 ##### Acceptance Tests
 1. Successful Account Creation
