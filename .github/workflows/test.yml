@@ -8,7 +8,7 @@ on:
       - AccImprove_quizzingFeature
   push:
     branches:
-      - AccImprove_quizzingFeature
+      - quizzes_integrationTest_sukhmeet
 
 jobs:
   test:
