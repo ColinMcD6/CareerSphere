@@ -514,6 +514,7 @@ describe('Test candidate and employer portals', () => {
             skills: [ 'Kendama' ],
             createdAt: newuser.createdAt,
             updatedAt: newuser.updatedAt,
+            preferences: [0,0,0,0,0,0],
             __v: 0
         }
         // Test whether correct json response is received (no password field in json)

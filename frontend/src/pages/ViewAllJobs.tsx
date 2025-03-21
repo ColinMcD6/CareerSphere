@@ -8,6 +8,11 @@ import { FaPlus } from "react-icons/fa";
 interface Job {
   _id: string;
   title: string;
+  positionTitle: string;
+  description: string;
+  employer: string;
+  location: string;
+  skills: string[];
   category: number;
 }
 
@@ -16,7 +21,11 @@ const ViewAllJobs: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
+
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
   const [showSavedJobs, setShowSavedJobs] = useState<boolean>(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,6 +79,16 @@ const ViewAllJobs: React.FC = () => {
     return <div className="text-center mt-4 text-danger">Error fetching jobs.</div>;
   }
 
+  // Compute the filtered jobs list based on the search query
+  const filteredJobs = jobs.filter((job) =>
+    job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    job.positionTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    job.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    job.employer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (job.skills && job.skills.join(" ").toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
   return (
     <div className="mt-5 pt-1">
     <div className="container mt-4">
@@ -97,13 +116,38 @@ const ViewAllJobs: React.FC = () => {
             <button className="btn btn-primary" onClick={() => viewJobPosting(job._id)}>
               View Job Posting
             </button>
+          )}
+        </div>
+        {/* Adding the Search Bar above the job list */}
+        <div className="mb-3">
+          <input
+            type="text"
+            placeholder="Search jobs..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="form-control"
+          />
+        </div>
+        {/* If no jobs match the search, show a message */}
+        {filteredJobs.length === 0 ? (
+          <div className="alert alert-info mt-3">
+            No available job that matches the search!
           </div>
-        ))}
+        ) : (
+        <div className="list-group">
+          {filteredJobs.map((job) => (
+            <div key={job._id} className="list-group-item d-flex justify-content-between align-items-center">
+              <span>{job.title}</span>
+              <button className="btn btn-primary" onClick={() => viewJobPosting(job._id)}>
+                View Job Posting
+              </button>
+            </div>
+          ))}
+        </div>
+        )}
       </div>
     </div>
-    </div>
   );
-  
 };
 
 export default ViewAllJobs;
