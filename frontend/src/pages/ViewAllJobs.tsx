@@ -35,11 +35,14 @@ const ViewAllJobs: React.FC = () => {
       }
       try {
         console.log("Contacting Express server to query jobs");
-        let query = user?.userRole === "Employer" ? `?employer_id=${user._id}` : "";
-        if(query === ""){
-          query = showSavedJobs ? `?saved_posting_candidate_id=${user._id}` : "";
+        let query =
+          user?.userRole === "Employer" ? `?employer_id=${user._id}` : "";
+        if (query === "") {
+          query = showSavedJobs
+            ? `?saved_posting_candidate_id=${user._id}`
+            : "";
         }
-        if(query === ""){
+        if (query === "") {
           query = `?user_id=${user._id}`;
         }
         const response = await getAllJobPostings(query);
@@ -76,49 +79,68 @@ const ViewAllJobs: React.FC = () => {
   }
 
   if (error) {
-    return <div className="text-center mt-4 text-danger">Error fetching jobs.</div>;
+    return (
+      <div className="text-center mt-4 text-danger">Error fetching jobs.</div>
+    );
   }
 
   // Compute the filtered jobs list based on the search query
-  const filteredJobs = jobs.filter((job) =>
-    job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    job.positionTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    job.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    job.employer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (job.skills && job.skills.join(" ").toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredJobs = jobs.filter(
+    (job) =>
+      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.positionTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.employer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (job.skills &&
+        job.skills.join(" ").toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
     <div className="mt-5 pt-1">
-    <div className="container mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-      <div className="d-flex justify-content-center flex-grow-1">
-        <h1>
-          {user.userRole === "Employer" ? "My Job Postings" : "All Job Postings"}
-        </h1>
-        </div>
-        {user.userRole === "Employer" && (
-          <button className="btn btn-success me-5" onClick={createJobPosting}>
-            <FaPlus/> Create
-          </button>
-        )}
-        {user.userRole === "Candidate" && (
-          <button className="btn btn-primary" onClick={() => setShowSavedJobs(!showSavedJobs)}>
-            {showSavedJobs ? "Show All Jobs" : "Show Saved Jobs"}
-          </button>
-        )}
-      </div>
-      <div className="list-group">
-        {jobs.map((job) => (
-          <div key={job._id} className="list-group-item d-flex justify-content-between align-items-center">
-            <span>{job.title}</span>
-            <button className="btn btn-primary" onClick={() => viewJobPosting(job._id)}>
-              View Job Posting
+      <div className="container mt-4">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <div className="d-flex justify-content-center flex-grow-1">
+            <h1>
+              {user.userRole === "Employer"
+                ? "My Job Postings"
+                : "All Job Postings"}
+            </h1>
+          </div>
+          {user.userRole === "Employer" && (
+            <button className="btn btn-success me-5" onClick={createJobPosting}>
+              <FaPlus /> Create
+            </button>
+          )}
+          {user.userRole === "Candidate" && (
+            <button
+              className="btn btn-primary"
+              onClick={() => setShowSavedJobs(!showSavedJobs)}
+            >
+              {showSavedJobs ? "Show All Jobs" : "Show Saved Jobs"}
             </button>
           )}
         </div>
-        {/* Adding the Search Bar above the job list */}
+        <div className="list-group">
+          <div className="list-group">
+            {jobs.map((job) => (
+              <div
+                key={job._id}
+                className="list-group-item d-flex justify-content-between align-items-center"
+              >
+                <span>{job.title}</span>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => viewJobPosting(job._id)}
+                >
+                  View Job Posting
+                </button>
+              </div> // Added closing div for list-group-item
+            ))}{" "}
+            {/* Fixed closing parenthesis for map function */}
+          </div>
+        </div>
+
         <div className="mb-3">
           <input
             type="text"
@@ -134,16 +156,22 @@ const ViewAllJobs: React.FC = () => {
             No available job that matches the search!
           </div>
         ) : (
-        <div className="list-group">
-          {filteredJobs.map((job) => (
-            <div key={job._id} className="list-group-item d-flex justify-content-between align-items-center">
-              <span>{job.title}</span>
-              <button className="btn btn-primary" onClick={() => viewJobPosting(job._id)}>
-                View Job Posting
-              </button>
-            </div>
-          ))}
-        </div>
+          <div className="list-group">
+            {filteredJobs.map((job) => (
+              <div
+                key={job._id}
+                className="list-group-item d-flex justify-content-between align-items-center"
+              >
+                <span>{job.title}</span>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => viewJobPosting(job._id)}
+                >
+                  View Job Posting
+                </button>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>
