@@ -199,6 +199,11 @@ Will be implemented in Sprint 3
 
 ##### Integration Tests
 
+1. Create a job posting, create a quiz, and verify results: Tests the ability to create a job posting, add a quiz to it, and verify that the quiz is successfully stored in the database.
+2. Create a job posting, create two quizzes, and get all quizzes for the specific job: Verifies that multiple quizzes can be created for a job and ensures they are correctly retrieved when fetching all quizzes for the job.
+3. Create a job posting, create a quiz, get quizzes for the job, and get a specific quiz: Confirms that a specific quiz can be retrieved from a list of quizzes associated with a job.
+4. Create a job posting, create a quiz, get quizzes for the job, get a specific quiz, and submit a response to the quiz: Ensures that a candidate can submit responses to a quiz and that the score is calculated correctly.
+5. Create a job posting, create a quiz, get quizzes for the job, get a specific quiz, submit a response, and retrieve submissions: Validates that quiz submissions are stored and can be accessed by an employer.
 
 ##### Acceptance Tests
 
