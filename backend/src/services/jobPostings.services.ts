@@ -4,27 +4,19 @@ import JobPostingsModel, { JobPostingsDocument } from "../models/jobPostings.mod
 import SaveJobPostingsModel from "../models/saveJobPostings.model";
 import UserModel from "../models/users.model";
 import appAssert from "../utils/appAssert";
+import jobPostingsDAO from "../dao/jobPosting.dao";
 const mongoose = require("mongoose");
 
 export const createJobPosting = async (data: any) => {
     // Pass the entire `data` object to Mongoose's `create` method
-    const jobPosting = await JobPostingsModel.create(data);
+    const jobPosting = await jobPostingsDAO.create(data);
     return {
         jobPosting: jobPosting,
     };
 };
 
-export const getJobPosting = async (id: string) => {
-    if (!mongoose.isValidObjectId(id))
-        appAssert(false, CONFLICT, "Job Posting does not exist, invalid ID!"); // This will throw an error, and return a 409 response
-
-    const jobPosting = await JobPostingsModel.findById(id);
-    appAssert(jobPosting, CONFLICT, "Job Posting does not exist!");
-    return jobPosting;
-};
-
 // Get Job Posting with application and saved status
-export const getJobPostingImproved = async (id: string, candidate_id: any) => {
+export const getJobPosting = async (id: string, candidate_id: any) => {
     if (!mongoose.isValidObjectId(id))
         appAssert(false, CONFLICT, "Job Posting does not exist, invalid ID!"); // This will throw an error, and return a 409 response
 

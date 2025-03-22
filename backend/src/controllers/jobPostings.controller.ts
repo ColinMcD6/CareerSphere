@@ -10,7 +10,7 @@ import {
     getAllJobPostingsQueryWithSaved,
     getJobPostingApplications,
     getJobPostingApplicationsQuery,
-    getJobPostingImproved,
+    getJobPosting,
     getSavedJobPostings,
     saveJobPosting,
     unsaveJobPosting
@@ -53,7 +53,7 @@ const saveJobPostingModel = z.object({
     candidate_id: z.string().min(1).max(225)
 })
 
-import JobPostingValidation from "../services/JobPostingValidation"
+import JobPostingValidation from "../utils/JobPostingValidation"
   
 const jobApplicationModel = z.object({
     job_id: z.string().min(1).max(225),
@@ -95,7 +95,7 @@ export const getJobPostingHandler = catchErrors(async (req: Request, res: Respon
     const id = req.params.id;
     const candidate_id = req.query.candidate_id
 
-    const jobPosting = await getJobPostingImproved(id, candidate_id);
+    const jobPosting = await getJobPosting(id, candidate_id);
     res.status(OK).json(jobPosting);
 })
 
