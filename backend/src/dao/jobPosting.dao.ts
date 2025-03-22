@@ -15,6 +15,8 @@ class JobPostingsDAO {
     async findById(jobPostingId: string): Promise<JobPostingsDocument | null> {
         return await this.model.findById(jobPostingId);
     }
+
+    async find()
 }
 
 const jobPostingsDAO = new JobPostingsDAO();

@@ -15,22 +15,22 @@ export const createJobPosting = async (data: any) => {
     };
 };
 
-// Get Job Posting with application and saved status
-export const getJobPosting = async (id: string, candidate_id: any) => {
-    if (!mongoose.isValidObjectId(id))
-        appAssert(false, CONFLICT, "Job Posting does not exist, invalid ID!"); // This will throw an error, and return a 409 response
-
-    const jobPosting = await JobPostingsModel.findById(id);
-    
-    const application = await ApplicationModel.findOne({
-        job_id: id,
-        candidate_id: candidate_id,
-    });
-
+export const getJobPostingAndApplication = async (id: string, candidate_id: any) => {
+    const jobPosting = await getJobPosting(id);
+    const application = await getApplication(id, candidate_id);
     return {
         jobPosting: jobPosting,
         application: application
     };
+}
+
+// Get Job Posting with application and saved status
+export const getJobPosting = async (id: string) => {
+    const jobPosting = await jobPostingsDAO.findById(id);
+    if (!jobPosting)
+        appAssert(false, CONFLICT, "Job Posting does not exist, invalid ID!"); // This will throw an error, and return a 409 response
+    
+    return jobPosting;
 }
 
 //include paging
@@ -215,6 +215,15 @@ export const deleteJobPostingApplication = async (id: any) => {
     appAssert(jobPosting, CONFLICT, "Application does not exist!");
     return jobPosting;
 };
+
+// Get Job Posting with application and saved status
+export const getApplication = async (id: string, candidate_id: any) => {
+    const application = await ApplicationModel.findOne({
+        job_id: id,
+        candidate_id: candidate_id,
+    });
+    return application;
+}
 
 export const getJobPostingApplications = async (id: any) => {
     const jobPosting = await ApplicationModel.findById(id);

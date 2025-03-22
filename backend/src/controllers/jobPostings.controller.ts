@@ -9,6 +9,7 @@ import {
     getAllJobPostings,
     getAllJobPostingsQueryWithSaved,
     getJobPostingApplications,
+    getJobPostingAndApplication,
     getJobPostingApplicationsQuery,
     getJobPosting,
     getSavedJobPostings,
@@ -95,7 +96,7 @@ export const getJobPostingHandler = catchErrors(async (req: Request, res: Respon
     const id = req.params.id;
     const candidate_id = req.query.candidate_id
 
-    const jobPosting = await getJobPosting(id, candidate_id);
+    const jobPosting = await getJobPostingAndApplication(id, candidate_id);
     res.status(OK).json(jobPosting);
 })
 
