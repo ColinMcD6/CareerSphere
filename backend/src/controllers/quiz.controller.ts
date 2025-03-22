@@ -25,7 +25,7 @@ import appAssert from "../utils/appAssert";
     }
 */
 
-export const addquizHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+export const addQuizHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const jobId = req.params.id;
         const { quizName, questions } = req.body;
@@ -59,7 +59,7 @@ export const addquizHandler = catchErrors(async (req: Request, res: Response, ne
     get request to /job/{job_id}/quizzes
 */
 
-export const getquizHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+export const getQuizHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const jobId = req.params.id;
       appAssert(mongoose.isValidObjectId(jobId),BAD_REQUEST, "Invalid Data")
@@ -77,7 +77,7 @@ export const getquizHandler = catchErrors(async (req: Request, res: Response, ne
     get request to /job/{job_id}/quizzes/{quiz_id}
 */
 
-export const getspecificquizHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+export const getSpecificQuizHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id: jobId, quizId } = req.params;
       appAssert((mongoose.isValidObjectId(jobId) && mongoose.isValidObjectId(quizId)),BAD_REQUEST, "Invalid Data")
@@ -102,7 +102,7 @@ export const getspecificquizHandler = catchErrors(async (req: Request, res: Resp
 */
 
 /* Example to add candidate response: */
-export const addquizCandiateResponse = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+export const addQuizCandidateResponse = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { quizId } = req.params;
     const { responses } = req.body;
@@ -143,7 +143,7 @@ export const addquizCandiateResponse = catchErrors(async (req: Request, res: Res
   }
 });
 
-export const getquizSubmissions = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
+export const getQuizSubmissions = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { quizId } = req.params;
     appAssert(mongoose.isValidObjectId(quizId), BAD_REQUEST, "Invalid Data")
