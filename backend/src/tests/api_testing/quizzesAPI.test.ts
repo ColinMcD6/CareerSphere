@@ -307,7 +307,6 @@ describe('API Routes', () => {
             responses: ["A", "A"],
         }
         const submitResponse = await request(app).post(`/job/${jobId}/quizzes/${specquizId}/submissions`).send(submissionData).set('Cookie', candaccessToken)
-        console.log(submitResponse.body)
         expect(submitResponse.status).toBe(CREATED)
         expect(submitResponse.body.candidateUsername).toBe(candidate.username)
         expect(submitResponse.body.score).toBe(1)
@@ -402,7 +401,6 @@ describe('API Routes', () => {
         expect(submitResponse.status).toBe(CREATED)
 
         const getsubmissionResponse = await request(app).get(`/job/${jobId}/quizzes/${specquizId}/submissions`).set('Cookie', empaccessToken)
-        console.log(getquizzesResponse)
         expect(getsubmissionResponse.status).toBe(OK)
     });
 });
