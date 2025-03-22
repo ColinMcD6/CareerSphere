@@ -34,6 +34,11 @@ export const getJobPosting = async (id: string) => {
 }
 
 //include paging
+export const getAllJobPostings = async (page: number, limit: number) => {
+    return await getAllJobPostingsQuery({},page, limit);
+};
+
+//include paging
 export const getAllJobPostingsQuery = async (
     query: any,
     page: number,
@@ -118,7 +123,6 @@ export const getAllJobPostingsQueryWithSaved = async (
             }
             for(var i = 0; i < order.length; i++)
             {
-                //console.log(order[i]);
                 for(var j = 0; j < jobDisplay[order[i]].length; j++)
                 {
                     output.push(jobDisplay[order[i]][j]);
@@ -128,13 +132,11 @@ export const getAllJobPostingsQueryWithSaved = async (
         }
         else
         {
-            //console.log("No preferences");
             output = jobPostings;
         }
     }
     else
     {
-        //console.log("No user_id");
         output = jobPostings;
     }
     
@@ -150,22 +152,7 @@ export const getAllJobPostingsQueryWithSaved = async (
     };
 };
 
-//include paging
-export const getAllJobPostings = async (page: number, limit: number) => {
-    const jobPostings = await JobPostingsModel.find()
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .exec();
 
-    const total = await JobPostingsModel.countDocuments();
-
-    return {
-        jobPostings,
-        total,
-        page,
-        pages: Math.ceil(total / limit),
-    };
-};
 // SAVING JOBS ----------------------------------------------
 
 export const saveJobPosting = async (data: any) => {
