@@ -175,10 +175,6 @@ export const getSavedJobPostings = async (candidate_id: any, job_id: any) => {
     return savedJobPosting;
 }
 
-
-
-
-
 //APPLICATIONS----------------------------------------------
 
 export const addJobPostingApplication = async (data: any) => {
