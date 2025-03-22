@@ -16,7 +16,16 @@ class JobPostingsDAO {
         return await this.model.findById(jobPostingId);
     }
 
-    async find()
+    async find(query: Object, page: number, limit: number): Promise<JobPostingsDocument[]> {
+        return await this.model.find(query)
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .exec();
+    }
+
+    async countJobs() {
+        return await JobPostingsModel.countDocuments()
+    }
 }
 
 const jobPostingsDAO = new JobPostingsDAO();

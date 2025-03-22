@@ -39,12 +39,9 @@ export const getAllJobPostingsQuery = async (
     page: number,
     limit: number
 ) => {
-    const jobPostings = await JobPostingsModel.find(query)
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .exec();
+    const jobPostings = await jobPostingsDAO.find(query, page, limit);
 
-    const total = await JobPostingsModel.countDocuments();
+    const total = await jobPostingsDAO.countJobs();
     const pages = Math.ceil(total / limit);
 
     return {
