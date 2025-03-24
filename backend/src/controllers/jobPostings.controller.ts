@@ -18,43 +18,12 @@ import {
 } from "../services/jobPostings.services";
 
 import catchErrors from "../utils/catchErrors";
-import { Category } from "../models/jobPostings.model";
-
-
-
-const MIN_TITLE_LENGTH = 10;
-const MAX_TITLE_LENGTH = 150; 
-
-const MAX_DESCRIPTION_LENGTH = 20000;
-const MIN_DESCRIPTION_LENGTH = 50;
-
-const MAX_POSITION_LENGTH = 100;
-const MIN_POSITION_LENGTH = 5;
-
-const jobPostingsZModel = z.object({
-    title: z.string().min(MIN_TITLE_LENGTH, `Title length must be a minimum of ${MIN_TITLE_LENGTH} characters long`).max(MAX_TITLE_LENGTH, `Title length can be a maximum of ${MAX_TITLE_LENGTH} characters long`),
-    positionTitle: z.string().min(MIN_POSITION_LENGTH, `Position Title must have a minimum of ${MIN_POSITION_LENGTH} characters`).max(MAX_DESCRIPTION_LENGTH, `Position Title can have a maximum of ${MAX_POSITION_LENGTH} characters` ),
-    description: z.string().min(MIN_DESCRIPTION_LENGTH, `Description must have a minimum of ${MIN_DESCRIPTION_LENGTH} characters`).max(MAX_DESCRIPTION_LENGTH, `Description can have a maximum of ${MAX_DESCRIPTION_LENGTH} characters` ),
-    employer: z.string().min(1).max(225),
-    employer_id: z.string().min(1).max(225),
-    location: z.string().min(1, "Location must have at least 1 character").max(225),
-    compensationType: z.enum(['do-not-disclose', 'hourly', 'salary']),
-    salary: z.number().min(0, "Salary value must be greater than 0"),
-    experience: z.array(z.string()), 
-    skills: z.array(z.string()),
-    education: z.array(z.string()),
-    status: z.string().min(1).max(225), // Change to open/close later
-    startingDate: z.string(), // I am not sure what to do about this right now, but this should be a date
-    jobType: z.enum(['Full-time', 'Part-time', 'Temporary', 'Internship']),
-    category: z.nativeEnum(Category)
-})
+import JobPostingValidation from "../utils/JobPostingValidation"
 
 const saveJobPostingModel = z.object({
     job_id: z.string().min(1).max(225),
     candidate_id: z.string().min(1).max(225)
 })
-
-import JobPostingValidation from "../utils/JobPostingValidation"
   
 const jobApplicationModel = z.object({
     job_id: z.string().min(1).max(225),
@@ -100,15 +69,6 @@ export const getJobPostingHandler = catchErrors(async (req: Request, res: Respon
     res.status(OK).json(jobPosting);
 })
 
-// Is this Defunct now ??
-export const getAllJobPostingsHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
-    
-    const page = req.query.page ? parseInt(req.query.page as string) : 1;
-    const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
-    const jobPostings = await getAllJobPostings(page, limit);
-    res.status(OK).json(jobPostings);
-})
-
 export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     const queryFieldNames = Object.keys(req.query);
 
@@ -121,7 +81,7 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
         return acc;
     }, {} as Record<string, any>);
 
-    // Handle the search query paramete
+    // Handle the search query parameters
     if (req.query.search) {
         const searchTerm = req.query.search.toString();
         const searchRegex = new RegExp(searchTerm, "i");
@@ -173,9 +133,6 @@ export const getSavedJobPostingsHandler = catchErrors(async (req: Request, res: 
     const savedPostings = await getSavedJobPostings(candidate_id, job_id);
     res.status(OK).json(savedPostings);
 })
-
-
-
 
 //APPLICATIONS----------------------------------------------
 export const addJobPostingApplicationHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
@@ -230,6 +187,5 @@ export const getJobPostingApplicationsQueryHandler = catchErrors(async (req: Req
         const page = req.query.page ? parseInt(req.query.page as string) : 1;
         const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
         const applications = await getJobPostingApplicationsQuery(query, page, limit);
-        res.status(OK).json(applications);
-    
+        res.status(OK).json(applications);  
 })
