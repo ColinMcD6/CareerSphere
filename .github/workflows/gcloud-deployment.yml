@@ -58,8 +58,10 @@ jobs:
 
     - name: deploy backend to gke
       run: |
+        sed -i "s|image: .*$|image: $BACKEND_DIGEST|" ./backend/backend-deployment.yml
         kubectl apply -f ./backend/backend-deployment.yml
 
     - name: deploy frontend to gke
       run: |
+        sed -i "s|image: .*$|image: $FRONTEND_DIGEST|" ./frontend/frontend-deployment.yml
         kubectl apply -f ./frontend/frontend-deployment.yml
