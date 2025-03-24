@@ -40,12 +40,16 @@ jobs:
         gcloud auth configure-docker $GAR_REGION-docker.pkg.dev
         docker build -t $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend:latest ./backend
         docker push $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend:latest
+        BACKEND_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend:latest)
+        echo "BACKEND_DIGEST=$BACKEND_DIGEST" >> $GITHUB_ENV
 
     - name: build and push the frontend docker image
       run: |
         gcloud auth configure-docker $GAR_REGION-docker.pkg.dev
         docker build -t $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/frontend:latest ./frontend
         docker push $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/frontend:latest
+        FRONTEND_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/frontend:latest)
+        echo "FRONTEND_DIGEST=$FRONTEND_DIGEST" >> $GITHUB_ENV
 
     - name: Get GKE credentials
       run: |
@@ -59,12 +63,3 @@ jobs:
     - name: deploy frontend to gke
       run: |
         kubectl apply -f ./frontend/frontend-deployment.yml
-
-    - name: force rollout restart for backend
-      run: |
-        kubectl rollout restart deployment/backend-deployment
-  
-    - name: force rollout restart for frontend
-      run: |
-        kubectl rollout restart deployment/frontend-deployment
-

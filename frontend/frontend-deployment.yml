@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: us-central1-docker.pkg.dev/careersphere/docker-career-sphere/frontend:latest
+        image: $FRONTEND_DIGEST
         ports:
         - containerPort: 80
 ---

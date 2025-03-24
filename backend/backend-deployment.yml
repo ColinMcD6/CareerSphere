@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: us-central1-docker.pkg.dev/careersphere/docker-career-sphere/backend:latest
+        image: $BACKEND_DIGEST
         ports:
         - containerPort: 5000
         env:
