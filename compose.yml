@@ -1,8 +1,11 @@
 services:
   frontend:
-    image: colinmcd6/frontend:latest
+    # image: colinmcd6/frontend:latest
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - "5173:5173"
+      - "5173:80"
     depends_on:
       - backend
     networks:
