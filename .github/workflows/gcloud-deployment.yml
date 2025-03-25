@@ -46,7 +46,7 @@ jobs:
     - name: build and push the frontend docker image
       run: |
         gcloud auth configure-docker $GAR_REGION-docker.pkg.dev
-        docker build -t $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/frontend:latest ./frontend
+        docker build -t $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/frontend:latest --build-arg VITE_API_URL=http://backend-service.default.svc.cluster.local:4004 ./frontend
         docker push $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/frontend:latest
         FRONTEND_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/frontend:latest)
         echo "FRONTEND_DIGEST=$FRONTEND_DIGEST" >> $GITHUB_ENV

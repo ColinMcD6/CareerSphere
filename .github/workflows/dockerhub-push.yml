@@ -29,7 +29,7 @@ jobs:
 
       - name: Build and Push Frontend Image
         run: |
-          docker build -t colinmcd6/frontend:latest ./frontend
+          docker build -t colinmcd6/frontend:latest --build-arg VITE_API_URL=http://localhost:4004 ./frontend
           docker push colinmcd6/frontend:latest
 
       - name: Build and Push Backend Image
