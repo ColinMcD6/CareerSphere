@@ -13,6 +13,10 @@ class UserDAO {
     return await this.model.findById(candidateId);
   }
 
+  async findOne(searchCriteria: any): Promise<UserDocument | null> {
+    return await this.model.findOne(searchCriteria);
+  }
+
 }
 
 const userDAO = new UserDAO();

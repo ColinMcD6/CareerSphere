@@ -1,10 +1,11 @@
 import { CONFLICT } from "../constants/http";
-import ApplicationModel from "../models/application.model";
-import JobPostingsModel, { JobPostingsDocument } from "../models/jobPostings.model";
-import SaveJobPostingsModel from "../models/saveJobPostings.model";
-import UserModel from "../models/users.model";
+import {JobPostingsDocument } from "../models/jobPostings.model";
 import appAssert from "../utils/appAssert";
 import jobPostingsDAO from "../dao/jobPosting.dao";
+import userDAO from "../dao/user.dao";
+import saveJobPostingDAO from "../dao/saveJobPosting.dao"; 
+import applicationDAO from "../dao/application.dao";
+
 const mongoose = require("mongoose");
 
 export const createJobPosting = async (data: any) => {
@@ -99,13 +100,13 @@ export const getAllJobPostingsQueryWithSaved = async (
         )
     }
 
-    const jobPostings = await JobPostingsModel.aggregate(aggregation_rules);
+    const jobPostings = await jobPostingsDAO.aggregate(aggregation_rules);
     let output: JobPostingsDocument[] = [];
 
     //organize
     if(user_id)
     {
-        const user = await UserModel.findById(user_id)
+        const user = await userDAO.findById(user_id)
         const preferences = user?.preferences;
         
         if(preferences)
@@ -156,18 +157,18 @@ export const getAllJobPostingsQueryWithSaved = async (
 // SAVING JOBS ----------------------------------------------
 
 export const saveJobPosting = async (data: any) => {
-    const savedJobPosting = await SaveJobPostingsModel.create(data);
+    const savedJobPosting = await saveJobPostingDAO.create(data);
     return savedJobPosting;
 }
 
 export const unsaveJobPosting = async (id: any) => {
-    const savedJobPosting = await SaveJobPostingsModel.findByIdAndDelete(id);
+    const savedJobPosting = await saveJobPostingDAO.findByIdAndDelete(id);
     return savedJobPosting;
 }
 
 export const getSavedJobPostings = async (candidate_id: any, job_id: any) => {
     console.log(candidate_id, job_id);
-    const savedJobPosting = await SaveJobPostingsModel.findOne(
+    const savedJobPosting = await saveJobPostingDAO.findOne(
         { 
             candidate_id: candidate_id,
             job_id: job_id
@@ -178,27 +179,27 @@ export const getSavedJobPostings = async (candidate_id: any, job_id: any) => {
 //APPLICATIONS----------------------------------------------
 
 export const addJobPostingApplication = async (data: any) => {
-    const jobApplication = await ApplicationModel.create(data);
+    const jobApplication = await applicationDAO.create(data);
     return {
         jobApplication: jobApplication,
     };
 };
 
 export const editJobPostingApplicationStatus = async (id: any, status: any) => {
-    const jobApplication = await ApplicationModel.findByIdAndUpdate(id, { status: status }, { new: true });
+    const jobApplication = await applicationDAO.findByIdAndUpdate(id, { status: status }, { new: true });
     return jobApplication;
 
 };
 
 export const deleteJobPostingApplication = async (id: any) => {
-    const jobPosting = await ApplicationModel.findByIdAndDelete(id);
+    const jobPosting = await applicationDAO.findByIdAndDelete(id);
     appAssert(jobPosting, CONFLICT, "Application does not exist!");
     return jobPosting;
 };
 
 // Get Job Posting with application and saved status
 export const getApplication = async (id: string, candidate_id: any) => {
-    const application = await ApplicationModel.findOne({
+    const application = await applicationDAO.findOne({
         job_id: id,
         candidate_id: candidate_id,
     });
@@ -206,7 +207,7 @@ export const getApplication = async (id: string, candidate_id: any) => {
 }
 
 export const getJobPostingApplications = async (id: any) => {
-    const jobPosting = await ApplicationModel.findById(id);
+    const jobPosting = await applicationDAO.findById(id);
     appAssert(jobPosting, CONFLICT, "Application does not exist!");
     return jobPosting;
 };
@@ -216,16 +217,14 @@ export const getJobPostingApplicationsQuery = async (
     page: number,
     limit: number
 ) => {
-    const applications = await ApplicationModel.find(query)
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .exec();
-    const total = await ApplicationModel.countDocuments(query);
+    const applications = await applicationDAO.find(query)
+
+    const total = await applicationDAO.countDocuments(query);
 
     // The following code attaches the username to the applications
     const applicationsWithUser = await Promise.all(
         applications.map(async (application) => {
-            const user = await UserModel.findOne({
+            const user = await userDAO.findOne({
                 _id: application.candidate_id,
             });
             return {

@@ -38,6 +38,11 @@ class JobPostingsDAO {
     async countJobs() {
         return await JobPostingsModel.countDocuments()
     }
+
+    async aggregate(aggregation_rules : any) : Promise<JobPostingsDocument[]> 
+    {
+        return await JobPostingsModel.aggregate(aggregation_rules)
+    }
 }
 
 const jobPostingsDAO = new JobPostingsDAO();
