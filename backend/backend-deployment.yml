@@ -39,7 +39,7 @@ spec:
               name: backend-config
               key: PORT
         - name: APP_ORIGIN
-          value: http://__FRONTEND_IP__:5173
+          value: http://__FRONTEND_IP__:80
         - name: MONGO_URI
           valueFrom:
             secretKeyRef:
