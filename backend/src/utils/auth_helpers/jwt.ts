@@ -1,15 +1,15 @@
 import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
-import { sessionDoc } from "../../models/session.model";
+import { sessionDocument } from "../../models/session.model";
 import { UserDocument } from "../../models/users.model";
 import { JWT_SECRET, JWTREFRESH_SECRET } from "../../constants/env";
 
 export type RefTokenPayload = {
-    sessionId: sessionDoc["_id"];
+    sessionId: sessionDocument["_id"];
 };
 
 export type AccessTokenPayload = {
     userId: UserDocument["_id"];
-    sessionId: sessionDoc["_id"];
+    sessionId: sessionDocument["_id"];
 };
 
 type SignOptionsWithSecret = SignOptions & {

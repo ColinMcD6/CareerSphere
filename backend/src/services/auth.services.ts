@@ -1,15 +1,15 @@
 import { APP_ORIGIN } from "../constants/env";
 import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED } from "../constants/http";
 import verificationType from "../constants/verificationTyes";
-import sessionModel from "../models/session.model";
-import UserModel from "../models/users.model";
-import verificationModel from "../models/verify.model";
 import appAssert from "../utils/appAssert";
 import { hashPass } from "../utils/auth_helpers/bcrypt";
 import { afteronehour, DAY_LEFT, oneyearfromnow, weekfromnow } from "../utils/auth_helpers/calc";
 import { getPasswordResetTemplate, getVerifyEmailTemplate } from "../utils/auth_helpers/emailTemplates";
 import { refeshTokenOption, RefTokenPayload, signingToken, verifyToken } from "../utils/auth_helpers/jwt";
 import { sendEmail } from "../utils/auth_helpers/sendEmail";
+import userDAO from "../dao/user.dao";
+import verificationDAO from "../dao/verification.dao";
+import sessionDAO from "../dao/session.dao"
 
 export type signupAccountFields = {
     username: string;
@@ -26,7 +26,7 @@ export type loginAccountFields = {
 
 export const signup_account = async (data: signupAccountFields) => {
     // verify exisiting user doesnt exist
-    const existUser = await UserModel.exists({
+    const existUser = await userDAO.exists({
         email: data.email,
     });
     
@@ -35,7 +35,7 @@ export const signup_account = async (data: signupAccountFields) => {
     )
 
     // if not then create the user
-    const newuser = await UserModel.create({
+    const newuser = await userDAO.create({
         username: data.username, 
         email: data.email, 
         password: data.password, 
@@ -48,7 +48,7 @@ export const signup_account = async (data: signupAccountFields) => {
     });
     
     // create and send verification code to email
-    const verificaion_codes = await verificationModel.create({
+    const verificaion_codes = await verificationDAO.create({
         userId: newuser._id, 
         type: verificationType.emailVerification,
         expireAt: oneyearfromnow(),
@@ -65,7 +65,7 @@ export const signup_account = async (data: signupAccountFields) => {
     }
 
     // create session and assign jwt token session (unit of time) is valid for 7days - use the access and refresh token for 7 days
-    const newsession = await sessionModel.create({
+    const newsession = await sessionDAO.create({
         userId: newuser._id,
         userAgent: data.user_role,
     })
@@ -92,14 +92,14 @@ export const signup_account = async (data: signupAccountFields) => {
 
 export const login_account = async ({email, password, user_role}: loginAccountFields) => {
     // get the user email and check if the user exists
-    const existUser = await UserModel.findOne({ email });
+    const existUser = await userDAO.findOne({ email });
     appAssert(existUser, UNAUTHORIZED, "User Account does not exist !")
     // check the password
     const validPass = await existUser.checkPassword(password);
     appAssert(validPass, UNAUTHORIZED, "Invalid email or Password !")
     // create session, access tokens and refresh tokens
     const userId = existUser._id;
-    const session = await sessionModel.create({
+    const session = await sessionDAO.create({
         userId,
         user_role,
     })
@@ -130,7 +130,7 @@ export const refreshSessionToken = async (refreshToken: string) => {
     })
     appAssert(payload, UNAUTHORIZED, "Token Missing to refresh session !")
 
-    const session = await sessionModel.findById(payload.sessionId);
+    const session = await sessionDAO.findById(String(payload.sessionId));
     appAssert(session
         && session.expiredAt.getTime() > Date.now()
         , UNAUTHORIZED, "Session not valid anymore !");
@@ -162,14 +162,14 @@ export const refreshSessionToken = async (refreshToken: string) => {
 }
 
 export const verifyEmailCode = async (code: string) => {
-    const validcode = await verificationModel.findOne({
+    const validcode = await verificationDAO.findOne({
         _id: code,
         type: verificationType.emailVerification,
         expireAt: {$gt: new Date() },
     })
     appAssert(validcode, NOT_FOUND, " Invalid verification Code")
 
-    const user_verified = await UserModel.findByIdAndUpdate(
+    const user_verified = await userDAO.findByIdAndUpdate(
         validcode.userId, {
             verified: true,
         }, 
@@ -185,11 +185,11 @@ export const verifyEmailCode = async (code: string) => {
 }
 
 export const forgotPass = async (email: string) => {
-    const user = await UserModel.findOne({ email });
+    const user = await userDAO.findOne({ email });
     appAssert(user, NOT_FOUND, "User account does not exist")
 
     const codeexpiresAt = afteronehour();
-    const code = await verificationModel.create({
+    const code = await verificationDAO.create({
         userId: user._id,
         type: verificationType.passwordReset,
         expireAt: codeexpiresAt,
@@ -223,14 +223,14 @@ export const changePass = async (
     {password, verifycode}: changePassParams
 ) => {
     // get code, change user password, delete code and delete all session for that user
-    const code = await verificationModel.findOne({
+    const code = await verificationDAO.findOne({
         _id: verifycode,
         type: verificationType.passwordReset,
         expireAt: { $gt: new Date()},
     })
     appAssert(code, NOT_FOUND, "Verification code is invalid !")
     
-    const user_toupdate = await UserModel.findByIdAndUpdate(
+    const user_toupdate = await userDAO.findByIdAndUpdate(
         code.userId,{
             password: await hashPass(password),
     })
@@ -238,7 +238,7 @@ export const changePass = async (
 
     await code.deleteOne()
 
-    await sessionModel.deleteMany({
+    await sessionDAO.deleteMany({
         userId: user_toupdate._id,
     })
 

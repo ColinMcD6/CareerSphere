@@ -13,10 +13,21 @@ class UserDAO {
     return await this.model.findById(candidateId);
   }
 
-  async findOne(searchCriteria: any): Promise<UserDocument | null> {
+  async findOne(searchCriteria: {}): Promise<UserDocument | null> {
     return await this.model.findOne(searchCriteria);
   }
 
+  async findByIdAndUpdate(id: any, update? : {}, options? : {}): Promise< UserDocument | null> {
+    return await this.model.findByIdAndUpdate(id, update, options);
+  }
+
+  async create(data: {}): Promise<UserDocument> {
+    return await this.model.create(data);
+  }
+
+  async exists(query: {}): Promise< {} | null> {
+    return await this.model.exists(query);
+  }
 }
 
 const userDAO = new UserDAO();
