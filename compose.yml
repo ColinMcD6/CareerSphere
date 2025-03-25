@@ -8,13 +8,13 @@ services:
     networks:
       - app
 
-  backend:
+  backend-service:
     image: colinmcd6/backend:latest
     ports:
       - "4004:4004"
     environment:
       - NODE_ENV=production
-      - APP_ORIGIN=http://localhost:5173
+      - APP_ORIGIN=http://backend-service:5173
       - PORT=4004
       - MONGO_URI=mongodb://mongo:27017/test_db
     env_file:

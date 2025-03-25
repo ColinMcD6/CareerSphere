@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Set environment variables
-ENV VITE_API_URL=http://backend-service:4004
+ENV VITE_API_URL=http://backend-service.default.svc.cluster.local:4004
 
 # Build the TypeScript code
 RUN npm run build
