@@ -63,7 +63,7 @@ jobs:
         # Store IP as GitHub environment variable
         echo "BACKEND_IP=$BACKEND_IP" >> $GITHUB_ENV
         sed -i "s|__BACKEND_IP__|$BACKEND_IP|g" ./backend/backend-deployment.yml
-        
+        kubectl apply -f ./backend/backend-deployment.yml
 
     - name: build and push the frontend docker image
       run: |
@@ -77,3 +77,14 @@ jobs:
       run: |
         sed -i "s|image: .*$|image: $FRONTEND_DIGEST|" ./frontend/frontend-deployment.yml
         kubectl apply -f ./frontend/frontend-deployment.yml
+        # # Wait for LoadBalancer IP to be assigned
+        # FRONTEND_IP=$(kubectl get svc frontend-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+        # while [ -z "$FRONTEND_IP" ]; do
+        #   echo "Waiting for LoadBalancer IP..."
+        #   sleep 5
+        #   FRONTEND_IP=$(kubectl get svc frontend-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+        # done
+        # echo "Backend IP: $FRONTEND_IP"
+        # # Store IP as GitHub environment variable
+        # echo "FRONTEND_IP=$FRONTEND_IP" >> $GITHUB_ENV
+        # sed -i "s|__FRONTEND_IP__|$FRONTEND_IP|g" ./backend/backend-deployment.yml
