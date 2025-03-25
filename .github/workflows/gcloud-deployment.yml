@@ -43,14 +43,6 @@ jobs:
         BACKEND_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/backend:latest)
         echo "BACKEND_DIGEST=$BACKEND_DIGEST" >> $GITHUB_ENV
 
-    - name: build and push the frontend docker image
-      run: |
-        gcloud auth configure-docker $GAR_REGION-docker.pkg.dev
-        docker build -t $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/frontend:latest --build-arg VITE_API_URL=http://backend-service.default.svc.cluster.local:4004 ./frontend
-        docker push $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/frontend:latest
-        FRONTEND_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/frontend:latest)
-        echo "FRONTEND_DIGEST=$FRONTEND_DIGEST" >> $GITHUB_ENV
-
     - name: Get GKE credentials
       run: |
         gcloud components install gke-gcloud-auth-plugin
@@ -60,6 +52,26 @@ jobs:
       run: |
         sed -i "s|image: .*$|image: $BACKEND_DIGEST|" ./backend/backend-deployment.yml
         kubectl apply -f ./backend/backend-deployment.yml
+        # Wait for LoadBalancer IP to be assigned
+        BACKEND_IP=$(kubectl get svc backend-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+        while [ -z "$BACKEND_IP" ]; do
+          echo "Waiting for LoadBalancer IP..."
+          sleep 5
+          BACKEND_IP=$(kubectl get svc backend-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+        done
+        echo "Backend IP: $BACKEND_IP"
+        # Store IP as GitHub environment variable
+        echo "BACKEND_IP=$BACKEND_IP" >> $GITHUB_ENV
+        sed -i "s|__BACKEND_IP__|$BACKEND_IP|g" ./backend/backend-deployment.yml
+        
+
+    - name: build and push the frontend docker image
+      run: |
+        gcloud auth configure-docker $GAR_REGION-docker.pkg.dev
+        docker build -t $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/frontend:latest --build-arg VITE_API_URL=http://$BACKEND_IP:4004 ./frontend
+        docker push $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/frontend:latest
+        FRONTEND_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $GAR_REGION-docker.pkg.dev/$GOOGLE_PROJECT/docker-career-sphere/frontend:latest)
+        echo "FRONTEND_DIGEST=$FRONTEND_DIGEST" >> $GITHUB_ENV
 
     - name: deploy frontend to gke
       run: |
