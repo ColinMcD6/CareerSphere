@@ -185,9 +185,11 @@ Instructions: Open the website and click the button labeled "Need to Create Acco
 1. Candidate View  
     - A user can see “Edit Profile” option as a candidate 
     - Candidates see "Apply for Jobs" but no "Create Job" button.  
+Instructions: Perform the Login Success acceptance test from feature 1. Near the top right of your screen you will see a suitcase symbol next to the word "Jobs", click on it. You should be taken to a new screen with the words "All Job Postings" in blue, along with a smaller button for "Saved Jobs" and a search bar. This should be all that is there, concluding the test.
 
 2. Update Profile Details 
     - A Candidate adds their "Software Engineering" skills and saves the profile.   
+Instructions: Perform the Login Success acceptance test from feature 1. at the bottom left of your screen you will see a grey circle with the simplified outline of a persons head and shoulders, click that. Now click the words "Edit Profile" that appear above it and expect to be taken to a new screen. This screen should list the information you entered when signing up, followed by several fields. In the field labelled "User Skills", there should be a button labelled "Add Skill". Click this button and enter the words "Software Engineering" into the section that is created. Press the "Confirm" button and expect to be taken back to the home screen. Repeat the steps for entering the edit profile screen and observe that the added skill is still there to conclude the test.
 
 3. Resume Upload Success   
     - A Candidate uploads a PDF resume. 
