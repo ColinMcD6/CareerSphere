@@ -5,7 +5,7 @@ import { onedaylater, weekfromnow } from "./calc"
 const secure = process.env.NODE_ENV !== "development"
 
 const defaults: CookieOptions={
-    sameSite: "strict",
+    sameSite: "none",
     httpOnly: true,
     secure,
 }
