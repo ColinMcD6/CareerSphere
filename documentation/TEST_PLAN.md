@@ -128,10 +128,12 @@ Instructions: Perform the Logout Functionality acceptance test. Now go to the to
 1. Employer View
     - A user can see “Edit Profile” option as an employer 
     - Employers see "Post Job" and "View Applicants" but no "Apply" button. 
+Instructions: Open the website and click the button labeled "Need to Create Account?" enter the username "test2" to the "Username" field, the email address "test2@gmail.com" to the "Email Address" field, and the password "test1234" into both the "Password" and "Confirm Password" fields. Press the Dot next to the word "Employer" and ensure it is blue. Press the "Sign Up" button. You should be informed of a successful account creation and sent back to the previous screen, Enter the given email to the "Email" field and the password to the "Password" field. Press the "Log In" button and expect to be taken to the home screen. Near the top right of the screen you will see a briefcase and the word "Jobs", click on that. You will be taken to a new screen with the words "My Job Postings" at the top. You should also see a green button labelled "Create" and a search bar. There should be no postings on this page. THis concludes the test.
 
 2. Employer Profile Update 
     - An Employer updates their company’s location to "New York."   
-    - The change is reflected on their company profile page.   
+    - The change is reflected on their company profile page. 
+Instructions: Open the website and click the button labeled "Need to Create Account?" enter the username "test2" to the "Username" field, the email address "test2@gmail.com" to the "Email Address" field, and the password "test1234" into both the "Password" and "Confirm Password" fields. Press the Dot next to the word "Employer" and ensure it is blue. Press the "Sign Up" button. You should be informed of a successful account creation and sent back to the previous screen, Enter the given email to the "Email" field and the password to the "Password" field. Press the "Log In" button and expect to be taken to the home screen. At the bottom left you will see a grey circle with the outline of a persons head and shoulders, click it. Click the words "Edit Profile" that appear above it and expect to be taken to a new screen with the information you entered at the top, followed by several fields. In the field labelled "Company Details" enter the words "Located in New York" and then click the blue "Confirm" button. Expect to be taken to the home screen. Repeat the process of moving to the edit profile screen and observe that the typed message remains in the "Company Details" field to conclude the test.
 
 3. Post a New Job 
     - An Employer fills out a job form (title: "Frontend Developer," location: "Remote").   
