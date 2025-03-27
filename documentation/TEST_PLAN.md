@@ -290,17 +290,28 @@ Instructions: Continue from Duplicate Submission Prevention. Click the "Home" bu
 10. Confirm that any valid search query (e.g., "Data") returns a response with a status of OK.
 
 ##### Acceptance Tests
+
+*I recommend doing these tests in one session as well*
+
 1. Display All Job Postings
     - When the job listings page is loaded with an empty search field, all available job postings are displayed.
-Instructions: 
+Instructions: Perform the Post a New Job acceptance test from feature 2. Now repeat the process of creating the job with the only change being to change the title from "Frontend Developer" to "Test Job 2". Observe that when the search bar (bar containg the words "Search jobs") is empty, both jobs appear visible.
+
 2. Real-Time Search Filtering
     - As a candidate types a valid search term, the job listings update in real time to show only postings matching the term in the title, position, description, employer, location, or skills.
+Instructions: Continue from Display All Job Postings. type the word "Front" into the search bar and observe that only the "Frontend Developer" is visible.
+
 3. No Matching Results Message
     - When a candidate enters a search term that does not match any postings, the message "No available job that matches the search" is displayed.
+Instructions: Continue from Real-TIme Search Filtering. erase the word "Front" and replace it with the word "Incorrect". Notice that the jobs are gone and you are informed that there is "No available job that matches the search!".
+
 4. Case-Insensitive Search
     - The candidate enters search queries in different cases (e.g., "tech corp" and "Tech Corp") and receives consistent results.
+Instructions: Continue from No Matching Results Message. Erase the word "Incorrect" and instead type "test job". Observe that the job titled "Test Job 2" shows up despite the case difference.
+
 5. Clearing the Search Input
     - Clearing the search input restores the full list of job postings on the page.
+Instructions: Continue from Case-Insensitive Search. Erase the search bar and observe both jobs are visible once again to conclude these tests.
 
 ### Non-functional Feature
 - Implemented in later sprint (For load testing, when design the load, make sure at least twos request associated with
