@@ -83,14 +83,6 @@ export const getJobPostingHandler = catchErrors(async (req: Request, res: Respon
     res.status(OK).json(jobPosting);
 })
 
-
-/**
- * * Get All Job Postings Handler
- * * @description - This handler retrieves all job postings, with optional pagination and filtering based on query parameters.
- * * @param {Request} req - The request object containing the query parameters for filtering and pagination.
- * * @param {Response} res - The response object to send the response back to the client.
- * * @throws {Error} - Throws an error if the job postings retrieval fails.
- */
 export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     const queryFieldNames = Object.keys(req.query);
 
