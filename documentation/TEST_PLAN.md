@@ -126,7 +126,7 @@ Instructions: Open the website and click the button labeled "Need to Create Acco
 3. Post a New Job 
     - An Employer fills out a job form (title: "Frontend Developer," location: "Remote").   
     - The job appears in the public "Job Listings" page.   
-Instructions: Perform the Employer View acceptance test, click the "Create" button and expect to be shown a form. Enter in order from top to bottom: "Frontend Developer", "title", "description satisfying requirement of 50 characters", nothing, nothing, nothing, "Remote", "skills", "education". Click the round button next to the word "Temporary", followed by the one next to "Technology". Click the "Create Job Posting" button at the bottom. Observe a message confirming that the job posting was created, and that there is now a job labeled "title of job" in the list of postings to conclude the test.
+Instructions: Perform the Employer View acceptance test, click the "Create" button and expect to be shown a form. Enter in order from top to bottom: "Frontend Developer", "title", "description satisfying requirement of 50 characters", nothing, nothing, nothing, "Remote", "skills", "education". Click the round button next to the word "Temporary", followed by the one next to "Technology". Click the "Create Job Posting" button at the bottom. Observe a message confirming that the job posting was created, and that there is now a job labeled "Frontend Developer" in the list of postings to conclude the test.
 
 4. Track Applicants 
     - An Employer can see a list of Candidates who applied, with usernames below the specific job posting.   
@@ -183,7 +183,7 @@ Instructions: Perform the Login Success acceptance test from feature 1. at the b
 3. View Job Details
     - A Candidate clicks on a job titled "Frontend Developer."   
     - They see the full description, salary, and location.   
-Instructions: Complete the Track Applicants acceptance test up to and including the part where you click on the "View Job Posting" button as a candidate. Observe the details are displayed as they were entered to conclude the test
+Instructions: Complete the Track Applicants acceptance test from feature 2 up to and including the part where you click on the "View Job Posting" button as a candidate. Observe the details are displayed as they were entered.
 
 4. Resume Upload Success   
     - A Candidate uploads a PDF resume. 
@@ -191,11 +191,11 @@ Instructions: Continue from View Job Details and press the "Apply" button. If yo
 
 5. Apply for a Job 
     - A Candidate clicks "Apply" on a job, uploads their resume, and submits. The apply button changes to applied. 
-Instructions: Continue from Resume Upload Success and observe that upon pressing submit, the Apply button changes to "Applied".
+Instructions: Continue from Resume Upload Success and observe that upon pressing submit, the "Apply" button changes to "Applied".
 
 6. View Application Status 
     - A Candidate checks "My Applications" and sees their status: "Pending," "Accepted". 
-Instructions: Continue from Apply for a Job, look to the top left of the window containing the job information to see the word "Pending". This concludes the test.
+Instructions: Continue from Apply for a Job, look to the top left of the window containing the job information to see the word "Pending". This concludes these test.
 
 #### 4. Quizzing for Job Screening Process
 ##### Unit Tests
@@ -224,17 +224,27 @@ Instructions: Continue from Apply for a Job, look to the top left of the window 
 5. Create a job posting, create a quiz, get quizzes for the job, get a specific quiz, submit a response, and retrieve submissions: Validates that quiz submissions are stored and can be accessed by an employer.
 
 ##### Acceptance Tests
+
+*Once again I reccomend doing the next four tests in the same session*
+
 1. Quiz Creation and Association
     - An employer creates a quiz for a job posting using the quiz creation form.
     - The quiz is successfully linked to the job posting and a confirmation message is displayed.
+Instructions: Perform the Post a New Job acceptance test from feature 2. Click on the "View Job Posting" button next to the title. Look to the middle lower section of the screen for a blue button labeled "Create new Quiz for job posting" and click on it. You will see a new window pop up. At the top is a field labelled "Enter a Name for the quiz" into which you will write "quiz". Underneath this is a field labeled "Question 1" into which you will write "question". There are 4 fields below this labelled as answers 1 through 4. Into answer 1, enter the word "correct". Into the other 3, enter the word "incorrect". Click the round button next to answer 1 labeled "Correct" such that it becomes blue. If you so desire, you can click the "Add Another Question" button and repeat the previous step. Click the blue button labeled "Create Quiz". You should be informed that the quiz was created successfully and added to the job posting. Click the "Jobs" button in the top right and then "View Job Posting" on the job. Observe that "quiz" is now visible under "Existing Quizzes".
+
 2. Quiz Submission and Scoring
     - A candidate submits their responses to a quiz.
     - The system records the submission, calculates the score, and displays a success confirmation.
+Instructions: Continue from Quiz Creation and Association. Click on the home button in the top right, followed by the grey circle with the head and shoulders outline in the bottom left. Click "Log Out". Perform the Candidate View acceptance test from feature 3. Click on the "View Job Posting" button next to the "Frontend Developer" job. Click on the "Take Quiz" button in the bottom right of the job window. Click on the round button near the top left answer so that it turns blue. Click on the "Submit Quiz Answers" button and be informed that you have taken the quiz successfully, and that your answer was recorded.
+
 3. Duplicate Submission Prevention
     - A candidate attempts to submit responses for the same quiz more than once.
     - The system prevents the duplicate submission and displays an error message.
+Instructions: Continue from Quiz Submission and Scoring and observe that the "Take Quiz" button is now grey and reads "Quiz Taken".
+
 4. Quiz Retrieval and Display
     - When a valid job ID and quiz ID are provided, the correct quiz details and all associated submissions (with candidate names and scores) are retrieved and displayed.
+Instructions: Continue from Duplicate Submission Prevention. Click the "Home" button in the top right, followed by the grey circle with the head and shoulders outline in the bottom left. Click "Log Out". Perform the Employer View acceptance test from feature 2. Click on the "View Job Posting" button next to the "Frontend Developer" job. Click on the green "View Results" button next to "quiz". Observe the paired results of "test1" and "1" under "Username" and "Score" respectively to conclude these tests.
 
 #### 5. Recommendation Engine
 ##### Unit Tests
