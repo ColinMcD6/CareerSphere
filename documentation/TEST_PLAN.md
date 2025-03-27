@@ -81,24 +81,12 @@ Instructions: Perform the Successful Account Creation acceptance test. In the fi
     - After closing and reopening the browser, the user remains logged in.  
 Instructions: Perform the Login Success acceptance test. Now go the top of your screen, right below the tabs where it says "https://CareerSphere" and click on it. Now press    Ctrl+c or an equivalent method of copying the highlighted text. Press the X on the tab with the same name as the text you just copied. Open a new tab and press Ctrl+v or some equivalent method of pasting the copied text, press enter. You should be returned to the home screen that was there before, signalling a successful test.
 
-7. Reset Password via Email   
-    - A user clicks "Forgot Password," enters their email, and receives a reset link. 
-    - Clicking the link lets them set a new password.   
-
-8. Expired Reset Link 
-    - A user tries to use a password reset link after 60 minutes.   
-    - They see: "Invalid or expired reset link" 
-
-9. New Password Validation   
-    - After resetting their password, the user should see “Password Reset Successful” 
-    - The user can log in with the new password.   
-
-10. Logout Functionality  
+7. Logout Functionality  
     - After clicking "Logout," the user is redirected to the login page.   
     - The user sees “Logout Successful”  
 Instructions: Perform the Login Success acceptance test. On the bottom left of your screen you will see a symbol of a grey circle containing the simplified outline of a persons head and shoulders. Click this and then the words "Log Out" that appear above it. You should be taken back to the login screen signalling a successful test.
 
-11. Security 
+8. Security 
     - After logging out, a user cannot access `/dashboard` without logging in again.  
 Instructions: Perform the Logout Functionality acceptance test. Now go to the top left of your screen and click the arrow pointing left (back). You should remain on the login screen and not be shown the home screen at any point using the back arrow. This signifies a successful test.
 
@@ -128,7 +116,7 @@ Instructions: Perform the Logout Functionality acceptance test. Now go to the to
 1. Employer View
     - A user can see “Edit Profile” option as an employer 
     - Employers see "Post Job" and "View Applicants" but no "Apply" button. 
-Instructions: Open the website and click the button labeled "Need to Create Account?" enter the username "test2" to the "Username" field, the email address "test2@gmail.com" to the "Email Address" field, and the password "test1234" into both the "Password" and "Confirm Password" fields. Press the Dot next to the word "Employer" and ensure it is blue. Press the "Sign Up" button. You should be informed of a successful account creation and sent back to the previous screen, Enter the given email to the "Email" field and the password to the "Password" field. Press the "Log In" button and expect to be taken to the home screen. Near the top right of the screen you will see a briefcase and the word "Jobs", click on that. You will be taken to a new screen with the words "My Job Postings" at the top. You should also see a green button labelled "Create" and a search bar. There should be no postings on this page. THis concludes the test.
+Instructions: Open the website and click the button labeled "Need to Create Account?" enter the username "test2" to the "Username" field, the email address "test2@gmail.com" to the "Email Address" field, and the password "test1234" into both the "Password" and "Confirm Password" fields. Press the Dot next to the word "Employer" and ensure it is blue. Press the "Sign Up" button. You should be informed of a successful account creation and sent back to the previous screen, Enter the given email to the "Email" field and the password to the "Password" field. Press the "Log In" button and expect to be taken to the home screen. Near the top right of the screen you will see a briefcase and the word "Jobs", click on that. You will be taken to a new screen with the words "My Job Postings" at the top. You should also see a green button labelled "Create" and a search bar. There should be no postings on this page. This concludes the test.
 
 2. Employer Profile Update 
     - An Employer updates their company’s location to "New York."   
@@ -138,12 +126,11 @@ Instructions: Open the website and click the button labeled "Need to Create Acco
 3. Post a New Job 
     - An Employer fills out a job form (title: "Frontend Developer," location: "Remote").   
     - The job appears in the public "Job Listings" page.   
+Instructions: Perform the Employer View acceptance test, click the "Create" button and expect to be shown a form. Enter in order from top to bottom: "Frontend Developer", "title", "description satisfying requirement of 50 characters", nothing, nothing, nothing, "Remote", "skills", "education". Click the round button next to the word "Temporary", followed by the one next to "Technology". Click the "Create Job Posting" button at the bottom. Observe a message confirming that the job posting was created, and that there is now a job labeled "title of job" in the list of postings to conclude the test.
 
 4. Track Applicants 
     - An Employer can see a list of Candidates who applied, with usernames below the specific job posting.   
-
-5. Form Validation 
-    - A user tries to submit a job form, and then on submit they can see the validation errors. 
+Instructions: Perform the Post a New Job acceptance test. Near the top right of the screen you will see a house symbol and the word "Home", click on it. You will be sent to a new screen with a grey circle containing the simplified outline of a person. Click on that, followed by the words "Log Out". Perform the Login Success acceptance test from feature 1. Click on the "Jobs" button with the briefcase again and expect to be shown the job named "title of job". Click on the blue "View Job Posting" button and expect to be shown the job details you entered before. Now click on the blue "Apply" button. If you are willing and able to enter a PDF into the website, do so by clicking the "Browse..." button and selecting it. If you are not, end the test here. If you submitted the file, press the "Submit" button. Now press the "Home" button and then log out using the grey circle once again. Log In once more using the credentials from Employer View, and click on the "Jobs" button in the top right. Click on the "View Job Posting" button and scroll downward. You should see that you have 1 applicant, along with a horizontal rectangle with the name "test1". Click on this to show the details of the candidate you created and then the "View Resume" button in order to verify the file is correct and complete the test.
 
 #### 3. Candidate Portal
 ##### Unit Tests
@@ -191,21 +178,24 @@ Instructions: Perform the Login Success acceptance test from feature 1. Near the
     - A Candidate adds their "Software Engineering" skills and saves the profile.   
 Instructions: Perform the Login Success acceptance test from feature 1. at the bottom left of your screen you will see a grey circle with the simplified outline of a persons head and shoulders, click that. Now click the words "Edit Profile" that appear above it and expect to be taken to a new screen. This screen should list the information you entered when signing up, followed by several fields. In the field labelled "User Skills", there should be a button labelled "Add Skill". Click this button and enter the words "Software Engineering" into the section that is created. Press the "Confirm" button and expect to be taken back to the home screen. Repeat the steps for entering the edit profile screen and observe that the added skill is still there to conclude the test.
 
-3. Resume Upload Success   
-    - A Candidate uploads a PDF resume. 
+*I reccomend the next four tests be done in one session, as each follows directly from the next*
 
-4. Invalid Resume Handling   
-    - File must be PDF/DOCX. 
-
-5. View Job Details
+3. View Job Details
     - A Candidate clicks on a job titled "Frontend Developer."   
     - They see the full description, salary, and location.   
+Instructions: Complete the Track Applicants acceptance test up to and including the part where you click on the "View Job Posting" button as a candidate. Observe the details are displayed as they were entered to conclude the test
 
-6. Apply for a Job 
+4. Resume Upload Success   
+    - A Candidate uploads a PDF resume. 
+Instructions: Continue from View Job Details and press the "Apply" button. If you are willing and able to do so: upload a PDF file from your computer. Press the "Browse..." button to open your files, and then the "Submit" button to confirm.
+
+5. Apply for a Job 
     - A Candidate clicks "Apply" on a job, uploads their resume, and submits. The apply button changes to applied. 
+Instructions: Continue from Resume Upload Success and observe that upon pressing submit, the Apply button changes to "Applied".
 
-7. View Application Status 
+6. View Application Status 
     - A Candidate checks "My Applications" and sees their status: "Pending," "Accepted". 
+Instructions: Continue from Apply for a Job, look to the top left of the window containing the job information to see the word "Pending". This concludes the test.
 
 #### 4. Quizzing for Job Screening Process
 ##### Unit Tests
@@ -292,6 +282,7 @@ Instructions: Perform the Login Success acceptance test from feature 1. at the b
 ##### Acceptance Tests
 1. Display All Job Postings
     - When the job listings page is loaded with an empty search field, all available job postings are displayed.
+Instructions: 
 2. Real-Time Search Filtering
     - As a candidate types a valid search term, the job listings update in real time to show only postings matching the term in the title, position, description, employer, location, or skills.
 3. No Matching Results Message
