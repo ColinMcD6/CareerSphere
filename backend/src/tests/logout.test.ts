@@ -2,8 +2,7 @@ import * as db from "./db";
 import { logoutController } from "../controllers/auth_controllers/logout.controller";
 import sessionModel from "../models/one-to-many/session.model";
 import { NextFunction, Request, Response } from "express";
-import { signupAccount, loginAccount } from "../services/auth.services";
-import { OK } from "../constants/http.constants";
+import { signup_account, login_account } from "../services/auth.services";
 
 describe("Logout Controller", () => {
     beforeAll(async () => {
