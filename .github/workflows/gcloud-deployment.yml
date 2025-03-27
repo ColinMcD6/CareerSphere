@@ -3,7 +3,7 @@ name: Deploy to GKE
 on:
   push:
     branches:
-    - 'nginx'
+    - 'NOTnginx'
 
 env:
   GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
