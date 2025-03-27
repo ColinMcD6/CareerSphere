@@ -1,11 +1,10 @@
 import mongoose from 'mongoose';
 import UserModel from '../models/main/users.model';
 import verificationModel from '../models/one-to-many/verify.model';
-import { changePass, forgotPass } from '../services/auth.services';
-import { afteronehour, oneyearfromnow } from '../utils/auth_helpers/calc';
+import { changePass } from '../services/auth.services';
+import { oneyearfromnow } from '../utils/auth_helpers/calc';
 import * as db from './db'
 import verificationType from '../constants/verificationTyes.constants';
-import { APP_ORIGIN } from '../constants/env.constants';
 
 describe("Verify Email Code", () => {
     beforeAll(async () => {
@@ -73,23 +72,4 @@ describe("Verify Email Code", () => {
         const validPass2 = await updatedUser?.checkPassword(newPass);;
         expect(validPass2).toBe(false);
     });
-
-    // /*
-    //     test to see if forgot password sends the correct data
-    // */
-
-    // test("forgot password for a valid user", async () => {
-    //     const mockUser = await UserModel.create({
-    //         username: "test_user",
-    //         email: "test_user@gmail.com",
-    //         password: "test123456789",
-    //         userRole: "Candidate",
-    //     });
-
-    //     const info = await forgotPass(mockUser.email);
-    //     const code = await verificationModel.findOne({userId: mockUser._id});
-    //     console.log(code);
-    //     expect(info.resetURL).toBe(`${APP_ORIGIN}/password/reset?code=` + code?._id + `&exp=` + code?.expireAt.getTime());
-        
-    // });
 });
