@@ -34,9 +34,9 @@ api.{$DOMAIN_NAME:invalid} {
 	rate_limit {
         # limit requests based on IP address
         zone api_limit {
-            key {remote_host}
+            # key {remote_host}
             # if using Cloudflare proxy, use the following key:
-            # key {http.request.header.CF-Connecting-IP}
+            key {http.request.header.CF-Connecting-IP}
             events 100
             window 1m
         }
