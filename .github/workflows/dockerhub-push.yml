@@ -62,10 +62,20 @@ jobs:
 
       - name: Build and Push Frontend Image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest ./frontend
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ env.NEW_VERSION }} ./frontend
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
-
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ env.NEW_VERSION }}
+  
       - name: Build and Push Backend Image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest ./backend
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest -t ${{ secrets.DOCKER_HUB_USERNAME }}/backend:${{ env.NEW_VERSION }} ./backend
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/backend:${{ env.NEW_VERSION }}
+
+      - name: Commit Updated Version File
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add version.txt
+          git commit -m "Update version to ${{ env.NEW_VERSION }}"
+          git push
