@@ -1,11 +1,11 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
-import connectToDatabase from "./config/db";
-import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env";
-import { OK } from "./constants/http";
-import authenticate from "./middleware/authenticate";
-import errorHandler from "./middleware/errorHandler";
+import connectToDatabase from "./config/db.config";
+import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env.constants";
+import { OK } from "./constants/http.constants";
+import authenticate from "./middleware/authenticate.middleware";
+import errorHandler from "./middleware/errorHandler.middleware";
 import authRoutes from "./routes/auth.route";
 import jobPostingRoutes from "./routes/jobPostings.route";
 import resumeRoutes from "./routes/resume.routes";

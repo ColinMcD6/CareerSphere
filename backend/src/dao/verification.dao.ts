@@ -1,7 +1,14 @@
 import { Model } from "mongoose";
-import verificationModel, { verificationDocument } from "../models/verify.model";
+import verificationModel, { verificationDocument } from "../models/one-to-many/verify.model";
 import mongoose from "mongoose";
 
+
+
+/**
+ * * VerificationDAO Class
+ * * @description - This class handles the data access operations for the Verification model.
+ * * It provides methods to create, find, update, and delete verification documents in the database.
+ */
 class VerificationDAO {
   private model: Model<verificationDocument>;
 

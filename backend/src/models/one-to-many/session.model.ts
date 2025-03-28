@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { weekfromnow } from "../utils/auth_helpers/calc";
+import { weekfromnow } from "../../utils/auth_helpers/calc";
 
 export interface sessionDocument extends mongoose.Document {
     userId: mongoose.Types.ObjectId;

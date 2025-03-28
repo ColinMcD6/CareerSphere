@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { comparePass, hashPass } from "../utils/auth_helpers/bcrypt";
+import { comparePass, hashPass } from "../../utils/auth_helpers/bcrypt";
 
 export interface UserDocument extends mongoose.Document {
     username: string;

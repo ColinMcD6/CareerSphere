@@ -1,6 +1,12 @@
 import { Model } from "mongoose";
-import ResumeModel, { ResumeDocument } from "../models/resume.model";
+import ResumeModel, { ResumeDocument } from "../models/main/resume.model";
 
+
+/**
+ * * ResumeDAO Class
+ * * @description - This class handles the data access operations for the Resume model.
+ * * It provides methods to create, find, update, and delete resume documents in the database.
+ */
 class ResumeDAO {
   private model: Model<ResumeDocument>;
 

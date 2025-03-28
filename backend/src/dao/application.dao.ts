@@ -1,6 +1,12 @@
 import { Model } from "mongoose";
-import ApplicationModel, { ApplicationDocument } from "../models/application.model";
+import ApplicationModel, { ApplicationDocument } from "../models/many-to-many/application.model";
 
+
+/**
+ * * ApplicationDAO Class
+ * * @description - This class handles the data access operations for the Application model.
+ * * It provides methods to create, find, update, and delete application documents in the database.
+ */
 class ApplicationDAO {
   private model: Model<ApplicationDocument>;
 

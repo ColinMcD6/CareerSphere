@@ -1,7 +1,13 @@
 import { Model } from "mongoose";
-import Quiz, { QuizDocument } from "../models/quiz.model";
+import Quiz, { QuizDocument } from "../models/main/quiz.model";
 import mongoose from "mongoose";
 
+
+/**
+ * * QuizDAO Class
+ * * @description - This class handles the data access operations for the Quiz model.
+ * * It provides methods to create, find, update, and delete quiz documents in the database.
+ */
 class QuizDAO {
   private model: Model<QuizDocument>;
 

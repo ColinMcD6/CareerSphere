@@ -1,7 +1,11 @@
 import mongoose from "mongoose"
-import { MONGO_URI } from "../constants/env";
+import { MONGO_URI } from "../constants/env.constants";
 
-
+/**
+ * * Connect to MongoDB database using Mongoose
+ * * @returns {Promise<void>} - A promise that resolves when the connection is successful
+ * * @throws {Error} - Throws an error if the connection fails
+ */
 const connectToDatabase = async () => {
     try {
         await mongoose.connect(MONGO_URI);

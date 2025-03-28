@@ -1,8 +1,14 @@
 import { Model } from "mongoose";
-import JobPostingsModel, { JobPostingsDocument } from "../models/jobPostings.model";
+import JobPostingsModel, { JobPostingsDocument } from "../models/main/jobPostings.model";
 import mongoose from "mongoose";
 
 
+
+/**
+ * * JobPostingsDAO Class
+ * * @description - This class handles the data access operations for the JobPostings model.
+ * * It provides methods to create, find, update, and delete job postings in the database.
+ */
 class JobPostingsDAO {
     private model: Model<JobPostingsDocument>;
 

@@ -1,7 +1,14 @@
 import { Model } from "mongoose";
-import sessionModel, { sessionDocument } from "../models/session.model";
+import sessionModel, { sessionDocument } from "../models/one-to-many/session.model";
 import mongoose from "mongoose";
 
+
+
+/**
+ * * SessionDAO Class
+ * * @description - This class handles the data access operations for the Session model.
+ * * It provides methods to create, find, update, and delete session documents in the database.
+ */
 class SessionDAO {
   private model: Model<sessionDocument>;
 
@@ -28,6 +35,11 @@ class SessionDAO {
   async deleteMany(query: {}): Promise<any> {
     return await this.model.deleteMany(query);
   }
+
+  async deleteById(id: string): Promise<any> {
+    return await this.model.findByIdAndDelete(id);
+  }
+
 
 }
 

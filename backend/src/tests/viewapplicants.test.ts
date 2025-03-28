@@ -1,6 +1,6 @@
-import UserModel from '../models/users.model';
+import UserModel from '../models/main/users.model';
 import * as db from './db'
-import ApplicationModel from '../models/application.model';
+import ApplicationModel from '../models/many-to-many/application.model';
 import { getJobPostingApplicationsQuery } from '../services/jobPostings.services';
 
 describe("getJobPostingApplicationsQuery", () => {

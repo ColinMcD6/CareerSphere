@@ -20,3 +20,4 @@ export type HttpStatusCode =
   | typeof UNPROCESSABLE_CONTENT
   | typeof TOO_MANY_REQUESTS
   | typeof INTERNAL_SERVER_ERROR;
+  

@@ -1,6 +1,6 @@
-import { APP_ORIGIN } from "../constants/env";
-import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED } from "../constants/http";
-import verificationType from "../constants/verificationTyes";
+import { APP_ORIGIN } from "../constants/env.constants";
+import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED } from "../constants/http.constants";
+import verificationType from "../constants/verificationTyes.constants";
 import appAssert from "../utils/appAssert";
 import { hashPass } from "../utils/auth_helpers/bcrypt";
 import { afteronehour, DAY_LEFT, oneyearfromnow, weekfromnow } from "../utils/auth_helpers/calc";
@@ -24,7 +24,14 @@ export type loginAccountFields = {
     user_role?: string;
 }
 
-export const signup_account = async (data: signupAccountFields) => {
+/**
+ * * * signupAccount
+ * * @description - This function handles the signup process for a new user account.
+ * * @param {signupAccountFields} data - The signup data containing username, email, password, and user role.
+ * * @returns {Promise<{ newuser: any; accesstoken: string; refreshtoken: string; }>} - Returns the newly created user, access token, and refresh token.
+ * * @throws {Error} - Throws an error if the user already exists or if there is an issue during the signup process.
+ * */
+export const signupAccount = async (data: signupAccountFields) => {
     // verify exisiting user doesnt exist
     const existUser = await userDAO.exists({
         email: data.email,
@@ -90,7 +97,15 @@ export const signup_account = async (data: signupAccountFields) => {
     };
 }
 
-export const login_account = async ({email, password, user_role}: loginAccountFields) => {
+
+/**
+ * * loginAccount
+ * * @description - This function handles the login process for an existing user account.
+ * * @param {loginAccountFields} data - The login data containing email, password, and user role.
+ * * @returns {Promise<{ newuser: any; accesstoken: string; refreshtoken: string; }>} - Returns the logged-in user, access token, and refresh token.
+ * * @throws {Error} - Throws an error if the user does not exist or if the password is invalid.
+ * */
+export const loginAccount = async ({email, password, user_role}: loginAccountFields) => {
     // get the user email and check if the user exists
     const existUser = await userDAO.findOne({ email });
     appAssert(existUser, UNAUTHORIZED, "User Account does not exist !")
@@ -124,6 +139,14 @@ export const login_account = async ({email, password, user_role}: loginAccountFi
     }
 }
 
+
+/**
+ * * refreshSessionToken
+ * * @description - This function handles the process of refreshing the session token for a user.
+ * * @param {string} refreshToken - The refresh token used to validate the session.
+ * * @returns {Promise<{ accesstoken: string; rerefreshToken?: string; }>} - Returns the new access token and optional refresh token.
+ * * @throws {Error} - Throws an error if the refresh token is invalid or if the session is not valid anymore.
+ * */
 export const refreshSessionToken = async (refreshToken: string) => {
     const {payload} = verifyToken<RefTokenPayload>(refreshToken, {
         secret: refeshTokenOption.token,
@@ -161,6 +184,15 @@ export const refreshSessionToken = async (refreshToken: string) => {
     }
 }
 
+
+
+/**
+ * * verifyEmailCode
+ * * @description - This function verifies the email verification code sent to the user.
+ * * @param {string} code - The verification code sent to the user's email.
+ * * @returns {Promise<{ user: any; }>} - Returns the verified user account.
+ * * @throws {Error} - Throws an error if the verification code is invalid or if the user cannot be verified.
+ * */
 export const verifyEmailCode = async (code: string) => {
     const validcode = await verificationDAO.findOne({
         _id: code,
@@ -184,6 +216,14 @@ export const verifyEmailCode = async (code: string) => {
     }
 }
 
+
+/**
+ * * forgotPass
+ * * @description - This function handles the process of sending a password reset email to the user.
+ * * @param {string} email - The email address of the user requesting a password reset.
+ * * @returns {Promise<{ resetURL: string; emailId: string; }>} - Returns the password reset URL and email ID.
+ * * @throws {Error} - Throws an error if the user account does not exist or if there is an issue sending the email.
+ * */
 export const forgotPass = async (email: string) => {
     const user = await userDAO.findOne({ email });
     appAssert(user, NOT_FOUND, "User account does not exist")
@@ -219,6 +259,14 @@ type changePassParams = {
     verifycode: string;
 }
 
+
+/**
+ * * changePass
+ * * @description - This function handles the process of changing the user's password.
+ * * @param {changePassParams} params - The parameters containing the new password and verification code.
+ * * @returns {Promise<{ user: any; }>} - Returns the updated user account.
+ * * @throws {Error} - Throws an error if the verification code is invalid or if the password cannot be changed.
+ * */
 export const changePass = async (
     {password, verifycode}: changePassParams
 ) => {
@@ -230,19 +278,36 @@ export const changePass = async (
     })
     appAssert(code, NOT_FOUND, "Verification code is invalid !")
     
-    const user_toupdate = await userDAO.findByIdAndUpdate(
+    const userToUpdate = await userDAO.findByIdAndUpdate(
         code.userId,{
             password: await hashPass(password),
     })
-    appAssert(user_toupdate, INTERNAL_SERVER_ERROR, "Cannot change the password !")
+    appAssert(userToUpdate, INTERNAL_SERVER_ERROR, "Cannot change the password !")
 
     await code.deleteOne()
 
     await sessionDAO.deleteMany({
-        userId: user_toupdate._id,
+        userId: userToUpdate._id,
     })
 
     return {
-        user: user_toupdate.removePassword(),
+        user: userToUpdate.removePassword(),
+    }
+}
+
+
+/**
+ * * logout
+ * * @description - This function handles the process of logging out the user by deleting their session.
+ * * @param {string} sessionId - The ID of the session to be deleted.
+ * * @returns {Promise<{ message: string; }>} - Returns a message indicating successful logout.
+ * * @throws {Error} - Throws an error if the session is not found or if there is an issue during the logout process.
+ * */
+export const logout = async (sessionId: string) => {
+    const session = await sessionDAO.findById(sessionId);
+    appAssert(session, UNAUTHORIZED, "Session not found !")
+    await sessionDAO.deleteById(sessionId);
+    return {
+        message: "User logged out !",
     }
 }

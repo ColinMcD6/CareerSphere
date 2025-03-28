@@ -1,8 +1,14 @@
 import { Model } from "mongoose";
-import SaveJobPostingsModel, { SaveJobPostingsDocument } from "../models/saveJobPostings.model";
+import SaveJobPostingsModel, { SaveJobPostingsDocument } from "../models/many-to-many/saveJobPostings.model";
 import mongoose from "mongoose";
 
 
+
+/**
+ * * SaveJobPostingDAO Class
+ * * @description - This class handles the data access operations for the SaveJobPostings model.
+ * * It provides methods to create, find, update, and delete saved job postings in the database.
+ */
 class SaveJobPostingDAO {
     private model: Model<SaveJobPostingsDocument>;
 

@@ -1,7 +1,13 @@
 import { Model } from "mongoose";
-import User, { UserDocument } from "../models/users.model";
+import User, { UserDocument } from "../models/main/users.model";
 import mongoose from "mongoose";
 
+
+/**
+ * * UserDAO Class
+ * * @description - This class handles the data access operations for the User model.
+ * * It provides methods to create, find, update, and delete user documents in the database.
+ */
 class UserDAO {
   private model: Model<UserDocument>;
 

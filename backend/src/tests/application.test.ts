@@ -9,8 +9,8 @@ import {
 import * as db from './db';
 
 
-import ApplicationModel from "../models/application.model";
-import UserModel from '../models/users.model';
+import ApplicationModel from "../models/many-to-many/application.model";
+import UserModel from '../models/main/users.model';
 
 describe('Test adding Application', () => {
     beforeAll(async () => {

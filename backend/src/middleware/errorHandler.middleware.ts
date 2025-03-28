@@ -1,9 +1,16 @@
 import { ErrorRequestHandler, Response, Request, NextFunction } from "express";
-import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from "../constants/http";
+import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from "../constants/http.constants";
 import AppError from "../utils/AppError";
 import { z } from "zod";
 import { clearCookies } from "../utils/auth_helpers/cookies";
 
+
+/**
+* * Middleware to handle errors in the application
+* * @param {Error} error - The error object thrown in the application.
+* * @param {Response} res - The response object to send the response back to the client.
+* * @throws {Error} - Throws an error if the error handling process fails.
+*/
 const sendZodError = (res: Response, error: z.ZodError): void => {
     const errors = error.issues.map((err) => ({
         path: err.path.join("."),
@@ -23,6 +30,14 @@ const sendZodError = (res: Response, error: z.ZodError): void => {
     });
 };
 
+
+
+/**
+* * Middleware to handle application errors
+* * @param {Response} res - The response object to send the response back to the client.
+* * @param {AppError} error - The application error object thrown in the application.
+* * @throws {Error} - Throws an error if the error handling process fails.
+* */
 const handleAppError = (res: Response, error: AppError): void => {
     res.status(error.statusCode).json({
         message: error.message,
@@ -30,6 +45,15 @@ const handleAppError = (res: Response, error: AppError): void => {
     });
 };
 
+
+/**
+* * Middleware to handle all errors in the application
+* * @param {Error} error - The error object thrown in the application.
+* * @param {Response} res - The response object to send the response back to the client.
+* * @param {Request} req - The request object containing the request information.
+* * @param {NextFunction} next - The next middleware function in the stack.
+* * @throws {Error} - Throws an error if the error handling process fails.
+* */
 const errorHandler: ErrorRequestHandler = (
     error: any,
     req: Request,

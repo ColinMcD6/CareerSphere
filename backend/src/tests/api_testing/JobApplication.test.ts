@@ -1,9 +1,9 @@
 import request from "supertest";
 import * as db from "../db";
 import app from "../..";
-import { CREATED, OK, UNAUTHORIZED } from "../../constants/http";
-import JobPostingsModel from "../../models/jobPostings.model";  
-import UserModel from "../../models/users.model";
+import { CREATED, OK, UNAUTHORIZED } from "../../constants/http.constants";
+import JobPostingsModel from "../../models/main/jobPostings.model";  
+import UserModel from "../../models/main/users.model";
 import path from "path";
 import fs from "fs";
 import e from "express";

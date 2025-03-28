@@ -8,6 +8,12 @@ import {
 import fs from "fs";
 import multer from "multer";
 
+
+/**
+ * Configure multer storage options
+ * This will store the uploaded files in the 'uploads' directory under 'resume'
+ * and will rename the files to a unique name using the current timestamp and a random number.
+*/
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadPath = './resume/uploads/';
