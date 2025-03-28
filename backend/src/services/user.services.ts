@@ -14,7 +14,7 @@ import { Category } from "../models/main/jobPostings.model";
 export const getUser = async (id: string) => {
     const user = await userDAO.findById(id);
     if (!user)
-        appAssert(false, CONFLICT, "User does not exist, invalid ID!"); // This will throw an error, and return a 409 response
+        appAssert(false, CONFLICT, "User account does not exist !"); // This will throw an error, and return a 409 response
     
     const removePassword = user.removePassword();
     return {

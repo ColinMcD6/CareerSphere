@@ -19,7 +19,7 @@ import { get } from "mongoose";
 export const getUserHandler = catchErrors(
     async (req: Request, res: Response, next: NextFunction) => {
         const { user, removePassword } = await getUser(req.userId);
-        appAssert(user, NOT_FOUND, "User account does not exist !")
+        
         res.status(OK).json(removePassword);
     }
 );
@@ -47,6 +47,8 @@ export const updateUserDetails = catchErrors(
         }
 
         const user = await updateUser(req.userId, query);
+
+        appAssert(user, NOT_FOUND, "User account does not exist !")
         
         res.status(200).json({ message: "User details updated successfully", user });
     }
