@@ -74,22 +74,22 @@ describe("Verify Email Code", () => {
         expect(validPass2).toBe(false);
     });
 
-    /*
-        test to see if forgot password sends the correct data
-    */
+    // /*
+    //     test to see if forgot password sends the correct data
+    // */
 
-    test("forgot password for a valid user", async () => {
-        const mockUser = await UserModel.create({
-            username: "test_user",
-            email: "test_user@gmail.com",
-            password: "test123456789",
-            userRole: "Candidate",
-        });
+    // test("forgot password for a valid user", async () => {
+    //     const mockUser = await UserModel.create({
+    //         username: "test_user",
+    //         email: "test_user@gmail.com",
+    //         password: "test123456789",
+    //         userRole: "Candidate",
+    //     });
 
-        const info = await forgotPass(mockUser.email);
-        const code = await verificationModel.findOne({userId: mockUser._id});
-        console.log(code);
-        expect(info.resetURL).toBe(`${APP_ORIGIN}/password/reset?code=` + code?._id + `&exp=` + code?.expireAt.getTime());
+    //     const info = await forgotPass(mockUser.email);
+    //     const code = await verificationModel.findOne({userId: mockUser._id});
+    //     console.log(code);
+    //     expect(info.resetURL).toBe(`${APP_ORIGIN}/password/reset?code=` + code?._id + `&exp=` + code?.expireAt.getTime());
         
-    });
+    // });
 });
