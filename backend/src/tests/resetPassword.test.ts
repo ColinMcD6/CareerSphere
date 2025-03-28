@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import UserModel from '../models/main/users.model';
 import verificationModel from '../models/one-to-many/verify.model';
-import { changePass, forgotPass } from '../services/auth.services';
+import { changePass } from '../services/auth.services';
 import { oneyearfromnow } from '../utils/auth_helpers/calc';
 import * as db from './db'
 import verificationType from '../constants/verificationTyes.constants';
