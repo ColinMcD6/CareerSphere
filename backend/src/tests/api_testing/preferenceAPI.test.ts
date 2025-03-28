@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Wire up the GET /job endpoint with the search-capable handler
 app.get('/job', getAllJobPostingsQueryHandler);
-describe('Test user preference updates', () => {
+describe('Test preference API', () => {
     beforeAll(async () => {
         await db.connect()
     });

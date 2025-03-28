@@ -266,15 +266,26 @@ Instructions: Continue from Duplicate Submission Prevention. Click the "Home" bu
 3. Check if jobs get sorted correctly based on existing preferences: creates multiple jobs and a single user with preference updates. Calls api to get all jobs and passes user id, ensures that the status is 200, the correct number of jobs are returned and that they are sorted according to the preferences of the user (which does not align with ascending category)
 
 ##### Acceptance Tests
-1. Update Single and Multiple Preferences
-    - A user updates one or more job preference values via the profile update form.
-    - The updated preferences are correctly saved and reflected in the job recommendations.
-2. Invalid Preference Handling
-    - A user attempts to update preferences with invalid inputs (e.g., negative or non-numeric values).
-    - The system rejects the update and displays an appropriate error message without crashing.
-3. Individual and Concurrent Preference Updates
-    - Multiple users update their preferences simultaneously.
-    - Each user's recommendations update correctly and remain isolated from one another.
+
+*I recommend doing these in one session*
+
+1. Neutral Recommendations Without Applications
+    - A candidate with no applications sees a standard, unbiased job listing order.
+    - The search results are not skewed toward any specific category in the absence of application data.
+Instructions: Perform the Post a New Job acceptance test from feature 2. Now repeat the process of creating the job with the only change being to change the title from "Frontend Developer" to "Test Job 2" and the category from "Technology" to "Engineering". Now click the "Home" button in the top right, and then the grey circle with the outline of a person in the bottom left. Click the words "Log Out". Perform the Candidate View acceptance test from feature 3. Observe that the jobs are displayed with "Frontend Developer" first and "Test Job 2" second.
+
+2. Increased Visibility of Preferred Job Types
+    - A candidate applies for a job in a specific category (for example, a job related to "business").
+    - Subsequent job searches show more postings from that category, making them more prominent in the search list.
+Instructions: Continue from Neutral Recommendations Without Applications. Using Apply for a Job from feature 3 as a guide, apply for "Test Job 2". Click on the "Jobs" button once more to observe that "Test Job 2" is now displayed above "Frontend Developer".
+
+3. Dynamic Reordering Based on Application History
+    - The recommendations update consistently on each application, adjusting ordering depending on current habits
+    - The candidate observes that jobs from the frequently applied category appear at the top of the search results.
+Instructions: Contine from Increased Visibility of Preferred Job Types. Now apply for "Frontend Developer" as you did the other job. Click on the "Jobs" button to go back to viewing all jobs. Observe that the ordering has now flipped back to "Frontend Developer" being displayed above "Test Job 2" to conclude these tests.
+
+*Caveat: if you do these acceptance tests in the same session as feature 3, they will not function correctly, as you will have already applied to "Frontend Developer".*
+
 
 #### 6. Search Engine
 ##### Unit Tests
