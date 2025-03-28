@@ -472,7 +472,7 @@ describe('Test candidate and employer portals', () => {
         const mNext = jest.fn();
         await getUserHandler(mReq as Request, mRes as Response, mNext);
         let error: Error = mNext.mock.calls[0][0];
-        expect(error.message).toContain("User account does not exist !");
+        expect(error.message).toContain("User does not exist, invalid ID!");
     });
 
     test('Get existing user and make sure password is not contained in response body', async () => {
