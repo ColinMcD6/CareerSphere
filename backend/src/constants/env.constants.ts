@@ -1,5 +1,13 @@
 import "dotenv/config";
 
+/**
+ * * This function sets the environment variables for the application.
+ * * It checks if the environment variable is set, and if not, it throws an error.
+ * @param key: string - The key of the environment variable to set.
+ * @param defaultValue: string - The default value to set if the environment variable is not set.
+ * @returns: string - The value of the environment variable.
+ * @throws: Error - Throws an error if the environment variable is not set and no default value is provided.
+ */
 const setEnv = (key: string, defaultValue?: string):string => {
     const value = process.env[key] || defaultValue;
     if (value == undefined) {

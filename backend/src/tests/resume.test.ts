@@ -6,7 +6,7 @@ import request from 'supertest';
 import {
     addResumeHandler,
 } from '../controllers/resume.controller';
-import ResumeModel from '../models/resume.model';
+import ResumeModel from '../models/main/resume.model';
 import * as db from './db';
 
 const app = e();

@@ -25,6 +25,8 @@ export interface JobPostingsDocument extends mongoose.Document {
 
 export enum Category {Technology = 0, Agriculture = 1, Service = 2, Business = 3, Engineering = 4, Other = 5}
 
+
+// Function to get current date in yyyy-mm-dd format
 const TimeNow = (): string => {
     const timestamp = Date.now();
     const date = new Date(timestamp);
@@ -64,7 +66,3 @@ const jobPostingsSchema = new mongoose.Schema<JobPostingsDocument>({
 const JobPostingsModel = mongoose.model<JobPostingsDocument>("JobPostings", jobPostingsSchema);
 export default JobPostingsModel;
 // END Job Posting Model
-
-
-
-

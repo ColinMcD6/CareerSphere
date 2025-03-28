@@ -2,7 +2,7 @@ import express from 'express';
 import request from 'supertest';
 import * as db from './db';
 import { getAllJobPostingsQueryHandler } from '../controllers/jobPostings.controller';
-import JobPostingsModel from '../models/jobPostings.model';
+import JobPostingsModel from '../models/main/jobPostings.model';
 import mongoose from 'mongoose';
 
 const app = express();

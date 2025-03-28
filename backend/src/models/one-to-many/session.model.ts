@@ -1,14 +1,14 @@
 import mongoose from "mongoose";
-import { weekfromnow } from "../utils/auth_helpers/calc";
+import { weekfromnow } from "../../utils/auth_helpers/calc";
 
-export interface sessionDoc extends mongoose.Document {
+export interface sessionDocument extends mongoose.Document {
     userId: mongoose.Types.ObjectId;
     userAgent?: string;
     createdAt?: Date;
     expiredAt: Date;
 }
 
-const sessionSchema = new mongoose.Schema<sessionDoc>({
+const sessionSchema = new mongoose.Schema<sessionDocument>({
     userId: {
         ref: "User",
         type: mongoose.Schema.Types. ObjectId,
@@ -19,6 +19,6 @@ const sessionSchema = new mongoose.Schema<sessionDoc>({
     expiredAt: { type: Date, default: weekfromnow(), }
 })
 
-const sessionModel = mongoose.model<sessionDoc>("Session", sessionSchema);
+const sessionModel = mongoose.model<sessionDocument>("Session", sessionSchema);
 
 export default sessionModel;

@@ -1,59 +1,27 @@
 import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
-import { CREATED, OK } from "../constants/http";
+import { CREATED, OK } from "../constants/http.constants";
 import {
     addJobPostingApplication,
     createJobPosting,
     deleteJobPostingApplication,
     editJobPostingApplicationStatus,
-    getAllJobPostings,
     getAllJobPostingsQueryWithSaved,
     getJobPostingApplications,
+    getJobPostingAndApplication,
     getJobPostingApplicationsQuery,
-    getJobPostingImproved,
     getSavedJobPostings,
     saveJobPosting,
     unsaveJobPosting
 } from "../services/jobPostings.services";
 
 import catchErrors from "../utils/catchErrors";
-import { Category } from "../models/jobPostings.model";
-
-
-
-const MIN_TITLE_LENGTH = 10;
-const MAX_TITLE_LENGTH = 150; 
-
-const MAX_DESCRIPTION_LENGTH = 20000;
-const MIN_DESCRIPTION_LENGTH = 50;
-
-const MAX_POSITION_LENGTH = 100;
-const MIN_POSITION_LENGTH = 5;
-
-const jobPostingsZModel = z.object({
-    title: z.string().min(MIN_TITLE_LENGTH, `Title length must be a minimum of ${MIN_TITLE_LENGTH} characters long`).max(MAX_TITLE_LENGTH, `Title length can be a maximum of ${MAX_TITLE_LENGTH} characters long`),
-    positionTitle: z.string().min(MIN_POSITION_LENGTH, `Position Title must have a minimum of ${MIN_POSITION_LENGTH} characters`).max(MAX_DESCRIPTION_LENGTH, `Position Title can have a maximum of ${MAX_POSITION_LENGTH} characters` ),
-    description: z.string().min(MIN_DESCRIPTION_LENGTH, `Description must have a minimum of ${MIN_DESCRIPTION_LENGTH} characters`).max(MAX_DESCRIPTION_LENGTH, `Description can have a maximum of ${MAX_DESCRIPTION_LENGTH} characters` ),
-    employer: z.string().min(1).max(225),
-    employer_id: z.string().min(1).max(225),
-    location: z.string().min(1, "Location must have at least 1 character").max(225),
-    compensationType: z.enum(['do-not-disclose', 'hourly', 'salary']),
-    salary: z.number().min(0, "Salary value must be greater than 0"),
-    experience: z.array(z.string()), 
-    skills: z.array(z.string()),
-    education: z.array(z.string()),
-    status: z.string().min(1).max(225), // Change to open/close later
-    startingDate: z.string(), // I am not sure what to do about this right now, but this should be a date
-    jobType: z.enum(['Full-time', 'Part-time', 'Temporary', 'Internship']),
-    category: z.nativeEnum(Category)
-})
+import JobPostingValidation from "../utils/JobPostingValidation"
 
 const saveJobPostingModel = z.object({
     job_id: z.string().min(1).max(225),
     candidate_id: z.string().min(1).max(225)
 })
-
-import JobPostingValidation from "../services/JobPostingValidation"
   
 const jobApplicationModel = z.object({
     job_id: z.string().min(1).max(225),
@@ -64,6 +32,14 @@ const jobApplicationModel = z.object({
     status: z.enum(['Pending', 'Accepted', 'Rejected'])
 })
 
+
+/**
+ * * Job Posting Controller
+ * * @description - This controller handles the process of creating, retrieving, updating, and deleting job postings.
+ * * @param {Request} req - The request object containing the job posting data.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @throws {Error} - Throws an error if the job posting operation fails.
+ */
 export const addJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
 
     console.log("Received a request to create a new job posting");
@@ -87,25 +63,24 @@ export const addJobPostingHandler = catchErrors(async (req: Request, res: Respon
     }
 
     const request = JobPostingValidation.parse(job);
-    const user = await createJobPosting(request);
-    res.status(CREATED).json(request);
+    const jobResult = await createJobPosting(request);
+    res.status(CREATED).json(jobResult);
 });
 
+
+/**
+ * * * Get Job Posting Handler
+ * * @description - This handler retrieves a specific job posting by its ID and optionally includes the application status for a specific candidate.
+ * * @param {Request} req - The request object containing the job posting ID and candidate ID.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @throws {Error} - Throws an error if the job posting retrieval fails.
+ */
 export const getJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     const candidate_id = req.query.candidate_id
 
-    const jobPosting = await getJobPostingImproved(id, candidate_id);
+    const jobPosting = await getJobPostingAndApplication(id, candidate_id);
     res.status(OK).json(jobPosting);
-})
-
-// Is this Defunct now ??
-export const getAllJobPostingsHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
-    
-    const page = req.query.page ? parseInt(req.query.page as string) : 1;
-    const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
-    const jobPostings = await getAllJobPostings(page, limit);
-    res.status(OK).json(jobPostings);
 })
 
 export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
@@ -120,7 +95,7 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
         return acc;
     }, {} as Record<string, any>);
 
-    // Handle the search query paramete
+    // Handle the search query parameters
     if (req.query.search) {
         const searchTerm = req.query.search.toString();
         const searchRegex = new RegExp(searchTerm, "i");
@@ -145,7 +120,15 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
     res.status(OK).json(jobPostings);
 })
 
-// SAVING JOBS ----------------------------------------------
+// SAVING JOBS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/**
+ * * Save Job Posting Handler
+ * * @description - This handler saves a job posting for a specific candidate.
+ * * @param {Request} req - The request object containing the job posting ID and candidate ID.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @throws {Error} - Throws an error if the job posting saving fails.
+ */
 export const saveJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     console.log("Received a request to save a job posting");
     
@@ -158,6 +141,13 @@ export const saveJobPostingHandler = catchErrors(async (req: Request, res: Respo
     res.status(CREATED).json(savedJob);
 });
 
+/**
+ * * Unsaved Job Posting Handler
+ * * @description - This handler removes a saved job posting for a specific candidate.
+ * * @param {Request} req - The request object containing the job posting ID.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @throws {Error} - Throws an error if the job posting unsaving fails.
+ */
 export const unsaveJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     console.log("Received a request to unsave a job posting");
@@ -166,6 +156,14 @@ export const unsaveJobPostingHandler = catchErrors(async (req: Request, res: Res
 })
 
 
+
+/**
+ * * Get Saved Job Postings Handler
+ * * @description - This handler retrieves saved job postings for a specific candidate.
+ * * @param {Request} req - The request object containing the candidate ID and optional job ID.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @throws {Error} - Throws an error if the saved job postings retrieval fails.
+ */
 export const getSavedJobPostingsHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     const candidate_id = req.query.candidate_id;
     const job_id = req.query.job_id;
@@ -173,10 +171,16 @@ export const getSavedJobPostingsHandler = catchErrors(async (req: Request, res: 
     res.status(OK).json(savedPostings);
 })
 
+//APPLICATIONS----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-
-//APPLICATIONS----------------------------------------------
+/**
+ * * Add Job Posting Application Handler
+ * * @description - This handler adds a job application for a specific job posting.
+ * * @param {Request} req - The request object containing the job application data.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @throws {Error} - Throws an error if the job application addition fails.
+ */
 export const addJobPostingApplicationHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     console.log("Received a request to create a new job application");
     const jobApplication = {
@@ -192,6 +196,14 @@ export const addJobPostingApplicationHandler = catchErrors(async (req: Request, 
     res.status(CREATED).json(application);
 })
 
+
+/**
+ * * Edit Job Posting Application Status Handler
+ * * @description - This handler edits the status of a job application for a specific job posting.
+ * * @param {Request} req - The request object containing the job application ID and new status.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @throws {Error} - Throws an error if the job application status editing fails.
+ */
 export const editJobPostingApplicationStatusHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     const status = req.body.status;
@@ -200,12 +212,28 @@ export const editJobPostingApplicationStatusHandler = catchErrors(async (req: Re
 
 })
 
+
+/**
+ * * Delete Job Posting Application Handler
+ * * @description - This handler deletes a job application for a specific job posting.
+ * * @param {Request} req - The request object containing the job application ID.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @throws {Error} - Throws an error if the job application deletion fails.
+ */
 export const deleteJobPostingApplicationHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     const application = await deleteJobPostingApplication(id);
     res.status(OK).json(application);
 })
 
+
+/**
+ * * Get Job Posting Applications Handler
+ * * @description - This handler retrieves applications for a specific job posting.
+ * * @param {Request} req - The request object containing the job posting ID.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @throws {Error} - Throws an error if the job application retrieval fails.
+ */
 export const getJobPostingApplicationsHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
 
     const id = req.params.id;
@@ -213,6 +241,15 @@ export const getJobPostingApplicationsHandler = catchErrors(async (req: Request,
     res.status(OK).json(application);
 })
 
+
+
+/**
+ * * Get Job Posting Applications Query Handler
+ * * @description - This handler retrieves applications for a specific job posting based on query parameters.
+ * * @param {Request} req - The request object containing the query parameters for filtering and pagination.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @throws {Error} - Throws an error if the job application retrieval fails.
+ */
 export const getJobPostingApplicationsQueryHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
         const queryFieldNames = Object.keys(req.query);
 
@@ -229,6 +266,5 @@ export const getJobPostingApplicationsQueryHandler = catchErrors(async (req: Req
         const page = req.query.page ? parseInt(req.query.page as string) : 1;
         const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
         const applications = await getJobPostingApplicationsQuery(query, page, limit);
-        res.status(OK).json(applications);
-    
+        res.status(OK).json(applications);  
 })

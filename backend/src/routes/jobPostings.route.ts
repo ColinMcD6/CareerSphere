@@ -13,7 +13,7 @@ import {
     unsaveJobPostingHandler
 } from "../controllers/jobPostings.controller";
 
-import { addquizCandiateResponse, addquizHandler, getquizHandler, getquizSubmissions, getspecificquizHandler } from "../controllers/quiz.controller";
+import { addQuizCandidateResponse, addQuizHandler, getQuizHandler, getQuizSubmissions, getSpecificQuizHandler } from "../controllers/quiz.controller";
 
 
 const jobPostingRoutes = Router();
@@ -33,11 +33,11 @@ jobPostingRoutes.get("/save/query", getSavedJobPostingsHandler);
 
 
 // Quizzed for the job posting
-jobPostingRoutes.post("/:id/quizzes", addquizHandler);
-jobPostingRoutes.get("/:id/quizzes", getquizHandler);
-jobPostingRoutes.get("/:id/quizzes/:quizId", getspecificquizHandler);
-jobPostingRoutes.post("/:id/quizzes/:quizId/submissions", addquizCandiateResponse);
-jobPostingRoutes.get("/:id/quizzes/:quizId/submissions", getquizSubmissions);
+jobPostingRoutes.post("/:id/quizzes", addQuizHandler);
+jobPostingRoutes.get("/:id/quizzes", getQuizHandler);
+jobPostingRoutes.get("/:id/quizzes/:quizId", getSpecificQuizHandler);
+jobPostingRoutes.post("/:id/quizzes/:quizId/submissions", addQuizCandidateResponse);
+jobPostingRoutes.get("/:id/quizzes/:quizId/submissions", getQuizSubmissions);
 
 
 //Applications

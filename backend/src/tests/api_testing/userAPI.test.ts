@@ -1,7 +1,7 @@
 import request from "supertest";
 import * as db from "../db";
 import app from "../..";
-import { CREATED, OK, UNAUTHORIZED } from "../../constants/http";
+import { CREATED, OK, UNAUTHORIZED } from "../../constants/http.constants";
 
 describe("API Routes", () => {
   beforeAll(async () => {
