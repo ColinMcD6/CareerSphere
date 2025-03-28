@@ -1,7 +1,7 @@
 import * as db from './db'
 import { updateUserDetails } from '../controllers/user.controller';
 import { Request, Response } from 'express';
-import UserModel from '../models/users.model';
+import UserModel from '../models/main/users.model';
 
 
 describe('Test user preference updates', () => {

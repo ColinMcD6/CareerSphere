@@ -3,8 +3,8 @@ import express from 'express';
 import request from 'supertest';
 import { updateUserDetails } from '../../controllers/user.controller';
 import { Request, Response } from 'express';
-import UserModel from '../../models/users.model';
-import JobPostingsModel from '../../models/jobPostings.model';
+import UserModel from '../../models/main/users.model';
+import JobPostingsModel from '../../models/main/jobPostings.model';
 import { getAllJobPostingsQueryHandler } from '../../controllers/jobPostings.controller';
 
 

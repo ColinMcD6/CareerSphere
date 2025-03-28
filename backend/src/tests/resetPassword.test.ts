@@ -4,8 +4,8 @@ import verificationModel from '../models/one-to-many/verify.model';
 import { changePass, forgotPass } from '../services/auth.services';
 import { oneyearfromnow } from '../utils/auth_helpers/calc';
 import * as db from './db'
-import verificationType from '../constants/verificationTyes';
-import { APP_ORIGIN } from '../constants/env';
+import verificationType from '../constants/verificationTyes.constants';
+import { APP_ORIGIN } from '../constants/env.constants';
 
 describe("Verify Email Code", () => {
     beforeAll(async () => {
