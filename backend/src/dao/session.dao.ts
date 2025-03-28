@@ -1,8 +1,5 @@
 import { Model } from "mongoose";
 import sessionModel, { sessionDocument } from "../models/one-to-many/session.model";
-import mongoose from "mongoose";
-
-
 
 /**
  * * SessionDAO Class

@@ -1,8 +1,5 @@
 import { Model } from "mongoose";
 import verificationModel, { verificationDocument } from "../models/one-to-many/verify.model";
-import mongoose from "mongoose";
-
-
 
 /**
  * * VerificationDAO Class

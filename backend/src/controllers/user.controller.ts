@@ -1,9 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import catchErrors from "../utils/catchErrors";
 import { NOT_FOUND, OK, UNAUTHORIZED } from "../constants/http.constants";
-import UserModel from "../models/main/users.model";
 import appAssert from "../utils/appAssert";
-import { Category } from "../models/main/jobPostings.model";
 import {
     getUser,
     updateUser

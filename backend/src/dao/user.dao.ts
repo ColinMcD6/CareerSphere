@@ -1,7 +1,5 @@
 import { Model } from "mongoose";
 import User, { UserDocument } from "../models/main/users.model";
-import mongoose from "mongoose";
-
 
 /**
  * * UserDAO Class

@@ -1,5 +1,4 @@
 import { OK } from "../../constants/http.constants";
-import sessionModel from "../../models/one-to-many/session.model";
 import catchErrors from "../../utils/catchErrors"
 import { clearCookies } from "../../utils/auth_helpers/cookies";
 import { AccessTokenPayload, verifyToken } from "../../utils/auth_helpers/jwt";
