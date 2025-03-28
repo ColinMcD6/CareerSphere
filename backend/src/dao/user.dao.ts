@@ -1,6 +1,5 @@
 import { Model } from "mongoose";
 import User, { UserDocument } from "../models/main/users.model";
-
 /**
  * * UserDAO Class
  * * @description - This class handles the data access operations for the User model.

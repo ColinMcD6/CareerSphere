@@ -1,6 +1,5 @@
 import { Model } from "mongoose";
 import verificationModel, { verificationDocument } from "../models/one-to-many/verify.model";
-
 /**
  * * VerificationDAO Class
  * * @description - This class handles the data access operations for the Verification model.
