@@ -1,7 +1,7 @@
 import { z } from "zod"
 import catchErrors from "../../utils/catchErrors"
-import { login_account } from "../../services/auth.services"
-import { OK } from "../../constants/http"
+import { loginAccount } from "../../services/auth.services"
+import { OK } from "../../constants/http.constants"
 import { setAuthCookies } from "../../utils/auth_helpers/cookies"
 
 const loginSchema = z.object({
@@ -10,7 +10,16 @@ const loginSchema = z.object({
     userRole: z.string().optional(),
 })
 
-export const logincontroller = catchErrors(
+
+/**
+ * * Login Controller
+ * * @description - This controller handles the process of logging in a user.
+ * * @param {Request} req - The request object containing the email and password.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @returns {Promise<Response>} - Returns a response indicating the success of the login.
+ * * @throws {Error} - Throws an error if the login fails.
+ */
+export const loginController = catchErrors(
     async (req, res) => {
         // validate request
         const login_request = loginSchema.parse({
@@ -18,7 +27,7 @@ export const logincontroller = catchErrors(
             userRole: req.headers["user-agent"]
         })
         // call service
-        const { accesstoken, refreshtoken } = await login_account(login_request);
+        const { accesstoken, refreshtoken } = await loginAccount(login_request);
         // return response
         return setAuthCookies({ res, accesstoken, refreshtoken })
             .status(OK)

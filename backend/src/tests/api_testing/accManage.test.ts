@@ -1,10 +1,10 @@
 import request from "supertest"
 import * as db from '../db'
 import app from "../..";
-import { CREATED, OK, UNAUTHORIZED } from "../../constants/http";
-import UserModel from "../../models/users.model";
-import verificationModel from "../../models/verify.model";
-import verificationType from "../../constants/verificationTyes";
+import { CREATED, OK, UNAUTHORIZED } from "../../constants/http.constants";
+import UserModel from "../../models/main/users.model";
+import verificationModel from "../../models/one-to-many/verify.model";
+import verificationType from "../../constants/verificationTyes.constants";
 import { oneyearfromnow } from "../../utils/auth_helpers/calc";
 
 describe('API Routes', () => {

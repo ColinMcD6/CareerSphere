@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import catchErrors from "../utils/catchErrors";
-import Quiz from "../models/quiz.model";
-import JobPostingsModel from "../models/jobPostings.model";
-import mongoose from "mongoose";
-import UserModel from "../models/users.model";
-import { BAD_REQUEST, CONFLICT, CREATED, NOT_FOUND, OK } from "../constants/http";
+import { BAD_REQUEST, CONFLICT, CREATED, NOT_FOUND, OK } from "../constants/http.constants";
 import appAssert from "../utils/appAssert";
+import quizDAO from '../dao/quiz.dao'
+import jobPostingsDAO from "../dao/jobPosting.dao";
+import userDAO from "../dao/user.dao";
 
-/* Example fo sending requesting from fronend to this is :
+
+/* Example fo sending requesting from frontend to this is :
     post request to /job/{job_id}/quizzes
     {
     "questions": [
@@ -25,31 +25,39 @@ import appAssert from "../utils/appAssert";
     }
 */
 
+/**
+ * * * Add Quiz Handler
+ * * @description - This handler is responsible for adding a quiz to a specific job posting.
+ * * @param {Request} req - The request object containing the job ID and quiz details.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @returns {Promise<void>} - Returns a promise that resolves when the quiz is added successfully.
+ * * @throws {Error} - Throws an error if the quiz creation fails or if the job posting is not found.
+ */
 export const addQuizHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const jobId = req.params.id;
         const { quizName, questions } = req.body;
 
         // Validate jobId
-        appAssert(mongoose.isValidObjectId(jobId), BAD_REQUEST, "Invalid data");
+        appAssert(jobPostingsDAO.isValidId(jobId), BAD_REQUEST, "Invalid data");
 
         appAssert(quizName, BAD_REQUEST, "Invalid data")
 
         appAssert(questions && Array.isArray(questions) && questions.length > 0, BAD_REQUEST, "Invalid data")
 
         // Find the job posting
-        const jobPosting = await JobPostingsModel.findById(jobId);
+        const jobPosting = await jobPostingsDAO.findById(jobId);
         appAssert(jobPosting, NOT_FOUND, "Job not found!");
 
         // Create a new quiz
-        const newQuiz = new Quiz({ jobId, quizName, questions });
-        await newQuiz.save();
+        const quizInput : any = {jobId, quizName, questions};
+        const createdQuiz = await quizDAO.create(quizInput);
 
         // Link the new quiz to the job posting
-        jobPosting.quizzes.push(newQuiz._id?.toString() || "");
-        await jobPosting.save();
+        jobPosting.quizzes.push(createdQuiz._id?.toString() || "");
+        await jobPostingsDAO.save(jobPosting);
 
-        res.status(CREATED).json({ message: "Quiz created successfully", quiz: newQuiz });
+        res.status(CREATED).json({ message: "Quiz created successfully", quiz: createdQuiz });
     } catch (error) {
         next(error);
     }
@@ -59,12 +67,21 @@ export const addQuizHandler = catchErrors(async (req: Request, res: Response, ne
     get request to /job/{job_id}/quizzes
 */
 
+
+/**
+ * * Get Quiz Handler
+ * * @description - This handler retrieves all quizzes associated with a specific job posting.
+ * * @param {Request} req - The request object containing the job ID.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @returns {Promise<void>} - Returns a promise that resolves when the quizzes are retrieved successfully.
+ * * @throws {Error} - Throws an error if no quizzes are found for the specified job posting.
+ */
 export const getQuizHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const jobId = req.params.id;
-      appAssert(mongoose.isValidObjectId(jobId),BAD_REQUEST, "Invalid Data")
+      appAssert(jobPostingsDAO.isValidId(jobId),BAD_REQUEST, "Invalid Data")
 
-      const quizzes = await Quiz.find({ jobId });
+      const quizzes = await quizDAO.findByJobId(jobId);
       appAssert(!(quizzes.length == 0), NOT_FOUND, "No quizzes found for this job")
   
       res.status(OK).json({ quizzes });
@@ -77,12 +94,22 @@ export const getQuizHandler = catchErrors(async (req: Request, res: Response, ne
     get request to /job/{job_id}/quizzes/{quiz_id}
 */
 
+
+
+/**
+ * * Get Specific Quiz Handler
+ * * @description - This handler retrieves a specific quiz associated with a specific job posting.
+ * * @param {Request} req - The request object containing the job ID and quiz ID.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @returns {Promise<void>} - Returns a promise that resolves when the quiz is retrieved successfully.
+ * * @throws {Error} - Throws an error if the quiz is not found for the specified job posting.
+ */
 export const getSpecificQuizHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id: jobId, quizId } = req.params;
-      appAssert((mongoose.isValidObjectId(jobId) && mongoose.isValidObjectId(quizId)),BAD_REQUEST, "Invalid Data")
-
-      const quiz = await Quiz.findOne({ _id: quizId, jobId });
+      appAssert((jobPostingsDAO.isValidId(jobId) && jobPostingsDAO.isValidId(quizId)),BAD_REQUEST, "Invalid Data")
+      
+      const quiz = await quizDAO.findQuizByQuizIdJobId( quizId, jobId );
       appAssert(quiz, NOT_FOUND, "Quiz Not found")
   
       res.status(OK).json({ quiz });
@@ -101,7 +128,15 @@ export const getSpecificQuizHandler = catchErrors(async (req: Request, res: Resp
   }
 */
 
-/* Example to add candidate response: */
+
+/**  Example to add candidate response:
+ * * Add Quiz Candidate Response Handler
+ * * @description - This handler records a candidate's responses to a quiz and calculates their score.
+ * * @param {Request} req - The request object containing the quiz ID and candidate responses.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @returns {Promise<void>} - Returns a promise that resolves when the candidate's responses are recorded successfully.
+ * * @throws {Error} - Throws an error if the candidate has already submitted or if the quiz is not found.
+ */
 export const addQuizCandidateResponse = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { quizId } = req.params;
@@ -110,17 +145,17 @@ export const addQuizCandidateResponse = catchErrors(async (req: Request, res: Re
 
     console.log(candidateId)
 
-    appAssert(mongoose.isValidObjectId(candidateId), BAD_REQUEST, "Invalid Data")
+    appAssert(quizDAO.isValidId(candidateId), BAD_REQUEST, "Invalid Data")
 
-    appAssert(mongoose.isValidObjectId(quizId), BAD_REQUEST, "Invalid Data")
+    appAssert(quizDAO.isValidId(quizId), BAD_REQUEST, "Invalid Data")
 
     appAssert(responses, BAD_REQUEST, "Invalid Data")
 
-    const user = await UserModel.findById(candidateId);
+    const user = await userDAO.findById(candidateId);
     appAssert(user, NOT_FOUND, "Not Found")
     
     const candidateUsername = user?.username || "";
-    const quiz = await Quiz.findById(quizId);
+    const quiz = await quizDAO.findByQuizId(quizId);
     appAssert(quiz, NOT_FOUND, "Quiz not found")
 
     // Check if the candidate has already submitted
@@ -135,7 +170,7 @@ export const addQuizCandidateResponse = catchErrors(async (req: Request, res: Re
     });
 
     quiz.submissions.push({ candidateId, candidateUsername, score });
-    await quiz.save();
+    await quizDAO.save(quiz);
 
     res.status(CREATED).json({ message: "Submission recorded successfully", candidateUsername, score });
   } catch (error) {
@@ -143,12 +178,21 @@ export const addQuizCandidateResponse = catchErrors(async (req: Request, res: Re
   }
 });
 
+
+/**
+ * * Get Quiz Submissions Handler
+ * * @description - This handler retrieves all submissions for a specific quiz.
+ * * @param {Request} req - The request object containing the quiz ID.
+ * * @param {Response} res - The response object to send the response back to the client.
+ * * @returns {Promise<void>} - Returns a promise that resolves when the quiz submissions are retrieved successfully.
+ * * @throws {Error} - Throws an error if the quiz is not found.
+ */
 export const getQuizSubmissions = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { quizId } = req.params;
-    appAssert(mongoose.isValidObjectId(quizId), BAD_REQUEST, "Invalid Data")
+    appAssert(quizDAO.isValidId(quizId), BAD_REQUEST, "Invalid Data")
 
-    const quiz = await Quiz.findById(quizId);
+    const quiz = await quizDAO.findByQuizId(quizId);
     appAssert(quiz, NOT_FOUND, "Quiz not found")
 
     res.status(OK).json({ submissions: quiz.submissions });

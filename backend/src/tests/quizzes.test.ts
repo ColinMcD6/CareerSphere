@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { BAD_REQUEST, NOT_FOUND, CREATED, OK, CONFLICT } from "../constants/http";
+import { BAD_REQUEST, NOT_FOUND, CREATED, OK, CONFLICT } from "../constants/http.constants";
 import { addQuizCandidateResponse, addQuizHandler, getQuizHandler, getQuizSubmissions, getSpecificQuizHandler } from "../controllers/quiz.controller";
-import JobPostingsModel from "../models/jobPostings.model";
-import Quiz from "../models/quiz.model";
+import JobPostingsModel from "../models/main/jobPostings.model";
+import Quiz from "../models/main/quiz.model";
 import * as db from './db'
-import UserModel from "../models/users.model";
+import UserModel from "../models/main/users.model";
 import mongoose from "mongoose";
 
 describe("Quizzes Unit Tests", () => {

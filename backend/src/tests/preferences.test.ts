@@ -3,11 +3,11 @@ import express from 'express';
 import request from 'supertest';
 import { getUserHandler, updateUserDetails } from '../controllers/user.controller';
 import { Request, Response } from 'express';
-import UserModel from '../models/users.model';
+import UserModel from '../models/main/users.model';
 import appAssert from '../utils/appAssert';
-import { NOT_FOUND } from '../constants/http';
+import { NOT_FOUND } from '../constants/http.constants';
 import mongoose from 'mongoose';
-import JobPostingsModel from '../models/jobPostings.model';
+import JobPostingsModel from '../models/main/jobPostings.model';
 import { getAllJobPostingsQueryHandler } from '../controllers/jobPostings.controller';
 
 const app = express();

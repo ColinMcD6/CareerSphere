@@ -8,9 +8,9 @@ import * as db from './db';
 
 import express from 'express';
 import request from 'supertest';
-import JobPostingsModel from '../models/jobPostings.model';
-import SaveJobPostingsModel from '../models/saveJobPostings.model';
-import UserModel from '../models/users.model';
+import JobPostingsModel from '../models/main/jobPostings.model';
+import SaveJobPostingsModel from '../models/many-to-many/saveJobPostings.model';
+import UserModel from '../models/main/users.model';
 import supertest = require('supertest');
 
 

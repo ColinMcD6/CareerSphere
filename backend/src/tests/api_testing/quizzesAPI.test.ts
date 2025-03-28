@@ -1,10 +1,10 @@
 import request from "supertest"
 import * as db from '../db'
 import app from "../..";
-import UserModel from "../../models/users.model";
-import { CREATED, OK } from "../../constants/http";
-import JobPostingsModel from "../../models/jobPostings.model";
-import Quiz from "../../models/quiz.model";
+import UserModel from "../../models/main/users.model";
+import { CREATED, OK } from "../../constants/http.constants";
+import JobPostingsModel from "../../models/main/jobPostings.model";
+import Quiz from "../../models/main/quiz.model";
 
 describe('API Routes', () => {
     beforeAll(async () => {
