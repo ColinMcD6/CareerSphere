@@ -18,7 +18,7 @@ This document outlines the coding conventions and best practices for the project
 - **Functions**: Use `camelCase` for function names (e.g., `getUserData`, `calculateTotal`).
 - **Constants**: Use `UPPER_SNAKE_CASE` for constants (e.g., `MAX_RETRIES`, `API_URL`).
 - **Files**: Use `camelCase` and `dot.notation` for file names (e.g, `jobPosting.controller.ts`, `user.controller.ts`)
-- **Table Fields**: Use `snake case` for table fields (e.g, ``)
+- **Table Fields**: Use `camelCase` for table fields (e.g, `compensationType`, `jobType`)
 
 ---
 

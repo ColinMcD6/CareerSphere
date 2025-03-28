@@ -17,14 +17,16 @@ interface FormModalPopupComponentProps {
 const FormModalPopupComponent: React.FC<FormModalPopupComponentProps> = ({ show, handleClose, handleSubmit, title, body, submitText, children}) => {
   return (
     <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>{title}</Modal.Title>
-      </Modal.Header>
+      <Modal.Header closeButton className="d-flex justify-content-center">
+                <div className="w-100 text-center">
+                  <Modal.Title>{title}</Modal.Title>
+                </div>
+              </Modal.Header>
       <Modal.Body>
         {body}
         <form onSubmit={handleSubmit}>
             {children}
-            <Modal.Footer>
+            <Modal.Footer className='d-flex justify-content-center align-items-center'>
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>

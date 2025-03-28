@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllJobPostings } from "../lib/api";
+import { getAllJobPostings } from "../lib/api.lib";
 import { Navigate } from "react-router-dom";
-import useUser from "../hooks/user";
+import useUser from "../hooks/user.hooks";
 import { FaPlus } from "react-icons/fa";
 
 interface Job {
@@ -28,6 +28,12 @@ const ViewAllJobs: React.FC = () => {
 
   const navigate = useNavigate();
 
+
+  /*
+  useEffect to check if the user is logged in and has the correct role
+  This will run when the component mounts and whenever the user object changes.
+  If the user is not logged in or does not have the correct role, they will be redirected to the login page.
+  */
   useEffect(() => {
     const fetchData = async () => {
       if (!user) {
@@ -58,6 +64,7 @@ const ViewAllJobs: React.FC = () => {
     fetchData();
   }, [user, showSavedJobs]);
 
+  //---Navigation functions----
   const viewJobPosting = (id: string) => {
     navigate(`/view-job-posting?ID=${id}`);
   };
@@ -108,8 +115,8 @@ const ViewAllJobs: React.FC = () => {
             </h1>
           </div>
           {user.userRole === "Employer" && (
-            <button className="btn btn-success me-5" onClick={createJobPosting}>
-              <FaPlus /> Create
+            <button className="btn btn-success me-5 w-auto" style={{ minWidth: "50px" }} onClick={createJobPosting}>
+              <FaPlus /> 
             </button>
           )}
           {user.userRole === "Candidate" && (
@@ -143,12 +150,13 @@ const ViewAllJobs: React.FC = () => {
                 key={job._id}
                 className="list-group-item d-flex justify-content-between align-items-center"
               >
-                <span>{job.title}</span>
+                <span className="text-truncate">{job.title}</span>
                 <button
-                  className="btn btn-primary"
+                  className="btn btn-primary w-auto"
+                  style={{ minWidth: "80px" }}
                   onClick={() => viewJobPosting(job._id)}
                 >
-                  View Job Posting
+                  View
                 </button>
               </div>
             ))}

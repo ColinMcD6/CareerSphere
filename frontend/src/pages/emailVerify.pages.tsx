@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Container, Alert, Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { verifyEmail } from "../lib/api";
+import { verifyEmail } from "../lib/api.lib";
 
 const EmailVerify = () => {
     const navigate = useNavigate();
@@ -11,6 +11,13 @@ const EmailVerify = () => {
     const [isVerified, setIsVerified] = useState<boolean | null>(null);
     const [error] = useState<string | null>(null);
 
+
+    /*
+    useEffect to verify email
+    This will run when the component mounts and whenever the code changes.
+    It calls the verifyEmail function with the code from the URL parameters.
+    If the verification is successful, it sets isVerified to true. If it fails, it sets isVerified to false.
+    */
     useEffect(() => {
         // Call verifyEmail when the component mounts
         const verify = async () => {

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { getSpecificQuiz, submitQuizResponse } from "../lib/api";
+import { getSpecificQuiz, submitQuizResponse } from "../lib/api.lib";
 import { useSearchParams } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom"; // Add useNavigate for redirection
-import useUser from "../hooks/user";
+import useUser from "../hooks/user.hooks";
 
 interface Question {
   questionText: string;
@@ -32,6 +32,11 @@ const TakeQuiz: React.FC = () => {
   const navigate = useNavigate(); // For redirection
 
 
+  /*
+  useEffect to check if the user is logged in and has the correct role
+  This will run when the component mounts and whenever the user object changes.
+  If the user is not logged in or does not have the correct role, they will be redirected to the login page.
+  */
   useEffect(() => {
     if (!isLoading && !user) {
       window.location.href = "/login";
@@ -49,7 +54,13 @@ const TakeQuiz: React.FC = () => {
     }
   }, [jobId, quizId]);
 
-  // Function to call when fetching quiz
+  /*
+  Function to fetch the quiz data from the server
+  This function is called when the component mounts and whenever the jobId or quizId changes.
+  It calls the getSpecificQuiz function with the jobId and quizId as parameters.
+  If the request is successful, it sets the quiz state with the received data.
+  If the request fails, it logs an error message to the console.
+  */
   const fetchQuiz = async () => {
     try {
       console.log(
@@ -70,7 +81,14 @@ const TakeQuiz: React.FC = () => {
     }
   };
 
-  // Handle radio button change (marking the correct answer)
+  /*
+  Handler function for changing the correct answer
+  This function is called when the user selects an answer for a question.
+  It updates the quiz state with the selected answer and the correct answer for that question.
+  It maps through the questions array and updates the chosenAnswer and correctAnswer properties for the selected question.
+  It creates a new quiz object with the updated questions array and sets it in the state.
+  This ensures that the quiz state is updated correctly without mutating the original state.  
+  */
   const handleCorrectAnswerChange = (
     questionIndex: number,
     answerIndex: number
@@ -98,7 +116,15 @@ const TakeQuiz: React.FC = () => {
     }
   };
 
-  // Handle form submission
+  /*
+  Handler function for form submission
+  This function prevents the default form submission behavior,
+  collects the user's answers from the quiz state,
+  and sends them to the server using the submitQuizResponse function.
+  If the request is successful, it shows a success toast message and redirects the user to the job posting page.
+  If there is an error, it alerts the user with the error message.
+  This function is called when the user clicks the "Submit Quiz Answers" button.
+  */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Submitting quiz answers");
@@ -169,7 +195,7 @@ const TakeQuiz: React.FC = () => {
                 <div className="mb-3">
                   <h3>{questionData.questionText}</h3>
                 </div>
-                <div className="row">
+                <div className="row m-3">
                   {[0, 1].map((rowIndex) => (
                     <div key={rowIndex} className="row mb-3">
                       {[0, 1].map((colIndex) => {
@@ -189,6 +215,7 @@ const TakeQuiz: React.FC = () => {
                               </div>
                               <div className="input-group-text">
                                 <input
+                                  required
                                   type="radio"
                                   name={`correct-answer-${questionIndex}`}
                                   className="form-check-input"
@@ -202,7 +229,7 @@ const TakeQuiz: React.FC = () => {
                                     )
                                   }
                                 />
-                                <span className="ms-2">Choose answer</span>
+                        
                               </div>
                             </div>
                           </div>
