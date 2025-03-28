@@ -1,6 +1,7 @@
 name: Build and Push Docker Images
 
 on:
+  push:
   pull_request:
     branches:
       - development
@@ -20,6 +21,38 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Determine Version Tag
+        id: version
+        run: |
+          # Initialize version file if it doesn't exist
+          if [ ! -f version.txt ]; then
+            echo "0.0" > version.txt
+          fi
+
+          # Read the current version
+          CURRENT_VERSION=$(cat version.txt)
+
+          # Determine branch and increment version
+          if [[ "${{ github.ref }}" == "refs/heads/development" ]]; then
+            # Increment minor version
+            MAJOR=$(echo $CURRENT_VERSION | cut -d. -f1)
+            MINOR=$(echo $CURRENT_VERSION | cut -d. -f2)
+            MINOR=$((MINOR + 1))
+            NEW_VERSION="$MAJOR.$MINOR"
+          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            # Increment major version
+            MAJOR=$(echo $CURRENT_VERSION | cut -d. -f1)
+            MINOR=$(echo $CURRENT_VERSION | cut -d. -f2)
+            MAJOR=$((MAJOR + 1))
+            NEW_VERSION="$MAJOR.0"
+          fi
+
+          # Save the new version to the file
+          echo $NEW_VERSION > version.txt
+
+          # Output the new version
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
