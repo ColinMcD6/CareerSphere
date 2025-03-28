@@ -1,6 +1,6 @@
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import { logoutUser } from "../lib/api";
-import queryClient from "../config/queryClient";
+import { logoutUser } from "../lib/api.lib";
+import queryClient from "../config/queryClient.config";
 import { useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import image from "../assets/Logo.png";

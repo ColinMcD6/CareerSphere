@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import useUser from "../hooks/user";
-import { createQuizForJobPosting } from "../lib/api";
+import useUser from "../hooks/user.hooks";
+import { createQuizForJobPosting } from "../lib/api.lib";
 
 interface Question {
   questionText: string;
@@ -15,6 +15,7 @@ interface Question {
 }
 
 const CreateQuiz: React.FC = () => {
+  // State for quiz name and questions 
   const [quizName, setQuizName] = useState<string>("");
   const [questions, setQuestions] = useState<Question[]>([
     {
@@ -24,13 +25,19 @@ const CreateQuiz: React.FC = () => {
       correctAnswer: "",
     },
   ]);
-  const [searchParams] = useSearchParams();
-  const jobId = searchParams.get("ID");
+  // State for search params (job ID). Used to get the job ID from the URL
+  const [searchParams] = useSearchParams(); 
+  const jobId = searchParams.get("ID"); 
+
   const navigate = useNavigate(); // For redirection
-  const { user, isLoading } = useUser();
+  const { user, isLoading } = useUser(); // Custom hook to get user data
   const [disableInput, setDisableInput] = useState<boolean>(false);
 
-  // If the user is not logged in, redirect them away from this page
+  /*
+  If the user is not logged in, redirect them away from this page
+  If the user is not an employer, redirect them to home page.
+  This useEffect will run when the component mounts and whenever the user or isLoading state changes.
+  */
   useEffect(() => {
     if (!isLoading && !user) {
       window.location.href = "/login";
@@ -41,14 +48,23 @@ const CreateQuiz: React.FC = () => {
     }
   }, [user, isLoading]);
 
-  // Handle question input change
+  /* Handle question input change
+  This function updates the question text for a specific question in the questions state.
+  It takes the index of the question and the new value as parameters.
+  It creates a new array of questions, updates the question text at the specified index,
+  and sets the new questions array in the state.
+  */
   const handleQuestionChange = (index: number, value: string) => {
     const newQuestions = [...questions];
     newQuestions[index].questionText = value;
     setQuestions(newQuestions);
   };
 
-  // Handle answer input change
+  /*
+  Handle answer input change
+  This function updates the answer text for a specific question and answer index in the questions state.
+  It takes the question index, answer index, and new value as parameters.
+  */
   const handleAnswerChange = (
     questionIndex: number,
     answerIndex: number,
@@ -59,7 +75,12 @@ const CreateQuiz: React.FC = () => {
     setQuestions(newQuestions);
   };
 
-  // Handle radio button change (marking the correct answer)
+  /*
+  Handle correct answer change
+  This function updates the correct answer index for a specific question in the questions state.
+  It takes the question index and answer index as parameters.
+  It creates a new array of questions, updates the correct answer index at the specified question index.
+  */
   const handleCorrectAnswerChange = (
     questionIndex: number,
     answerIndex: number
@@ -70,11 +91,16 @@ const CreateQuiz: React.FC = () => {
     setQuestions(newQuestions);
   };
 
-  // Handle form submission
+  /*
+  Handle form submission
+  This function is called when the user submits the form.
+  It checks if all questions and answers are filled in, and if a correct answer is selected for each question.
+  */
   const handleSubmit = async (e: React.FormEvent) => {
     setDisableInput(true);
     e.preventDefault();
 
+    // For each question, check if the question text is filled in
     for (let i = 0; i < questions.length; i++) {
       const {
         questionText: question,
@@ -98,12 +124,14 @@ const CreateQuiz: React.FC = () => {
       }
     }
 
+    // Check if quiz name is empty
     if (questions.length <= 0) {
       alert("Must have at least one question!");
       setDisableInput(false);
       return;
     }
 
+    // Check if jobId is not null such that we can create a quiz for the job posting
     if (jobId !== null) {
       console.log("Sending a create quiz request to backend");
 
@@ -142,12 +170,23 @@ const CreateQuiz: React.FC = () => {
     }
   };
 
+
+  /*
+  Delete a question at a specific index
+  This function filters out the question at the specified index from the questions state.
+  It creates a new array of questions without the question at the specified index and sets the new questions array in the state.
+  It is called when the user clicks the delete button for a question.
+  */
   const deleteQuestion = (index: number) => {
     const newQuestions = questions.filter((_, i) => i !== index); // Return all questions that are not index
     setQuestions(newQuestions);
   };
 
-  // Add a new question
+  /*
+  Add a new question to the questions state
+  This function creates a new question object with empty values and adds it to the questions state.
+  It creates a new array of questions with the new question object and sets the new questions array in the state.
+  */
   const addQuestion = () => {
     setQuestions([
       ...questions,
@@ -191,7 +230,7 @@ const CreateQuiz: React.FC = () => {
                 key={questionIndex}
                 className="mb-4 border border-secondary rounded"
               >
-                <div className="mb-3 clearfix">
+                <div className="mb-3 clearfix p-4">
                   <label
                     htmlFor={`question-${questionIndex}`}
                     className="form-label mb-2 display-6"
@@ -211,7 +250,7 @@ const CreateQuiz: React.FC = () => {
                     disabled={disableInput}
                     type="text"
                     id={`question-${questionIndex}`}
-                    className="form-control text-center"
+                    className="form-control text-center "
                     value={questionData.questionText}
                     onChange={(e) =>
                       handleQuestionChange(questionIndex, e.target.value)
@@ -220,7 +259,7 @@ const CreateQuiz: React.FC = () => {
                     required
                   />
                 </div>
-                <div className="row">
+                <div className="row p-4">
                   {[0, 1].map((rowIndex) => (
                     <div key={rowIndex} className="row mb-3">
                       {[0, 1].map((colIndex) => {
@@ -252,6 +291,7 @@ const CreateQuiz: React.FC = () => {
                               />
                               <div className="input-group-text">
                                 <input
+                                  required
                                   disabled={disableInput}
                                   type="radio"
                                   name={`correct-answer-${questionIndex}`}
@@ -267,7 +307,7 @@ const CreateQuiz: React.FC = () => {
                                     )
                                   }
                                 />
-                                <span className="ms-2">Correct</span>
+                                
                               </div>
                             </div>
                           </div>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Container, Row, Col, Form, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { checklogIn } from "../lib/api";
+import { checklogIn } from "../lib/api.lib";
 
 const LogIn = () => {
   const navigate = useNavigate();
@@ -11,11 +11,26 @@ const LogIn = () => {
   });
   const [error, setError] = useState<string | null>(null);
 
+
+  /*
+  Handler function for form submission
+  Updates the formData state with the user's input values.
+  This function is called whenever the user types in the input fields.
+  */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError(null); // Clear error when user starts typing
   };
 
+
+  /*
+  Handler function for form submission
+  This function prevents the default form submission behavior,
+  sets the loading state to true,
+  and calls the checklogIn function with the user's email and password.
+  If the login is successful, it navigates to the home page.
+  If there is an error, it sets the error state to display an error message.
+  */
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
@@ -26,7 +41,7 @@ const LogIn = () => {
     }
   };
 
-  // Email validation
+  // Email validation 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
   const isPasswordValid = formData.password.length >= 8;
   const isFormValid = isEmailValid && isPasswordValid;

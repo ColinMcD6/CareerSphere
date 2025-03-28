@@ -1,10 +1,10 @@
 
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
-import { Category } from "./CreateJobPost";
+import { Category } from "./createJobPost.pages";
 import ApplicationPopupComponent from "../components/applicantPopup";
 import FormModalPopupComponent from "../components/popup";
-import useUser from "../hooks/user";
+import useUser from "../hooks/user.hooks";
 import {
   addResume,
   applyforJob,
@@ -18,31 +18,44 @@ import {
   saveJob,
   unsaveJob,
   updateUser
-} from "../lib/api";
+} from "../lib/api.lib";
 
 const ViewJobPosting = () => {
+  //uses searchParams to get the job id from the URL
   const [searchParams] = useSearchParams();
   const jobId = searchParams.get("ID");
+
+  //Grab User info
   const { user, isLoading } = useUser();
-  const [showModal, setShowModal] = useState(false);
-  const [application, setApplication] = useState<FormData | null>(null);
-  const [isApplied, setIsApplied] = useState<boolean>(false); // New state for tracking application submission
+
+  //Grabs information of any quizzes related to the job posting
   const [quizzes, setQuizzes] = useState<quizInterface[]>([]);
+
+  //Grabs data regarding the job posting
   const [data, setJob] = useState<JobPosting | null>(null); // Define the type for job
   const [jobNotFound, setJobNotFound] = useState<boolean>(false); // Define the type for job
-  const [appliedApplications, setAppliedApplications] = useState<
-    SingleApplication[]
-  >([]);
 
-  //Below is dedicated to Candidate information
+
+  //--------Below is dedicated to Candidate information----------
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [isSavedID, setIsSavedID] = useState<string>("");
   const [applicationStatus, setApplicationStatus] = useState<string>("");
 
-  //Below is used for Employer
+  //Show popup modal for application submission
+  const [showModal, setShowModal] = useState(false);
+
+  //Below is used for application submission
+  const [application, setApplication] = useState<FormData | null>(null);
+  const [isApplied, setIsApplied] = useState<boolean>(false); // New state for tracking application submission
+
+  //--------Below is used for Employer-------------
   const [showApplicantPopup, setShowApplicantPopup] = useState<boolean>(false);
   const [applicantIndex, setApplicantIndex] = useState<number>(0);
-  //const [applicantData, setApplicantData] = useState<SingleApplication | null>(null);
+
+  //Shows applicants who applied for the job posting
+  const [appliedApplications, setAppliedApplications] = useState<
+    SingleApplication[]
+  >([]);
 
 
   interface SingleApplication {
@@ -91,7 +104,11 @@ const ViewJobPosting = () => {
 
   const navigate = useNavigate();
 
-  // Query to get job posting ----------------------------------------------------
+  /*
+  useEffect to check if the user is logged in and has the correct role
+  This will run when the component mounts and whenever the user object changes.
+  If the user is not logged in or does not have the correct role, they will be redirected to the login page.
+  */
   useEffect(() => {
     if (jobId !== undefined && jobId !== null) {
       console.log("Fetching the job post");
@@ -102,6 +119,12 @@ const ViewJobPosting = () => {
     }
   }, [user, isApplied]);
 
+
+  /*
+  Check if This job is saved by the user
+  This will run when the component mounts and whenever the user object changes.
+  Only for candidate role
+  */
   useEffect(() => {
     const queryForSavedJobs = async () => {
       if (user?.userRole === "Candidate" && jobId !== null) {
@@ -126,7 +149,11 @@ const ViewJobPosting = () => {
 
   }, [user, isSaved]);
 
-  // Query to get applications if Employer is viewing page ----------------------------------------------------
+  /*
+  Check if this job has applications
+  This will run when the component mounts and whenever the user object changes.
+  Only for employer role
+  */
   useEffect(() => {
     const queryForApplications = async () => {
       if (user?.userRole == "Employer" && jobId !== null) {
@@ -148,7 +175,10 @@ const ViewJobPosting = () => {
     queryForApplications();
   }, [data]);
 
-  // Send Application ----------------------------------------------------
+  /*
+  useEffect to submit the application for the job posting
+  This will run when the component mounts and whenever the application state changes.
+  */
   useEffect(() => {
     try {
       if (data && application && !isApplied) {
@@ -210,7 +240,13 @@ const ViewJobPosting = () => {
     setShowModal(false);
   };
 
-  // Function to call when fetching jobs
+  /*
+  Function to fetch a specific job posting from the server
+  This function is called when the component mounts and whenever the jobId changes.
+  It calls the getIndividualJobPosting function with the jobId and userId as parameters.
+  If the request is successful, it sets the job state with the received data.
+  If the request fails, it logs an error message to the console.
+  */
   const fetchJobPosting = async (id: string) => {
     try {
       console.log(
@@ -237,7 +273,10 @@ const ViewJobPosting = () => {
     }
   };
 
-  //Save Job Posting. For Save Button
+  /*
+  Save Job Posting. For Save Button
+  only used for candidate role
+  */
   const saveJobPosting = async () => {
     if(isSaved)
     {
@@ -264,6 +303,12 @@ const ViewJobPosting = () => {
     setShowApplicantPopup(true);
   }
 
+
+  /*
+  Change Applicant Status Handler
+  This function is called when the user clicks on the "Change Status" button in the popup
+  only used for employer role
+  */
   const changeApplicantStatusHandler = (newStatus: string) => {
     if(user?.userRole === "Employer" && appliedApplications[applicantIndex])
     {
@@ -273,6 +318,13 @@ const ViewJobPosting = () => {
     }
   }
 
+
+  /*
+  Shows the resume of the applicant
+  This function is called when the user clicks on the "Show Resume" button in the popup
+  It fetches the resume name from the server and opens it in a new tab
+  Only used for employer role
+  */
   const showResumeHandler = (resume_id:string) => {
     const showResume = async () => {
       const response = await getResumeName(resume_id);
@@ -286,13 +338,25 @@ const ViewJobPosting = () => {
   
   }
 
+
+  /*
+  View the results of a quiz from a list of quizzes
+  This function is called when the user clicks on the "View Results" button in the quiz section
+  Mostly used for employer role
+  */
   const viewResults = async (index: number) => {
     const newQuiz: quizInterface[] = [...quizzes];
     newQuiz[index].expanded = !newQuiz[index].expanded;
     setQuizzes(newQuiz);
   };
 
-  // Function to call when fetching jobs
+  /*
+  Function to fetch all quizzes related to a specific job posting
+  This function is called when the component mounts and whenever the jobId changes.
+  It calls the getAllQuizzesForJob function with the jobId as a parameter.
+  If the request is successful, it sets the quizzes state with the received data.
+  If the request fails, it logs an error message to the console.
+  */
   const fetchQuizzes = async (id: string) => {
     try {
       console.log("Contacting Express server to get all quizzes for job post");
@@ -313,6 +377,7 @@ const ViewJobPosting = () => {
     }
   };
 
+  // Function to take a quiz
   const takeQuizLink = (quizId: string) => {
     navigate(`/Take-Quiz?ID=${jobId}&quizId=${quizId}`);
   };
@@ -339,6 +404,7 @@ const ViewJobPosting = () => {
     );
   }
 
+  // Check if the user has taken the quiz
   const checkIfQuizTaken = (quiz: quizInterface) => {
     for (const submission of quiz.submissions)
       if (submission.candidateUsername === user.username) return true;
@@ -346,6 +412,7 @@ const ViewJobPosting = () => {
     return false;
   };
 
+  // Get the score of the quiz of a user
   const getScore = (quiz: quizInterface) => {
     for (const submission of quiz.submissions)
       if (submission.candidateUsername === user.username) 
@@ -354,10 +421,14 @@ const ViewJobPosting = () => {
     return "Could not find score";
   };
 
+
+  // Redirects user to the quiz creation page
   const createQuizPage = (id: string | null) => {
     navigate(`/Create-Quiz-For-Job?ID=${id}`);
   };
 
+
+  // Function to convert date to string
   const DateToString = (time: string) => {
     if (time === "" || time === undefined) return "Not listed";
     else return time;
@@ -368,13 +439,13 @@ const ViewJobPosting = () => {
     return <div>Loading...</div>;
   }
   return (
-  <div className="pt-1">
+  <div className="pt-1 mb-5">
     <div className="container mt-5">
       <div className="card mb-4 shadow">
         <h2 className="card-header bg-primary text-white">
 
           {user?.userRole === "Candidate" && (
-            <span className={`badge bg-warning float-start`}>
+            <span className={`badge float-start bg-${applicationStatus === 'Accepted' ? "success" : applicationStatus === 'Rejected' ? "danger" : "warning"}`}>
               {applicationStatus}
             </span>
             )
@@ -622,7 +693,7 @@ const ViewJobPosting = () => {
                   </div>
                   <div>
                    {"Status:  "}
-                  <span className={`badge bg-success`} >
+                  <span className={`badge bg-${application.status === 'Accepted' ? "success" : application.status === 'Rejected' ? "danger" : "warning"}`}>
                     {application.status}
                   </span>
                   </div>
@@ -650,6 +721,7 @@ const ViewJobPosting = () => {
         )
       }
     </div>
+   
     
   );
 };

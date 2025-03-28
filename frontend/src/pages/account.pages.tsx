@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Container, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import useUser, { USER } from "../hooks/user";
-import { updateUser } from "../lib/api";
+import useUser, { USER } from "../hooks/user.hooks";
+import { updateUser } from "../lib/api.lib";
 import { IoAddCircle, IoTrashBin } from "react-icons/io5";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -22,6 +22,10 @@ const Account = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>(user?.phoneNumber || "");
   const [userLink, setUserLink] = useState<string>(user?.userlink || "");
 
+  /*
+  useEffect to set initial values for the fields
+  This will run when the component mounts and whenever the user object changes.
+  */
   useEffect(() => {
     if (user) {
       setexp(user.experience || []);
@@ -36,6 +40,10 @@ const Account = () => {
 
   const handleBack = () => navigate("/");
 
+  /*
+  Mutation to update user details
+  This mutation will be triggered when the user clicks the "Confirm" button.
+   */
   const mutation = useMutation({
     mutationFn: async () => {
       console.log("Updating user with data:", {
@@ -69,10 +77,19 @@ const Account = () => {
     },
   });
 
+  /* Handle form submission
+  This function will be called when the user clicks the "Confirm" button.
+  It will trigger the mutation to update the user details.
+  */
   const handleSubmit = async () => {
     mutation.mutate();
   };
 
+
+  /* Handle array changes
+  This function will be called when the user adds or removes items from the experience, education, or skills arrays.
+  It updates the respective state with the new value.
+  */
   const handleArrayChange = (index: number, value: string, setter: Function) => {
     setter((prev: string[]) => {
       const updated = [...prev];
@@ -81,9 +98,11 @@ const Account = () => {
     });
   };
 
+  // Handle adding and removing items from the arrays
   const handleAddItem = (setter: Function) => setter((prev: string[]) => [...prev, ""]);
-  const handleRemoveItem = (index: number, setter: Function) =>
-    setter((prev: string[]) => prev.filter((_, i) => i !== index));
+
+  // Handle removing items from the arrays
+  const handleRemoveItem = (index: number, setter: Function) => setter((prev: string[]) => prev.filter((_, i) => i !== index));
 
   return (
     <div className="mt-5">

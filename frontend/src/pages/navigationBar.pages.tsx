@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { FaHome, FaBriefcase } from "react-icons/fa";
 
+// Header
 const NavBar = () => {
   return (
     <div>

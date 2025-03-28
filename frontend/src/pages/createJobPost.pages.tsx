@@ -3,8 +3,8 @@ const BACK_END_URL = import.meta.env.VITE_API_URL;
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom"; // Add useNavigate for redirection
-import { createJobPosting } from "../lib/api";
-import useUser from "../hooks/user";
+import { createJobPosting } from "../lib/api.lib";
+import useUser from "../hooks/user.hooks";
 import { Navigate } from "react-router-dom";
 
 /*
@@ -25,7 +25,7 @@ const CreateJobPost: React.FC = () => {
   const [category, setCategory] = useState<number>(Category.Other);
   */
 
-import JobPostingValidation from "../lib/JobPostingValidation";
+import JobPostingValidation from "../lib/jobPostingValidation.lib";
 
 export enum Category {Technology = 0, Agriculture = 1, Service = 2, Business = 3, Engineering = 4, Other = 5}
 
@@ -53,13 +53,14 @@ interface JobPostingInterface {
 const CreateJobPost: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false); // Track submission state
   const navigate = useNavigate(); // For redirection
-  const { user, isLoading } = useUser();
+  const { user, isLoading } = useUser(); // Get user information from the custom hook
 
   // Feed back errors, allowing user to know what information is invalid
   const [errors, setErrors] = useState<{ field: string; message: string }[]>(
     []
   );
 
+  // Set up the form data state
   const [formData, setFormData] = useState<JobPostingInterface>({
     title: "",
     positionTitle: "",
@@ -81,6 +82,11 @@ const CreateJobPost: React.FC = () => {
     category: Category.Agriculture,
   });
 
+  /* Handle input changes
+  This function will be called when the user types in any input field.
+  It updates the formData state with the new value.
+  It also checks for validation errors after the change.
+  */
   const handleChange = (
     event: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -109,6 +115,13 @@ const CreateJobPost: React.FC = () => {
     });
   };
 
+  /* Error checking after input change
+  This function will be called after the user changes any input field.
+  It validates the formData state and updates the errors state accordingly.
+  It filters out the errors that are not related to the changed field.
+  If the changed field has an error, it adds it to the errors state.
+  If the changed field is valid, it removes the error from the errors state.
+  */
   const errorCheckAfterChange = (target: string, formData: any) => {
     const result = JobPostingValidation.safeParse(transformData(formData));
 
@@ -130,6 +143,10 @@ const CreateJobPost: React.FC = () => {
     setErrors(filteredErrors);
   };
 
+  /* Transform data before sending to the backend
+  This function will be called before sending the formData to the backend.
+  It transforms the formData state to match the backend API requirements.
+  */
   const transformData = (formData: JobPostingInterface) => {
     const transformedData = { ...formData };
     if (!transformedData.startDateEnabled)
@@ -140,7 +157,11 @@ const CreateJobPost: React.FC = () => {
     return transformedData;
   };
 
-  // If the user is not logged in, redirect them away from this page
+  /*
+  If the user is not logged in, redirect them away from this page
+  This effect will run when the component mounts and when the user or isLoading state changes.
+  If the user is not logged in and isLoading is false, redirect to the login page.
+  */
   useEffect(() => {
     if (!isLoading && !user) {
       window.location.href = "/login";
@@ -157,29 +178,15 @@ const CreateJobPost: React.FC = () => {
     setErrors([]); // Reset errors to an empty array
   };
 
-  // Submit job post button clicked
+  /* Submit job post button clicked
+  This function will be called when the user clicks the "Create Job Posting" button.
+  It prevents the default form submission behavior, sets the isSubmitting state to true,
+  and sends the formData to the backend API.
+  */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true); // Disable inputs and buttons
 
-    /*
-    const formData = {
-      title: postingTitle,
-      positionTitle: positionTitle,
-      compensationType: compensationType,
-      salary: compensationAmount,
-      description: description,
-      location: location,
-      experience: [],
-      skills: skills.split(","),
-      education: education.split(","),
-      deadline: dueDate,
-      startingDate: startDate,
-      status: "Open",
-      jobType: jobType,
-      category: category,
-    };
-       */
     console.log(`Sending a create job post request to ${BACK_END_URL}/job/add`);
     console.log(formData);
 
@@ -217,6 +224,8 @@ const CreateJobPost: React.FC = () => {
     }
   }; // End of function that handles submit button
 
+
+  // If loading, show loading message
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -225,6 +234,7 @@ const CreateJobPost: React.FC = () => {
     return <Navigate to="/login" />;
   }
 
+  
   return (
     <div className="container mt-5">
       <ToastContainer aria-label={undefined} />

@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
-import useUser from "../hooks/user";
-import Welcome from "../pages/Welcome";
+import useUser from "../hooks/user.hooks";
+import Welcome from "../pages/welcome.pages";
 
 export const CareerSphereApp = () => {
     const { user, isLoading } = useUser();

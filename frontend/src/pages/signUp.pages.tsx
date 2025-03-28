@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Container, Row, Col, Form, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../lib/api";
+import { registerUser } from "../lib/api.lib";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -15,11 +15,23 @@ const SignUp = () => {
     confirm_password: "",
   });
 
+  /*
+  Handler function for form submission
+  Updates the formData state with the user's input values.
+  This function is called whenever the user types in the input fields.
+  */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError(null);
   };
 
+
+  /*
+  Handler function for form submission
+  Updates the formData state with the user's input values.
+  This function is called whenever the user types in the input fields.
+  It also clears any previous error messages when the user starts typing.
+  */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 

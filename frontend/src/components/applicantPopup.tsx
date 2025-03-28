@@ -19,10 +19,12 @@ interface ApplicationPopupComponentProps {
 const ApplicationPopupComponent: React.FC<ApplicationPopupComponentProps> = ({show, username, email, experience, education, skills, resume_id, onClose, showResumeHandler, editStatusApplicationHandler}) => {
   return (
     <Modal show={show} onHide={onClose}>
-        <Modal.Dialog>
-            <Modal.Header closeButton>
+        
+        <Modal.Header closeButton className="d-flex justify-content-center">
+          <div className="w-100 text-center">
             <Modal.Title>Applicant Details</Modal.Title>
-            </Modal.Header>
+          </div>
+        </Modal.Header>
     
             <Modal.Body>
             <p>Username: {username}</p>
@@ -33,11 +35,11 @@ const ApplicationPopupComponent: React.FC<ApplicationPopupComponentProps> = ({sh
             <Button onClick={() => showResumeHandler(resume_id)} variant="primary">View Resume</Button>
             </Modal.Body>
     
-            <Modal.Footer>
-            <Button onClick={() => editStatusApplicationHandler("Accepted")} variant="success">Accept</Button>
-            <Button onClick={() => editStatusApplicationHandler("Rejected")} variant="danger">Reject</Button>
+            <Modal.Footer className='d-flex justify-content-center align-items-center'>
+              <Button onClick={() => editStatusApplicationHandler("Accepted")} variant="success">Accept</Button>
+              <Button onClick={() => editStatusApplicationHandler("Rejected")} variant="danger" className="ms-3">Reject</Button>
             </Modal.Footer>
-        </Modal.Dialog>
+        
     </Modal>
   );
 };

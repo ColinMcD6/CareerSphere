@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query"
-import { getUser } from "../lib/api"
+import { getUser } from "../lib/api.lib"
 
 
 export const USER = "user"
 
+
+//Get user data from the server
 const useUser = (opts = {}) => {
     const {
         data: user,

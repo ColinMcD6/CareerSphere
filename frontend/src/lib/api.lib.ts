@@ -1,4 +1,4 @@
-import API from "../config/apiClient";
+import API from "../config/apiClient.config";
 
 interface UserResponse {
   username: string;

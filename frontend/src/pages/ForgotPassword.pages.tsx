@@ -1,12 +1,21 @@
 import { useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
-import { sendresetPassEmail } from "../lib/api";
+import { sendresetPassEmail } from "../lib/api.lib";
 
 const ForgotPassword = () => {
   const [userInputEmail, setuserInputEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
+
+  /*
+  Handler function for form submission
+  This function prevents the default form submission behavior, sets the loading state to true,
+  and calls the sendresetPassEmail function with the user's email.
+  If the email is sent successfully, it sets the submitted state to true.
+  If there is an error, it alerts the user.
+  Finally, it resets the loading state.
+  */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true); // Disable button while sending request
