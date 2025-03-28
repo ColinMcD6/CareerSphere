@@ -15,7 +15,9 @@ node_modules
 dist
 dist-ssr
 *.local
-backend/coverage
+/backend/coverage
+/backend/resume
+cloud
 
 # Editor directories and files
 .vscode/*
@@ -28,3 +30,4 @@ backend/coverage
 *.sln
 *.sw?
 */resume/uploads/*
+/cloud

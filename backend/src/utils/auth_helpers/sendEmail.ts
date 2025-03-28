@@ -1,5 +1,5 @@
-import resend from "../../config/resend";
-import { NODE_ENV } from "../../constants/env";
+import resend from "../../config/resend.config";
+import { NODE_ENV } from "../../constants/env.constants";
 
 type emailParams = {
     to: string;
@@ -9,7 +9,7 @@ type emailParams = {
 }
 
 const getToEmail = (to: string) =>
-    NODE_ENV === "development" ? "delivered@resend.dev" : to;
+    NODE_ENV === "dev" || NODE_ENV === "test" ? "delivered@resend.dev" : to;
 
 export const sendEmail = async (
     {

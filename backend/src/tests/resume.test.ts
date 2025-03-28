@@ -1,14 +1,13 @@
-import e, { Request, Response } from 'express';
+import e from 'express';
+import fs from "fs";
 import multer from 'multer';
-import * as db from './db'
+import path from "path";
+import request from 'supertest';
 import {
     addResumeHandler,
-    getResumeHandler,
 } from '../controllers/resume.controller';
-import ResumeModel from '../models/resume.model';
-import request from 'supertest';
-import fs from "fs";
-import path from "path";
+import ResumeModel from '../models/main/resume.model';
+import * as db from './db';
 
 const app = e();
 const storage = multer.diskStorage({
@@ -28,7 +27,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 app.post("/add", upload.single('resume'), addResumeHandler);
-app.get("/resume/:id", getResumeHandler);
+
 
 
 
@@ -61,7 +60,6 @@ describe('Test adding resume', () => {
         .post('/add')
         .attach('resume', filePath)
         .expect(200);
-
         // Check if the resume is in the database
         const resume = await ResumeModel.find().exec();
         expect(resume).toHaveLength(1);
@@ -69,7 +67,7 @@ describe('Test adding resume', () => {
 
         expect(response.body.resume).toHaveProperty('pdf_name', 'test.pdf'); // Adjust the expected file name
         expect(response.body.resume).toHaveProperty('path', './resume/uploads/');
-
+    
         const uploadedFilePath = path.join(__dirname, '../../resume/uploads/', resume[0].file_name);
         const fileExists = fs.existsSync(uploadedFilePath);
         expect(fileExists).toBe(true);

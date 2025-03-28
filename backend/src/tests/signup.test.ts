@@ -1,9 +1,9 @@
 import * as db from './db'
-import sessionModel from "../models/session.model";
-import UserModel from "../models/users.model";
-import verificationModel from "../models/verify.model";
-import { signup_account } from "../services/auth.services";
-import verificationType from '../constants/verificationTyes';
+import sessionModel from "../models/one-to-many/session.model";
+import UserModel from "../models/main/users.model";
+import verificationModel from "../models/one-to-many/verify.model";
+import { signupAccount } from "../services/auth.services";
+import verificationType from '../constants/verificationTyes.constants';
 
 describe("Signup Account", () => {
     beforeAll(async () => {
@@ -31,7 +31,7 @@ describe("Signup Account", () => {
             user_role: "Candidate",
         };
 
-        const result = await signup_account(mockData);
+        const result = await signupAccount(mockData);
 
         const createdUser = await UserModel.findOne({ email: mockData.email });
         expect(createdUser).not.toBeNull();
@@ -66,7 +66,7 @@ describe("Signup Account", () => {
             user_role: "Employer",
         };
 
-        const result = await signup_account(mockData);
+        const result = await signupAccount(mockData);
 
         const createdUser = await UserModel.findOne({ email: mockData.email });
         expect(createdUser).not.toBeNull();
@@ -108,7 +108,7 @@ describe("Signup Account", () => {
           userRole: "Candidate",
         };
 
-        await expect(signup_account(mockData)).rejects.toThrow("Account already exists!");
+        await expect(signupAccount(mockData)).rejects.toThrow("Account already exists!");
 
         // duplicate accounts with same email not allowed
         const userCount = await UserModel.countDocuments({ email: "test_existUser@gmail.com" });

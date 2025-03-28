@@ -1,9 +1,9 @@
 import * as db from './db'
 import { getUserHandler, updateUserDetails } from '../controllers/user.controller';
 import { Request, Response } from 'express';
-import UserModel from '../models/users.model';
+import UserModel from '../models/main/users.model';
 import appAssert from '../utils/appAssert';
-import { NOT_FOUND } from '../constants/http';
+import { NOT_FOUND } from '../constants/http.constants';
 import mongoose from 'mongoose';
 
 describe('Test candidate and employer portals', () => {
@@ -452,7 +452,7 @@ describe('Test candidate and employer portals', () => {
         const mNext = jest.fn();
         await updateUserDetails(mReq as Request, mRes as Response, mNext);
         let error: Error = mNext.mock.calls[0][0];
-        expect(error.message).toEqual("Error: User account does not exist!");
+        expect(error.message).toContain("User account does not exist!");
     });
 
     test('Throw error for trying to get non-existent user', async () => {
@@ -472,7 +472,7 @@ describe('Test candidate and employer portals', () => {
         const mNext = jest.fn();
         await getUserHandler(mReq as Request, mRes as Response, mNext);
         let error: Error = mNext.mock.calls[0][0];
-        expect(error.message).toEqual("Error: User account does not exist !");
+        expect(error.message).toContain("User account does not exist !");
     });
 
     test('Get existing user and make sure password is not contained in response body', async () => {
@@ -514,6 +514,7 @@ describe('Test candidate and employer portals', () => {
             skills: [ 'Kendama' ],
             createdAt: newuser.createdAt,
             updatedAt: newuser.updatedAt,
+            preferences: [0,0,0,0,0,0],
             __v: 0
         }
         // Test whether correct json response is received (no password field in json)

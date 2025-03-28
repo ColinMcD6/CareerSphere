@@ -1,22 +1,22 @@
 import { Router } from "express";
-import { signupcontroller } from "../controllers/auth_controllers/signupcontroller";
-import { logincontroller } from "../controllers/auth_controllers/logincontroller";
-import { logoutcontroller } from "../controllers/auth_controllers/logoutcontroller";
-import { refreshcontroller } from "../controllers/auth_controllers/refreshcontroller";
-import { forgotPassController } from "../controllers/auth_controllers/forgotPassController";
-import { changePasswordController } from "../controllers/auth_controllers/changePassController";
-import { verifyEmailController } from "../controllers/auth_controllers/verifyEmailController";
+import { signupController } from "../controllers/auth_controllers/signup.controller";
+import { loginController } from "../controllers/auth_controllers/login.controller";
+import { logoutController } from "../controllers/auth_controllers/logout.controller";
+import { refreshController } from "../controllers/auth_controllers/refresh.controller";
+import { forgotPassController } from "../controllers/auth_controllers/forgotPass.controller";
+import { changePasswordController } from "../controllers/auth_controllers/changePass.controller";
+import { verifyEmailController } from "../controllers/auth_controllers/verifyEmail.controller";
 
 const authRoutes = Router();
 
 //prefix: /auth
-authRoutes.post("/signup", signupcontroller);
+authRoutes.post("/signup", signupController);
 
-authRoutes.post("/login", logincontroller);
+authRoutes.post("/login", loginController);
 
-authRoutes.get("/logout", logoutcontroller);
+authRoutes.get("/logout", logoutController);
 
-authRoutes.get("/refresh", refreshcontroller);
+authRoutes.get("/refresh", refreshController);
 
 authRoutes.get("/email/verify/:code", verifyEmailController);
 

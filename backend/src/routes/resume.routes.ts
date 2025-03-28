@@ -1,12 +1,19 @@
 import { Router } from "express";
-import { 
+import {
     addResumeHandler,
-    getResumeHandler
- } from "../controllers/resume.controller";
+    getResumeDownloadHandler,
+    getResumeNameHandler
+} from "../controllers/resume.controller";
 
+import fs from "fs";
 import multer from "multer";
-import fs from "fs"
 
+
+/**
+ * Configure multer storage options
+ * This will store the uploaded files in the 'uploads' directory under 'resume'
+ * and will rename the files to a unique name using the current timestamp and a random number.
+*/
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadPath = './resume/uploads/';
@@ -30,6 +37,7 @@ const resumeRoutes = Router();
 
 //prefix: /resume
 resumeRoutes.post("/add", upload.single('resume'), addResumeHandler);
-resumeRoutes.get("/:id", getResumeHandler);
+resumeRoutes.get("/download/:id", getResumeDownloadHandler);
+resumeRoutes.get("/:id", getResumeNameHandler);
 
 export default resumeRoutes;

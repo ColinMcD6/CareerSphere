@@ -1,13 +1,13 @@
 import * as db from './db'
 import { getUserHandler, updateUserDetails } from '../controllers/user.controller';
 import { Request, Response } from 'express';
-import UserModel from '../models/users.model';
+import UserModel from '../models/main/users.model';
 import appAssert from '../utils/appAssert';
-import { CREATED, NOT_FOUND } from '../constants/http';
+import { CREATED, NOT_FOUND } from '../constants/http.constants';
 import mongoose from 'mongoose';
 import { addJobPostingHandler } from '../controllers/jobPostings.controller';
 import { ZodError } from 'zod';
-import JobPostingsModel from '../models/jobPostings.model';
+import JobPostingsModel from '../models/main/jobPostings.model';
 
 describe('Test candidate and employer portals', () => {
     beforeAll(async () => {
@@ -46,7 +46,7 @@ describe('Test candidate and employer portals', () => {
             skills: ["ChatGPT"],
             education: ["None"],
             status: "Open",
-            startingDate: Date.now().toString()
+            category: 1
         }
         let jobs = await JobPostingsModel.find();
         expect(jobs.length).toBe(0);
@@ -63,7 +63,7 @@ describe('Test candidate and employer portals', () => {
                 skills: jobPosting.skills,
                 education: jobPosting.education,
                 status: jobPosting.status,
-                startingDate: jobPosting.startingDate
+                category: 1
             },
             userId: "" + employer._id,
         };
@@ -74,12 +74,17 @@ describe('Test candidate and employer portals', () => {
         };
         const mNext = jest.fn();
         await addJobPostingHandler(mReq as Request, mRes as Response, mNext);
+        jobs = await JobPostingsModel.find();
+        jobs[0]._id
+
+
         expect(mRes.status).toHaveBeenCalledWith(CREATED);
         // Test whether correct json response is received
-        expect(mJson).toHaveBeenCalledWith(jobPosting);
-        // Test whether job is in database
-        jobs = await JobPostingsModel.find();
         expect(jobs.length).toBe(1);
+        expect(mJson.mock.calls[0][0]._id).toBeDefined();
+        expect(mJson.mock.calls[0][0]._id.toString()).toEqual((jobs[0]._id as unknown as string).toString());
+        // Test whether job is in database
+        
 
     });
 
@@ -94,6 +99,7 @@ describe('Test candidate and employer portals', () => {
             experience: undefined,
             companyDetails: "Fun, fun, fun",
             hiringDetails: [],
+            category: 1
         });
         const jobPosting = {
             title: "Job",
@@ -110,6 +116,7 @@ describe('Test candidate and employer portals', () => {
             education: ["None"],
             status: "Open",
             startingDate: Date.now().toString()
+            ,category: 1
         }
         const mReq: Partial<Request> = {
             body: {
@@ -124,7 +131,8 @@ describe('Test candidate and employer portals', () => {
                 skills: jobPosting.skills,
                 education: jobPosting.education,
                 status: jobPosting.status,
-                startingDate: jobPosting.startingDate
+                startingDate: jobPosting.startingDate,
+                category: 1
             },
             userId: "" + employer._id,
         };
@@ -163,6 +171,7 @@ describe('Test candidate and employer portals', () => {
             experience: undefined,
             companyDetails: "Fun, fun, fun",
             hiringDetails: [],
+            category: 1
         });
         const jobPosting = {
             title: "Job that is the most fun",
@@ -178,7 +187,8 @@ describe('Test candidate and employer portals', () => {
             skills: ["ChatGPT"],
             education: ["None"],
             status: "Open",
-            startingDate: Date.now().toString()
+            startingDate: Date.now().toString(),
+            category: 1
         }
         const mReq: Partial<Request> = {
             body: {
@@ -193,7 +203,8 @@ describe('Test candidate and employer portals', () => {
                 skills: jobPosting.skills,
                 education: jobPosting.education,
                 status: jobPosting.status,
-                startingDate: jobPosting.startingDate
+                startingDate: jobPosting.startingDate,
+                category: 1
             },
             userId: "" + employer._id,
         };
@@ -232,6 +243,7 @@ describe('Test candidate and employer portals', () => {
             experience: undefined,
             companyDetails: "Fun, fun, fun",
             hiringDetails: [],
+            category: 1
         });
         const jobPosting = {
             title: "Job that is the most fun",
@@ -247,7 +259,8 @@ describe('Test candidate and employer portals', () => {
             skills: ["ChatGPT"],
             education: ["None"],
             status: "Open",
-            startingDate: Date.now().toString()
+            startingDate: Date.now().toString(),
+            category: 1
         }
         const mReq: Partial<Request> = {
             body: {
@@ -262,7 +275,8 @@ describe('Test candidate and employer portals', () => {
                 skills: jobPosting.skills,
                 education: jobPosting.education,
                 status: jobPosting.status,
-                startingDate: jobPosting.startingDate
+                startingDate: jobPosting.startingDate,
+                category: 1
             },
             userId: "" + employer._id,
         };

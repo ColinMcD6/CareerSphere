@@ -45,7 +45,7 @@ SENDER_EMAIL=aa
 API_RESEND=bb
 RESEND_API_KEY={API_KEY}
 ```
-2. Go to https://resend.com/home -> create an account -> create an API_KEY and copy that api to .env for RESED_API_KEY'
+2. Go to https://resend.com/home -> create an account -> create an API_KEY and copy that api to .env for RESEND_API_KEY'
 3. From ```backend``` directory run ```npm install```
 4. To run application in development mode (every change to file will update server): ```npm run dev```
 5. To run application in production mode: ```npm build; npm run start```
