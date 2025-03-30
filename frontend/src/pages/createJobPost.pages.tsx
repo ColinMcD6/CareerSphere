@@ -6,25 +6,6 @@ import { useNavigate } from "react-router-dom"; // Add useNavigate for redirecti
 import { createJobPosting } from "../lib/api.lib";
 import useUser from "../hooks/user.hooks";
 import { Navigate } from "react-router-dom";
-
-/*
-const CreateJobPost: React.FC = () => {
-  const [postingTitle, setPostingTitle] = useState<string>("");
-  const [positionTitle, setPositionTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [startDate, setStartDate] = useState<string>("");
-  const [dueDate, setDueDate] = useState<string>();
-  const [location, setLocation] = useState<string>("");
-  const [skills, setSkills] = useState<string>("");
-  const [education, setEducation] = useState<string>("");
-  const [compensationType, setCompensationType] = useState<
-    "salary" | "hourly" | "do-not-disclose"
-  >("do-not-disclose");
-  const [compensationAmount, setCompensationAmount] = useState<number>(0);
-  const [jobType, setJobType] = useState<string>("");
-  const [category, setCategory] = useState<number>(Category.Other);
-  */
-
 import JobPostingValidation from "../lib/jobPostingValidation.lib";
 
 export enum Category {Technology = 0, Agriculture = 1, Service = 2, Business = 3, Engineering = 4, Other = 5}

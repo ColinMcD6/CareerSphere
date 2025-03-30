@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Container, Form } from "react-bootstrap";
+import { Alert, Button, Card, Container, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import useUser, { USER } from "../hooks/user.hooks";
 import { updateUser } from "../lib/api.lib";
@@ -10,6 +10,7 @@ const Account = () => {
   const navigate = useNavigate();
   const { user } = useUser();
   const queryClient = useQueryClient();
+  const [error, setError] = useState<string | null>(null);
 
   // State for role-based fields
   const [exp, setexp] = useState<string[]>(user?.experience || []);
@@ -72,8 +73,7 @@ const Account = () => {
       navigate("/");
     },
     onError: (error: any) => {
-      console.error("Error updating user:", error);
-      alert(`Failed to update user. Please try again. ${error.message}`);
+      setError(error.message || "Failed to update user. Please try again.");
     },
   });
 
@@ -82,6 +82,7 @@ const Account = () => {
   It will trigger the mutation to update the user details.
   */
   const handleSubmit = async () => {
+    setError(null);
     mutation.mutate();
   };
 
@@ -107,6 +108,7 @@ const Account = () => {
   return (
     <div className="mt-5">
       <Container className="mt-4 p-4 border rounded shadow bg-light">
+      {error && <Alert variant="danger">{error}</Alert>}
         <Card className="p-3 mb-4 shadow-sm">
           <h3>User Account Info</h3>
           <p><strong>Username:</strong> {user?.username}</p>
