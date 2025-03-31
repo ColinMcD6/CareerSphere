@@ -26,7 +26,7 @@ jobPostingRoutes.get("/", getAllJobPostingsQueryHandler);
 jobPostingRoutes.post("/add", auth_verifyEmployer, addJobPostingHandler);
 
 //saving jobs
-jobPostingRoutes.post("/save", saveJobPostingHandler);
+jobPostingRoutes.post("/save", auth_verifyCandidate, saveJobPostingHandler);
 jobPostingRoutes.delete("/save/:id", auth_verifyCandidate, unsaveJobPostingHandler);
 jobPostingRoutes.get("/save/query", auth_verifyCandidate, getSavedJobPostingsHandler);
 
