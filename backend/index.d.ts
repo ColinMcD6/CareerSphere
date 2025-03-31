@@ -5,7 +5,7 @@ declare global {
     interface Request {
       userId: mongoose.Types;
       sessionId: mongoose.Types;
-      candidateId: mongoose.Types;
+      userRole: string;
     }
   }
 }

@@ -28,7 +28,6 @@ const ViewAllJobs: React.FC = () => {
 
   const navigate = useNavigate();
 
-
   /*
   useEffect to check if the user is logged in and has the correct role
   This will run when the component mounts and whenever the user object changes.
@@ -108,39 +107,56 @@ const ViewAllJobs: React.FC = () => {
       <div className="container mt-4">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <div className="d-flex justify-content-center flex-grow-1">
-            <h1>
+            <h1 className="text-primary">
               {user.userRole === "Employer"
                 ? "My Job Postings"
-                : showSavedJobs ? "My Saved Job Postings" : "All Job Postings"}
+                : showSavedJobs
+                ? "My Saved Job Postings"
+                : "All Job Postings"}
             </h1>
           </div>
           {user.userRole === "Employer" && (
-            <button className="btn btn-success me-5 w-auto" style={{ minWidth: "50px" }} onClick={createJobPosting}>
-              <FaPlus /> 
+            <button
+              className="btn btn-success me-5 w-auto"
+              style={{ minWidth: "50px", backgroundColor: "#28a745", borderColor: "#28a745" }}
+              onClick={createJobPosting}
+            >
+              <FaPlus />
             </button>
           )}
           {user.userRole === "Candidate" && (
             <button
               className="btn btn-primary"
+              style={{ backgroundColor: "#0056b3", borderColor: "#0056b3" }}
               onClick={() => setShowSavedJobs(!showSavedJobs)}
             >
               {showSavedJobs ? "Show All Jobs" : "Show Saved Jobs"}
             </button>
           )}
         </div>
-     
+
         <div className="mb-3">
-          <input
-            type="text"
-            placeholder="Search jobs..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="form-control"
-          />
+          <div className="input-group">
+            <span className="input-group-text" style={{ backgroundColor: "#e9ecef" }}>
+              <i className="bi bi-search text-primary"></i>
+            </span>
+            <input
+              type="text"
+              placeholder="Search jobs..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="form-control"
+              style={{ borderColor: "#0056b3" }}
+            />
+          </div>
         </div>
+
         {/* If no jobs match the search, show a message */}
         {filteredJobs.length === 0 ? (
-          <div className="alert alert-info mt-3">
+          <div
+            className="alert alert-info mt-3"
+            style={{ backgroundColor: "#d1ecf1", color: "#0c5460" }}
+          >
             No available job that matches the search!
           </div>
         ) : (
@@ -149,11 +165,22 @@ const ViewAllJobs: React.FC = () => {
               <div
                 key={job._id}
                 className="list-group-item d-flex justify-content-between align-items-center"
+                style={{
+                  backgroundColor: "#f8f9fa",
+                  border: "1px solid #e9ecef",
+                  transition: "background-color 0.3s",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#e9ecef")}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#f8f9fa")}
               >
-                <span className="text-truncate">{job.title}</span>
+                <span className="text-truncate text-dark">{job.title}</span>
                 <button
                   className="btn btn-primary w-auto"
-                  style={{ minWidth: "80px" }}
+                  style={{
+                    minWidth: "80px",
+                    backgroundColor: "#0056b3",
+                    borderColor: "#0056b3",
+                  }}
                   onClick={() => viewJobPosting(job._id)}
                 >
                   View

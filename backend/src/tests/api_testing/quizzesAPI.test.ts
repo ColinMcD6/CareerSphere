@@ -296,7 +296,7 @@ describe('API Routes', () => {
             questions: [{ questionText: "What is JSX?", options: ["A", "B"], correctAnswer: "A" }, { questionText: "What is React?", options: ["A", "B"], correctAnswer: "B" }]
         }
 
-        const quizcreateResponse = await request(app).post(`/job/${jobId}/quizzes`).send(quizData).set('Cookie', candaccessToken)
+        const quizcreateResponse = await request(app).post(`/job/${jobId}/quizzes`).send(quizData).set('Cookie', empaccessToken)
         expect(quizcreateResponse.status).toBe(CREATED)
         expect(quizcreateResponse.body).toHaveProperty('message', 'Quiz created successfully')
         
@@ -387,7 +387,7 @@ describe('API Routes', () => {
             questions: [{ questionText: "What is JSX?", options: ["A", "B"], correctAnswer: "A" }, { questionText: "What is React?", options: ["A", "B"], correctAnswer: "B" }]
         }
 
-        const quizcreateResponse = await request(app).post(`/job/${jobId}/quizzes`).send(quizData).set('Cookie', candaccessToken)
+        const quizcreateResponse = await request(app).post(`/job/${jobId}/quizzes`).send(quizData).set('Cookie', empaccessToken)
         expect(quizcreateResponse.status).toBe(CREATED)
         expect(quizcreateResponse.body).toHaveProperty('message', 'Quiz created successfully')
         

@@ -197,9 +197,9 @@ export const verifyEmailCode = async (code: string) => {
     const validcode = await verificationDAO.findOne({
         _id: code,
         type: verificationType.emailVerification,
-        expireAt: {$gt: new Date() },
+        expireAt: {$gt: Date.now() },
     })
-    appAssert(validcode, NOT_FOUND, " Invalid verification Code")
+    appAssert(validcode, NOT_FOUND, "Verification code is invalid!");
 
     const user_verified = await userDAO.findByIdAndUpdate(
         validcode.userId, {
