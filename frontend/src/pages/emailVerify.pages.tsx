@@ -21,12 +21,8 @@ const EmailVerify = () => {
     useEffect(() => {
         // Call verifyEmail when the component mounts
         const verify = async () => {
-            try {
-                await verifyEmail(code || "");
-                setIsVerified(true);  // Set to true on success
-            } catch (err) {
-                setIsVerified(false); // Set to false on failure
-            }
+            await verifyEmail(code as string); // Call the API to verify the email
+            setIsVerified(true); 
         };
 
         verify();
