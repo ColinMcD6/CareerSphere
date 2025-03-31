@@ -27,8 +27,8 @@ jobPostingRoutes.post("/add", auth_verifyEmployer, addJobPostingHandler);
 
 //saving jobs
 jobPostingRoutes.post("/save", saveJobPostingHandler);
-jobPostingRoutes.delete("/save/:id", unsaveJobPostingHandler);
-jobPostingRoutes.get("/save/query", getSavedJobPostingsHandler);
+jobPostingRoutes.delete("/save/:id", auth_verifyCandidate, unsaveJobPostingHandler);
+jobPostingRoutes.get("/save/query", auth_verifyCandidate, getSavedJobPostingsHandler);
 
 // Quizzed for the job posting
 jobPostingRoutes.post("/:id/quizzes", auth_verifyEmployer, addQuizHandler);
