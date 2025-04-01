@@ -96,7 +96,7 @@ const Welcome = () => {
           }}
         >
           <h2 style={{ textAlign: "center", width: "100%", marginBottom: "20px" }}>
-            Current Top Rated Job Postings
+            Jobs For You!
           </h2>
           {jobs.slice(0, 3).map((job) => (
             <div
