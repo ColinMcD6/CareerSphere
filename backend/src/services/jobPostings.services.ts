@@ -115,8 +115,33 @@ export const getAllJobPostingsQueryWithSaved = async (
     const aggregation_rules: any[] = [
         {$match: query},
         {$skip: (page - 1) * limit},
-        {$limit: limit}
-    ]
+        {$limit: limit},
+        {
+            $lookup: {
+                from: "applications",
+                let: { jobPostingId: "$_id" }, // Reference the _id field from jobPostings
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $eq: ["$$jobPostingId", { $toObjectId: "$job_id" }], // Convert job_id to ObjectId
+                            },
+                        },
+                    },
+                ],
+                as: "applications",
+            },
+        },
+        {
+            $addFields: {
+                applicationCount: { $size: "$applications" }, // Count the number of applications
+            },
+        },
+        {
+            $unset: "applications", // Remove the applications array
+        },
+        
+    ];
 
     //Checks if user wants to view all saved jobs
     if(saved_posting_candidate_id){
@@ -159,14 +184,22 @@ export const getAllJobPostingsQueryWithSaved = async (
             let jobDisplay: any[][] = [];
             let order = Array.from(preferences.keys()).sort((a, b) => preferences[b]- preferences[a]);
             
+            //initialize the jobDisplay array with empty arrays for each preference
             for(var i = 0; i < preferences.length; i++){
                 jobDisplay[i] = [];
             }
+            //parse the job postings and push them into the corresponding category in jobDisplay
             for(var i = 0; i < jobPostings.length; i++)
             {
                 let parseJob: any = jobPostings[i];
                 jobDisplay[parseJob.category].push(parseJob);
             }
+            //desending order for the job postings
+            for(var i = 0; i < jobDisplay.length; i++){
+                jobDisplay[i].sort((a: any, b: any) => b.applicationCount - a.applicationCount);
+            }
+
+            //push the job postings into the output array in the order of the preferences
             for(var i = 0; i < order.length; i++)
             {
                 for(var j = 0; j < jobDisplay[order[i]].length; j++)

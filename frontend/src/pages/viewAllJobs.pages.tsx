@@ -43,15 +43,15 @@ const ViewAllJobs: React.FC = () => {
         let query =
           user?.userRole === "Employer" ? `?employer_id=${user._id}` : "";
         if (query === "") {
-          query = showSavedJobs
-            ? `?saved_posting_candidate_id=${user._id}`
+          query = `?user_id=${user._id}`;
+          query += showSavedJobs
+            ? `&saved_posting_candidate_id=${user._id}`
             : "";
         }
-        if (query === "") {
-          query = `?user_id=${user._id}`;
-        }
+        
         const response = await getAllJobPostings(query);
         console.log("Received response from express server with all jobs");
+        console.log(response);
         setJobs(response.jobPostings);
       } catch (error) {
         console.error("Error fetching all job postings : ", error);
