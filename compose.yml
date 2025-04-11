@@ -23,7 +23,7 @@ services:
     ports:
       - "4004:4004"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - APP_ORIGIN=http://localhost:5173
       - PORT=4004
       - MONGO_URI=mongodb://mongo:27017/test_db
