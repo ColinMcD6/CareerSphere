@@ -188,57 +188,61 @@ const TakeQuiz: React.FC = () => {
           <h2 className="card-title mb-4">{quiz.quizName}</h2>
           <form onSubmit={handleSubmit}>
             {quiz.questions.map((questionData, questionIndex) => (
-              <div
+              <fieldset
                 key={questionIndex}
-                className="mb-4 border border-secondary rounded"
+                className={`mb-4 border rounded ${
+                  questionData.chosenAnswer === null ? "border-danger" : "border-secondary"
+                }`}
+                aria-labelledby={`question-${questionIndex}`}
               >
-                <div className="mb-3">
+                <legend id={`question-${questionIndex}`} className="mb-3">
                   <h3>{questionData.questionText}</h3>
-                </div>
-                <div className="row m-3">
-                  {[0, 1].map((rowIndex) => (
-                    <div key={rowIndex} className="row mb-3">
-                      {[0, 1].map((colIndex) => {
-                        const answerIndex = rowIndex * 2 + colIndex;
-                        return (
-                          <div key={answerIndex} className="col-md-6">
-                            <label
-                              htmlFor={`answer-${questionIndex}-${answerIndex}`}
-                              className="form-label"
-                            ></label>
-                            <div className="input-group">
-                              <div
-                                id={`answer-${questionIndex}-${answerIndex}`}
-                                className="form-control read-only-input"
-                              >
-                                {questionData.options[answerIndex]}
-                              </div>
-                              <div className="input-group-text">
-                                <input
-                                  required
-                                  type="radio"
-                                  name={`correct-answer-${questionIndex}`}
-                                  className="form-check-input"
-                                  checked={
-                                    questionData.chosenAnswer === answerIndex
-                                  }
-                                  onChange={() =>
-                                    handleCorrectAnswerChange(
-                                      questionIndex,
-                                      answerIndex
-                                    )
-                                  }
-                                />
-                        
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
+                </legend>
+                {questionData.chosenAnswer === null && (
+                  <p className="text-danger">Please select an answer for this question.</p>
+                )}
+                <div className="row">
+                  {questionData.options.map((option, answerIndex) => (
+                    <div key={answerIndex} className="col-12 col-md-6 col-lg-4 mb-3">
+                      <div
+                        className={`card ${
+                          questionData.chosenAnswer === answerIndex ? "border-primary" : "border-secondary"
+                        }`}
+                        onClick={() => handleCorrectAnswerChange(questionIndex, answerIndex)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            handleCorrectAnswerChange(questionIndex, answerIndex);
+                          }
+                        }}
+                        tabIndex={0}
+                        role="radio"
+                        aria-checked={questionData.chosenAnswer === answerIndex}
+                        style={{
+                          cursor: "pointer",
+                          fontSize: "0.9rem",
+                          height: "40px",
+                          maxWidth: "200px",
+                          margin: "0 auto",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div className="card-body d-flex align-items-center p-2">
+                          <input
+                            required
+                            type="radio"
+                            name={`correct-answer-${questionIndex}`}
+                            className="form-check-input me-2"
+                            checked={questionData.chosenAnswer === answerIndex}
+                            onChange={() => handleCorrectAnswerChange(questionIndex, answerIndex)}
+                            aria-label={`Option ${answerIndex + 1}: ${option}`}
+                          />
+                          <span>{option}</span>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
-              </div>
+              </fieldset>
             ))}
             <button type="submit" className="btn btn-primary w-100">
               Submit Quiz Answers

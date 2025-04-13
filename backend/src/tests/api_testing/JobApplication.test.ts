@@ -1,16 +1,17 @@
-import request from "supertest";
-import * as db from "../db";
-import app from "../..";
-import { CREATED, OK, UNAUTHORIZED } from "../../constants/http.constants";
-import JobPostingsModel from "../../models/main/jobPostings.model";  
-import UserModel from "../../models/main/users.model";
-import path from "path";
 import fs from "fs";
-import e from "express";
-import { date } from "zod";
+import path from "path";
+import request from "supertest";
+import app from "../..";
+import { CREATED, OK } from "../../constants/http.constants";
+import JobPostingsModel from "../../models/main/jobPostings.model";
+import UserModel from "../../models/main/users.model";
+import * as db from "../db";
 
 let requestUserStuff: any;
 let accessToken: any;
+
+let requestUserStuff2: any;
+let accessToken2: any;
 describe("API Routes for Job Posting, Application, and Saving", () => {
   beforeAll(async () => {
     await db.connect();
@@ -21,11 +22,22 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         confirm_password: "12345678",
         user_role: "Candidate",
     };
+    const userData2 = {
+        username: "test_emp",
+        email: "test_emp@gmail.com",
+        password: "12345678",
+        confirm_password: "12345678",
+        user_role: "Employer",
+    };
+        
     // Signup
     const signupResponse = await request(app).post("/auth/signup").send(userData);
+    const signupResponse2 = await request(app).post("/auth/signup").send(userData2);
     // login
     const loginResponse = await request(app).post('/auth/login').send(userData);
+    const loginResponse2 = await request(app).post('/auth/login').send(userData2);
     expect(loginResponse.status).toBe(OK);
+    expect(loginResponse2.status).toBe(OK);
 
     // Get cookie
     const cookies = Array.isArray(loginResponse.headers["set-cookie"])
@@ -35,8 +47,16 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
     accessToken = cookies.find((cookie: string) =>cookie.startsWith("accessToken="));
     expect(accessToken).toBeDefined();
 
+    const cookies2 = Array.isArray(loginResponse2.headers["set-cookie"])
+    ? loginResponse2.headers["set-cookie"]
+    : [loginResponse2.headers["set-cookie"]];
+    expect(cookies2).toBeDefined();
+    accessToken2 = cookies2.find((cookie: string) =>cookie.startsWith("accessToken="));
+    expect(accessToken2).toBeDefined();
+
     // Get user information
     requestUserStuff = await request(app).get("/user").send(userData).set('Cookie', accessToken);
+    requestUserStuff2 = await request(app).get("/user").send(userData2).set('Cookie', accessToken2);
 
     const newJob1 = {
         title: "Job test 1",
@@ -89,9 +109,9 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         category: 3
     }   
     
-    const requestCreateJob1 = await request(app).post("/job/add").send({...newJob1}).set('Cookie', accessToken).expect(CREATED);
-    const requestCreateJob2 = await request(app).post("/job/add").send({...newJob2}).set('Cookie', accessToken).expect(CREATED);
-    const requestCreateJob3 = await request(app).post("/job/add").send({...newJob3}).set('Cookie', accessToken).expect(CREATED);
+    const requestCreateJob1 = await request(app).post("/job/add").send({...newJob1}).set('Cookie', accessToken2).expect(CREATED);
+    const requestCreateJob2 = await request(app).post("/job/add").send({...newJob2}).set('Cookie', accessToken2).expect(CREATED);
+    const requestCreateJob3 = await request(app).post("/job/add").send({...newJob3}).set('Cookie', accessToken2).expect(CREATED);
     
     const jobs = await JobPostingsModel.find().exec();
     expect(jobs).toHaveLength(3);
@@ -236,7 +256,7 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
             category: 3
         }
 
-        const requestCreateJob3 = await request(app).post("/job/add").send({...newJob}).set('Cookie', accessToken).expect(CREATED);
+        const requestCreateJob3 = await request(app).post("/job/add").send({...newJob}).set('Cookie', accessToken2).expect(CREATED);
         const searchForJobTest3 = await request(app).get("/job/?search=Test 4").set('Cookie', accessToken).expect(OK);
         expect(searchForJobTest3.body.jobPostings.length).toEqual(1);
         expect(searchForJobTest3.body.jobPostings[0].title).toEqual("Job test 4");
@@ -274,7 +294,7 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         const createJobApplication2 = await request(app).post("/job/applications/apply/").send({...jobApplication2}).set('Cookie', accessToken).expect(CREATED);
         const createJobApplication3 = await request(app).post("/job/applications/apply/").send({...jobApplication3}).set('Cookie', accessToken).expect(CREATED);
 
-        const requestAllApplications = await request(app).get("/job/applications/all/query?job_id=" + job._id).set('Cookie', accessToken).expect(OK);
+        const requestAllApplications = await request(app).get("/job/applications/all/query?job_id=" + job._id).set('Cookie', accessToken2).expect(OK);
 
         expect(requestAllApplications.body.applications.length).toEqual(3);
 
@@ -282,10 +302,10 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         //delete Job Application
         for(let i = 0; i < requestAllApplications.body.applications.length; i++) {
             const application = requestAllApplications.body.applications[i];
-            const requestDeleteApplication = await request(app).delete("/job/applications/delete/" + application._id).set('Cookie', accessToken).expect(OK);
+            const requestDeleteApplication = await request(app).delete("/job/applications/delete/" + application._id).set('Cookie', accessToken2).expect(OK);
         }
 
-        const requestAllApplications2 = await request(app).get("/job/applications/all/query?job_id=" + job._id).set('Cookie', accessToken).expect(OK);
+        const requestAllApplications2 = await request(app).get("/job/applications/all/query?job_id=" + job._id).set('Cookie', accessToken2).expect(OK);
 
         expect(requestAllApplications2.body.applications.length).toEqual(0);
 
@@ -299,7 +319,7 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         const response = await request(app).post('/resume/add').attach('resume', filePath).set('Cookie', accessToken).expect(200);
         // Check if the resume is in the database
 
-        const resume = await request(app).get('/resume/' + response.body.resume._id).set('Cookie', accessToken).expect(OK);
+        const resume = await request(app).get('/resume/' + response.body.resume._id).set('Cookie', accessToken2).expect(OK);
 
         expect(resume.body.pdf_name).toBe('test.pdf');
 
@@ -331,7 +351,7 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
 
         const application = requestAllApplications.body.application;
 
-        const requestEditApplication = await request(app).put("/job/applications/edit/" + application._id).send({status: "Rejected"}).set('Cookie', accessToken).expect(OK);
+        const requestEditApplication = await request(app).put("/job/applications/edit/" + application._id).send({status: "Rejected"}).set('Cookie', accessToken2).expect(OK);
 
         const requestAllApplications2 = await request(app).get("/job/" + job._id + "?candidate_id="+requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
 
@@ -440,26 +460,26 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         const createApplication3 = await request(app).post("/job/applications/apply/").send({...application3}).set('Cookie', accessToken).expect(CREATED);
         const createApplication4 = await request(app).post("/job/applications/apply/").send({...application4}).set('Cookie', accessToken).expect(CREATED);
 
-        const requestAllApplications = await request(app).get("/job/applications/all/query").set('Cookie', accessToken).expect(OK);
+        const requestAllApplications = await request(app).get("/job/applications/all/query").set('Cookie', accessToken2).expect(OK);
 
         expect(requestAllApplications.body.applications.length).toEqual(6);
 
-        const requestAllApplications2 = await request(app).get("/job/applications/all/query?candidate_id="+requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
+        const requestAllApplications2 = await request(app).get("/job/applications/all/query?candidate_id="+requestUserStuff.body._id).set('Cookie', accessToken2).expect(OK);
 
         expect(requestAllApplications2.body.applications.length).toEqual(4);
 
 
         //multiple queries
-        const requestAllApplications4 = await request(app).get("/job/applications/all/query?candidate_id="+requestUserStuff.body._id + "&employer_id=OogaBooga").set('Cookie', accessToken).expect(OK);
+        const requestAllApplications4 = await request(app).get("/job/applications/all/query?candidate_id="+requestUserStuff.body._id + "&employer_id=OogaBooga").set('Cookie', accessToken2).expect(OK);
 
 
         //delete Job Application
         for(let i = 0; i < requestAllApplications2.body.applications.length; i++) {
             const application = requestAllApplications2.body.applications[i];
-            const requestDeleteApplication = await request(app).delete("/job/applications/delete/" + application._id).set('Cookie', accessToken).expect(OK);
+            const requestDeleteApplication = await request(app).delete("/job/applications/delete/" + application._id).set('Cookie', accessToken2).expect(OK);
         }
 
-        const requestAllApplications3 = await request(app).get("/job/applications/all/query?candidate_id="+requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
+        const requestAllApplications3 = await request(app).get("/job/applications/all/query?candidate_id="+requestUserStuff.body._id).set('Cookie', accessToken2).expect(OK);
         expect(requestAllApplications3.body.applications.length).toEqual(0);
 
 

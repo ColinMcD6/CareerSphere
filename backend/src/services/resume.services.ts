@@ -1,4 +1,4 @@
-import { CONFLICT } from "../constants/http.constants";
+import { CONFLICT, NOT_FOUND } from "../constants/http.constants";
 import appAssert from "../utils/appAssert";
 import resumeDAO from "../dao/resume.dao";
 
@@ -39,6 +39,6 @@ export const createResume = async (data: CreateResumeParams) => {
  */
 export const getResume = async (id: string) => {
     const resume = await resumeDAO.findById(id);
-    appAssert(resume, CONFLICT, "Resume does not exist!");
+    appAssert(resume, NOT_FOUND, "Resume does not exist!");
     return resume;
 }

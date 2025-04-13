@@ -87,9 +87,18 @@ const ResetPassword = () => {
                 placeholder="Enter new password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
+                isInvalid={!isPasswordValid && newPassword.length > 0}
                 required
               />
+              {newPassword.length > 0 && (
+                <Form.Text className={isPasswordValid ? "text-success" : "text-danger"}>
+                  {isPasswordValid
+                    ? "✅ Password length is sufficient."
+                    : "❌ Password must be at least 8 characters long."}
+                </Form.Text>
+              )}
             </Form.Group>
+
             <Form.Group className="mb-3" controlId="confirmPassword">
               <Form.Label>Confirm Password</Form.Label>
               <Form.Control
@@ -97,9 +106,18 @@ const ResetPassword = () => {
                 placeholder="Confirm new password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                isInvalid={!doPassMatch && confirmPassword.length > 0}
                 required
               />
+              {confirmPassword.length > 0 && (
+                <Form.Text className={doPassMatch ? "text-success" : "text-danger"}>
+                  {doPassMatch
+                    ? "✅ Passwords match."
+                    : "❌ Passwords do not match."}
+                </Form.Text>
+              )}
             </Form.Group>
+
             <Button
               variant="primary"
               type="submit"
