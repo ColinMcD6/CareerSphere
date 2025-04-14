@@ -4,6 +4,7 @@ import queryClient from "../config/queryClient.config";
 import { useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import image from "../assets/Logo.png";
+
 import { useState, useEffect } from "react";
 import useUser from "../hooks/user.hooks";
 import { getAllJobPostings } from "../lib/api.lib";
@@ -30,6 +31,7 @@ const Welcome = () => {
 
 
 
+
   const navigate = useNavigate();
 
   const handleBack = async () => {
@@ -41,6 +43,7 @@ const Welcome = () => {
   const handleProfile = () => {
     navigate("/account");
   };
+
 
   const viewJobPosting = (id: string) => {
     navigate(`/view-job-posting?ID=${id}`);
@@ -75,12 +78,14 @@ const Welcome = () => {
     }, [user]);
 
 
+
   return (
     <>
       <div
         style={{ position: "absolute", top: "200px", left: "50%", transform: "translateX(-50%)", width: "300px", height: "300px", borderRadius: "100%", overflow: "hidden", display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "#f0f0f0"}}>
         <img src={image} alt="Career Sphere" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
       </div>
+
 
       {/* Job Showcase Section */}
       {

@@ -115,6 +115,7 @@ export const getAllJobPostingsQueryWithSaved = async (
     const aggregation_rules: any[] = [
         {$match: query},
         {$skip: (page - 1) * limit},
+
         {$limit: limit},
         {
             $lookup: {
@@ -184,6 +185,7 @@ export const getAllJobPostingsQueryWithSaved = async (
             let jobDisplay: any[][] = [];
             let order = Array.from(preferences.keys()).sort((a, b) => preferences[b]- preferences[a]);
             
+
             //initialize the jobDisplay array with empty arrays for each preference
             for(var i = 0; i < preferences.length; i++){
                 jobDisplay[i] = [];
@@ -194,6 +196,7 @@ export const getAllJobPostingsQueryWithSaved = async (
                 let parseJob: any = jobPostings[i];
                 jobDisplay[parseJob.category].push(parseJob);
             }
+
             //desending order for the job postings
             for(var i = 0; i < jobDisplay.length; i++){
                 jobDisplay[i].sort((a: any, b: any) => b.applicationCount - a.applicationCount);
