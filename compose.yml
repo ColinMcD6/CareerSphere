@@ -29,6 +29,11 @@ services:
       - APP_ORIGIN=http://localhost:5173
       - PORT=4004
       - MONGO_URI=mongodb://mongo:27017/test_db
+      - JWT_SECRET=myjwtsecret
+      - JWTREFRESH_SECRET=myjwtrefrestsecret
+      - SENDER_EMAIL=test
+      - API_RESEND=test
+      - RESEND_API_KEY=test
     env_file:
       - ./backend/.env
     depends_on:

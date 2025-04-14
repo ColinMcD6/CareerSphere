@@ -1,6 +1,7 @@
 name: Build and Push Docker Images
 
 on:
+  push:
   pull_request:
     branches:
       - development
@@ -11,7 +12,7 @@ on:
 jobs:
   build-and-push:
     name: Build and Push Docker Images
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     env:
@@ -29,6 +30,10 @@ jobs:
 
           # Determine the tag based on the branch
           if [[ "${{ github.ref }}" == "refs/heads/development" ]]; then
+            IMAGE_TAG="${NEW_VERSION}+dev"
+            LATEST_TAG="latest+dev"
+            TARGET="development"
+          elif [[ "${{ github.ref }}" == "refs/heads/caddy" ]]; then
             IMAGE_TAG="${NEW_VERSION}+dev"
             LATEST_TAG="latest+dev"
             TARGET="development"
