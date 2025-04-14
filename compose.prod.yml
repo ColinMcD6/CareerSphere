@@ -11,9 +11,6 @@ services:
 
   backend:
     image: colinmcd6/backend:latest
-    build:
-      context: ./backend
-      target: production
     environment:
       - NODE_ENV=production
       - APP_ORIGIN=https://${DOMAIN_NAME}

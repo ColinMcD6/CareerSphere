@@ -33,8 +33,8 @@ jobs:
           docker build \
           --target production \
           --build-arg VITE_API_URL=https://api.career-sphere.me \
-          -t colinmcd6/frontend:latest ./frontend
-          docker push colinmcd6/frontend:latest
+          -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest ./frontend
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
 
       - name: Build and Push Backend Image
         run: |
@@ -42,3 +42,16 @@ jobs:
           --target production \
           -t ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest ./backend
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest
+
+      - name: Deploy to DigitalOcean
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.DIGITAL_OCEAN_HOST }}
+          username: ${{ secrets.DIGITAL_OCEAN_USER }}
+          key: ${{ secrets.DIGITAL_OCEAN_SSH_KEY }}
+          port: 22
+          script: |
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest
+            docker compose -f ~/var/www/CareerSphere/compose.prod.yml down
+            docker compose -f ~/var/www/CareerSphere/compose.prod.yml up -d
