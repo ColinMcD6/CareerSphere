@@ -43,7 +43,7 @@ jobs:
             IMAGE_TAG="${NEW_VERSION}"
             LATEST_TAG="latest"
             TARGET="production"
-            VITE_API_URL=https://api.career-sphere.me
+            VITE_API_URL="https://api.career-sphere.me"
           fi
 
           # Output the tag
