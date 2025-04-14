@@ -1,10 +1,11 @@
 services:
   frontend:
-    build:
-      context: ./frontend
-      target: development
-      args:
-        VITE_API_URL: https://localhost:4004
+    image: colinmcd6/frontend:latest+dev
+    # build:
+    #   context: ./frontend
+    #   target: development
+    #   args:
+    #     VITE_API_URL: https://localhost:4004
     ports:
       - "5173:5173"
     volumes:
@@ -17,9 +18,10 @@ services:
       - app
 
   backend:
-    build:
-      context: ./backend
-      target: development
+    image: colinmcd6/backend:latest+dev
+    # build:
+    #   context: ./backend
+    #   target: development
     ports:
       - "4004:4004"
     environment:
