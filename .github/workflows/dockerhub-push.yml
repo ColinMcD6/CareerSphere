@@ -33,20 +33,24 @@ jobs:
             IMAGE_TAG="${NEW_VERSION}-dev"
             LATEST_TAG="latest-dev"
             TARGET="development"
+            VITE_API_URL="https://localhost:4004"
           elif [[ "${{ github.ref }}" == "refs/heads/caddy" ]]; then
             IMAGE_TAG="${NEW_VERSION}-dev"
             LATEST_TAG="latest-dev"
             TARGET="development"
+            VITE_API_URL="https://localhost:4004"
           elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             IMAGE_TAG="${NEW_VERSION}"
             LATEST_TAG="latest"
             TARGET="production"
+            VITE_API_URL=https://api.career-sphere.me
           fi
 
           # Output the tag
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
           echo "LATEST_TAG=$NEW_VERSION" >> $GITHUB_ENV
           echo "TARGET=$TARGET" >> $GITHUB_ENV
+          echo "VITE_API_URL=$VITE_API_URL" >> $GITHUB_ENV
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -58,7 +62,7 @@ jobs:
         run: |
           docker build \
             --target ${{ env.TARGET }} \
-            --build-arg VITE_API_URL=https://api.career-sphere.me \
+            --build-arg VITE_API_URL=${{ env.VITE_API_URL }} \
             -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ env.IMAGE_TAG }} \
             -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ env.LATEST_TAG }} ./frontend
 
