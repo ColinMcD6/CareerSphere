@@ -48,7 +48,7 @@ jobs:
 
           # Output the tag
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-          echo "LATEST_TAG=$NEW_VERSION" >> $GITHUB_ENV
+          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
           echo "TARGET=$TARGET" >> $GITHUB_ENV
           echo "VITE_API_URL=$VITE_API_URL" >> $GITHUB_ENV
 
