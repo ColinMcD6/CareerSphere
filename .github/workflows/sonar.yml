@@ -25,3 +25,4 @@ jobs:
             -Dsonar.exclusions=**/test/**,**/tests/**,**/*.test.js
             -Dsonar.qualitygate.wait=false
             -Dsonar.analysis.force=true
+

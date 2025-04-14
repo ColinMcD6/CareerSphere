@@ -115,8 +115,10 @@ Instructions: Perform the Logout Functionality acceptance test. Now go to the to
 ##### Acceptance Tests
 1. Employer View
     - A user can see “Edit Profile” option as an employer 
-    - Employers see "Post Job" and "View Applicants" but no "Apply" button. 
-Instructions: Open the website and click the button labeled "Need to Create Account?" enter the username "test2" to the "Username" field, the email address "test2@gmail.com" to the "Email Address" field, and the password "test1234" into both the "Password" and "Confirm Password" fields. Press the Dot next to the word "Employer" and ensure it is blue. Press the "Sign Up" button. You should be informed of a successful account creation and sent back to the previous screen, Enter the given email to the "Email" field and the password to the "Password" field. Press the "Log In" button and expect to be taken to the home screen. Near the top right of the screen you will see a briefcase and the word "Jobs", click on that. You will be taken to a new screen with the words "My Job Postings" at the top. You should also see a green button labelled "Create" and a search bar. There should be no postings on this page. This concludes the test.
+
+    - Employers can create but not apply for jobs 
+Instructions: Open the website and click the button labeled "Need to Create Account?" enter the username "test2" to the "Username" field, the email address "test2@gmail.com" to the "Email Address" field, and the password "test1234" into both the "Password" and "Confirm Password" fields. Press the Dot next to the word "Employer" and ensure it is blue. Press the "Sign Up" button. You should be informed of a successful account creation and sent back to the previous screen, Enter the given email to the "Email" field and the password to the "Password" field. Press the "Log In" button and expect to be taken to the home screen. Near the top right of the screen you will see a briefcase and the word "Jobs", click on that. You will be taken to a new screen with the words "My Job Postings" at the top. You should also see a green button with a + symbol and a search bar with the words "Search jobs...". There should be no postings on this page. This concludes the test.
+
 
 2. Employer Profile Update 
     - An Employer updates their company’s location to "New York."   
@@ -126,11 +128,13 @@ Instructions: Open the website and click the button labeled "Need to Create Acco
 3. Post a New Job 
     - An Employer fills out a job form (title: "Frontend Developer," location: "Remote").   
     - The job appears in the public "Job Listings" page.   
-Instructions: Perform the Employer View acceptance test, click the "Create" button and expect to be shown a form. Enter in order from top to bottom: "Frontend Developer", "title", "description satisfying requirement of 50 characters", nothing, nothing, nothing, "Remote", "skills", "education". Click the round button next to the word "Temporary", followed by the one next to "Technology". Click the "Create Job Posting" button at the bottom. Observe a message confirming that the job posting was created, and that there is now a job labeled "Frontend Developer" in the list of postings to conclude the test.
+
+Instructions: Perform the Employer View acceptance test, click the green "+" button and expect to be shown a form. Enter in order from top to bottom: "Frontend Developer", "title", "description satisfying requirement of 50 characters", nothing, nothing, nothing, "Remote", "skills", "education". Click the round button next to the word "Temporary", followed by the one next to "Technology". Click the "Create Job Posting" button at the bottom. Observe a message confirming that the job posting was created, and that there is now a job labeled "Frontend Developer" in the list of postings to conclude the test.
 
 4. Track Applicants 
     - An Employer can see a list of Candidates who applied, with usernames below the specific job posting.   
-Instructions: Perform the Post a New Job acceptance test. Near the top right of the screen you will see a house symbol and the word "Home", click on it. You will be sent to a new screen with a grey circle containing the simplified outline of a person. Click on that, followed by the words "Log Out". Perform the Login Success acceptance test from feature 1. Click on the "Jobs" button with the briefcase again and expect to be shown the job named "title of job". Click on the blue "View Job Posting" button and expect to be shown the job details you entered before. Now click on the blue "Apply" button. If you are willing and able to enter a PDF into the website, do so by clicking the "Browse..." button and selecting it. If you are not, end the test here. If you submitted the file, press the "Submit" button. Now press the "Home" button and then log out using the grey circle once again. Log In once more using the credentials from Employer View, and click on the "Jobs" button in the top right. Click on the "View Job Posting" button and scroll downward. You should see that you have 1 applicant, along with a horizontal rectangle with the name "test1". Click on this to show the details of the candidate you created and then the "View Resume" button in order to verify the file is correct and complete the test.
+Instructions: Perform the Post a New Job acceptance test. Near the top right of the screen you will see a house symbol and the word "Home", click on it. You will be sent to a new screen with a grey circle containing the simplified outline of a person. Click on that, followed by the words "Log Out". Perform the Login Success acceptance test from feature 1. Click on the "Jobs" button with the briefcase again and expect to be shown the job named "title of job". Click on the blue "View" button and expect to be shown the job details you entered before. Now click on the blue "Apply" button. If you are willing and able to enter a PDF into the website, do so by clicking the "Browse..." button and selecting it. If you are not, end the test here. If you submitted the file, press the "Submit" button. Now press the "Home" button and then log out using the grey circle once again. Log In once more using the credentials from Employer View, and click on the "Jobs" button in the top right. Click on the "View" button and scroll downward. You should see that you have 1 applicant, along with a horizontal rectangle with the name "test1" and a blue button "View Details". Click on this button to show the details of the candidate you created and then the "View Resume" button in order to verify the file is correct and complete the test.
+
 
 #### 3. Candidate Portal
 ##### Unit Tests
@@ -171,8 +175,10 @@ Instructions: Perform the Post a New Job acceptance test. Near the top right of 
 ##### Acceptance Tests
 1. Candidate View  
     - A user can see “Edit Profile” option as a candidate 
-    - Candidates see "Apply for Jobs" but no "Create Job" button.  
-Instructions: Perform the Login Success acceptance test from feature 1. Near the top right of your screen you will see a suitcase symbol next to the word "Jobs", click on it. You should be taken to a new screen with the words "All Job Postings" in blue, along with a smaller button for "Saved Jobs" and a search bar. This should be all that is there, concluding the test.
+
+    - Candidates can apply for jobs and save jobs but not create them.  
+Instructions: Perform the Login Success acceptance test from feature 1. Near the top right of your screen you will see a suitcase symbol next to the word "Jobs", click on it. You should be taken to a new screen with the words "All Job Postings" in blue, along with a smaller button for "Show Saved Jobs" and a search bar reading "Search jobs...". This should be all that is there, concluding the test.
+
 
 2. Update Profile Details 
     - A Candidate adds their "Software Engineering" skills and saves the profile.   
@@ -183,7 +189,9 @@ Instructions: Perform the Login Success acceptance test from feature 1. at the b
 3. View Job Details
     - A Candidate clicks on a job titled "Frontend Developer."   
     - They see the full description, salary, and location.   
-Instructions: Complete the Track Applicants acceptance test from feature 2 up to and including the part where you click on the "View Job Posting" button as a candidate. Observe the details are displayed as they were entered.
+
+Instructions: Complete the Track Applicants acceptance test from feature 2 up to and including the part where you click on the "View" button as a candidate. Observe the details are displayed as they were entered.
+
 
 4. Resume Upload Success   
     - A Candidate uploads a PDF resume. 
@@ -191,7 +199,9 @@ Instructions: Continue from View Job Details and press the "Apply" button. If yo
 
 5. Apply for a Job 
     - A Candidate clicks "Apply" on a job, uploads their resume, and submits. The apply button changes to applied. 
-Instructions: Continue from Resume Upload Success and observe that upon pressing submit, the "Apply" button changes to "Applied".
+
+Instructions: Continue from Resume Upload Success and observe that upon pressing submit, the "Apply" button changes to "Applied" and the "Save" button changes to "Unsave".
+
 
 6. View Application Status 
     - A Candidate checks "My Applications" and sees their status: "Pending," "Accepted". 
@@ -230,12 +240,16 @@ Instructions: Continue from Apply for a Job, look to the top left of the window 
 1. Quiz Creation and Association
     - An employer creates a quiz for a job posting using the quiz creation form.
     - The quiz is successfully linked to the job posting and a confirmation message is displayed.
-Instructions: Perform the Post a New Job acceptance test from feature 2. Click on the "View Job Posting" button next to the title. Look to the middle lower section of the screen for a blue button labeled "Create new Quiz for job posting" and click on it. You will see a new window pop up. At the top is a field labelled "Enter a Name for the quiz" into which you will write "quiz". Underneath this is a field labeled "Question 1" into which you will write "question". There are 4 fields below this labelled as answers 1 through 4. Into answer 1, enter the word "correct". Into the other 3, enter the word "incorrect". Click the round button next to answer 1 labeled "Correct" such that it becomes blue. If you so desire, you can click the "Add Another Question" button and repeat the previous step. Click the blue button labeled "Create Quiz". You should be informed that the quiz was created successfully and added to the job posting. Click the "Jobs" button in the top right and then "View Job Posting" on the job. Observe that "quiz" is now visible under "Existing Quizzes".
+
+Instructions: Perform the Post a New Job acceptance test from feature 2. Click on the "View" button next to the title. Look to the middle lower section of the screen for a blue button labeled "Create New Quiz" and click on it. You will see a new window pop up. At the top is a field with a red error label "Quiz name is required." into which you will write "quiz". Underneath this is a fillable field labeled "Enter Question 1" into which you will write "question". There are 4 fields below this labelled as answers 1 through 4. Into answer 1, enter the word "correct". Into the other 3, enter the word "incorrect". Click the round button next to answer 1 labeled "Correct" such that it becomes blue. If you so desire, you can click the green "+" button below the answers and repeat the previous step. Click the blue button labeled "Create Quiz". You should be informed that the quiz was created successfully and added to the job posting. Click the "Jobs" button in the top right and then "View" on the job. Observe that "quiz" is now visible under "Existing Quizzes".
+
 
 2. Quiz Submission and Scoring
     - A candidate submits their responses to a quiz.
     - The system records the submission, calculates the score, and displays a success confirmation.
-Instructions: Continue from Quiz Creation and Association. Click on the home button in the top right, followed by the grey circle with the head and shoulders outline in the bottom left. Click "Log Out". Perform the Candidate View acceptance test from feature 3. Click on the "View Job Posting" button next to the "Frontend Developer" job. Click on the "Take Quiz" button in the bottom right of the job window. Click on the round button near the top left answer so that it turns blue. Click on the "Submit Quiz Answers" button and be informed that you have taken the quiz successfully, and that your answer was recorded.
+
+Instructions: Continue from Quiz Creation and Association. Click on the home button in the top right, followed by the grey circle with the head and shoulders outline in the bottom left. Click "Log Out". Perform the Candidate View acceptance test from feature 3. Click on the "View" button next to the "Frontend Developer" job. Click on the "Take Quiz" button in the bottom right of the job window. Click on the round button near the top left answer so that it turns blue. Click on the "Submit Quiz Answers" button and be informed that you have taken the quiz successfully, and that your answer was recorded.
+
 
 3. Duplicate Submission Prevention
     - A candidate attempts to submit responses for the same quiz more than once.
@@ -244,7 +258,9 @@ Instructions: Continue from Quiz Submission and Scoring and observe that the "Ta
 
 4. Quiz Retrieval and Display
     - When a valid job ID and quiz ID are provided, the correct quiz details and all associated submissions (with candidate names and scores) are retrieved and displayed.
-Instructions: Continue from Duplicate Submission Prevention. Click the "Home" button in the top right, followed by the grey circle with the head and shoulders outline in the bottom left. Click "Log Out". Perform the Employer View acceptance test from feature 2. Click on the "View Job Posting" button next to the "Frontend Developer" job. Click on the green "View Results" button next to "quiz". Observe the paired results of "test1" and "1" under "Username" and "Score" respectively to conclude these tests.
+
+Instructions: Continue from Duplicate Submission Prevention. Click the "Home" button in the top right, followed by the grey circle with the head and shoulders outline in the bottom left. Click "Log Out". Perform the Employer View acceptance test from feature 2. Click on the "View" button next to the "Frontend Developer" job. Click on the green "View Results" button next to "quiz". Observe the paired results of "test1" and "1" under "Username" and "Score" respectively to conclude these tests.
+
 
 #### 5. Recommendation Engine
 ##### Unit Tests
@@ -277,7 +293,9 @@ Instructions: Perform the Post a New Job acceptance test from feature 2. Now rep
 2. Increased Visibility of Preferred Job Types
     - A candidate applies for a job in a specific category (for example, a job related to "business").
     - Subsequent job searches show more postings from that category, making them more prominent in the search list.
-Instructions: Continue from Neutral Recommendations Without Applications. Using Apply for a Job from feature 3 as a guide, apply for "Test Job 2". Click on the "Jobs" button once more to observe that "Test Job 2" is now displayed above "Frontend Developer".
+
+Instructions: Continue from Neutral Recommendations Without Applications. Using Apply for a Job from feature 3 as a guide, apply for "Test Job 2". Click on the "Jobs" button once more to observe that "Test Job 2" is now displayed above "Frontend Developer". Now click on the "Home" button and observe that the displayed jobs below the logo now have "Test Job 2" in the center.
+
 
 3. Dynamic Reordering Based on Application History
     - The recommendations update consistently on each application, adjusting ordering depending on current habits
@@ -314,7 +332,9 @@ Instructions: Continue from Display All Job Postings. type the word "Front" into
 
 3. No Matching Results Message
     - When a candidate enters a search term that does not match any postings, the message "No available job that matches the search" is displayed.
-Instructions: Continue from Real-TIme Search Filtering. erase the word "Front" and replace it with the word "Incorrect". Notice that the jobs are gone and you are informed that there is "No available job that matches the search!".
+
+Instructions: Continue from Real-Time Search Filtering. erase the word "Front" and replace it with the word "Incorrect". Notice that the jobs are gone and you are informed that there is "No available job that matches the search!".
+
 
 4. Case-Insensitive Search
     - The candidate enters search queries in different cases (e.g., "tech corp" and "Tech Corp") and receives consistent results.
