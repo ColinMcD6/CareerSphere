@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: colinmcd6/frontend:latest+dev
+    image: colinmcd6/frontend:latest-dev
     # build:
     #   context: ./frontend
     #   target: development
@@ -18,7 +18,7 @@ services:
       - app
 
   backend:
-    image: colinmcd6/backend:latest+dev
+    image: colinmcd6/backend:latest-dev
     # build:
     #   context: ./backend
     #   target: development

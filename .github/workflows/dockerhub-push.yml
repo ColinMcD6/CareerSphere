@@ -30,12 +30,12 @@ jobs:
 
           # Determine the tag based on the branch
           if [[ "${{ github.ref }}" == "refs/heads/development" ]]; then
-            IMAGE_TAG="${NEW_VERSION}+dev"
-            LATEST_TAG="latest+dev"
+            IMAGE_TAG="${NEW_VERSION}-dev"
+            LATEST_TAG="latest-dev"
             TARGET="development"
           elif [[ "${{ github.ref }}" == "refs/heads/caddy" ]]; then
-            IMAGE_TAG="${NEW_VERSION}+dev"
-            LATEST_TAG="latest+dev"
+            IMAGE_TAG="${NEW_VERSION}-dev"
+            LATEST_TAG="latest-dev"
             TARGET="development"
           elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             IMAGE_TAG="${NEW_VERSION}"
