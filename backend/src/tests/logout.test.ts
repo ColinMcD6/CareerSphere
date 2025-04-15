@@ -1,6 +1,6 @@
 import * as db from "./db";
 import { logoutController } from "../controllers/auth_controllers/logout.controller";
-import sessionModel from "../models/one-to-many/session.model";
+import sessionModel from "../models/supportModels/session.model";
 import { NextFunction, Request, Response } from "express";
 import { signupAccount, loginAccount } from "../services/auth.services";
 

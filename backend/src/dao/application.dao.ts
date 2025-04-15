@@ -1,5 +1,5 @@
 import { Model } from "mongoose";
-import ApplicationModel, { ApplicationDocument } from "../models/many-to-many/application.model";
+import ApplicationModel, { ApplicationDocument } from "../models/supportModels/application.model";
 
 
 /**

@@ -1,5 +1,5 @@
 import { Model } from "mongoose";
-import SaveJobPostingsModel, { SaveJobPostingsDocument } from "../models/many-to-many/saveJobPostings.model";
+import SaveJobPostingsModel, { SaveJobPostingsDocument } from "../models/supportModels/saveJobPostings.model";
 import mongoose from "mongoose";
 
 

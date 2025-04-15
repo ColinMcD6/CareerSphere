@@ -1,5 +1,5 @@
 import { Model } from "mongoose";
-import sessionModel, { sessionDocument } from "../models/one-to-many/session.model";
+import sessionModel, { sessionDocument } from "../models/supportModels/session.model";
 /**
  * * SessionDAO Class
  * * @description - This class handles the data access operations for the Session model.

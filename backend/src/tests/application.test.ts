@@ -9,7 +9,7 @@ import {
 import * as db from './db';
 
 
-import ApplicationModel from "../models/many-to-many/application.model";
+import ApplicationModel from "../models/supportModels/application.model";
 import UserModel from '../models/main/users.model';
 
 describe('Test adding Application', () => {
@@ -87,10 +87,10 @@ describe('Test adding Application', () => {
 
         const expected = {
             _id: application._id,
-            job_id: application.job_id,
-            employer_id: application.employer_id,
-            candidate_id: application.candidate_id,
-            resume_id: application.resume_id,
+            job_id: application.jobId,
+            employer_id: application.employerId,
+            candidate_id: application.candidateId,
+            resume_id: application.resumeId,
             dateApplied: application.dateApplied,
             status: application.status,
             __v: application.__v,

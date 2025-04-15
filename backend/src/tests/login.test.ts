@@ -1,5 +1,5 @@
 import * as db from './db'
-import sessionModel from "../models/one-to-many/session.model";
+import sessionModel from "../models/supportModels/session.model";
 import UserModel from "../models/main/users.model";
 import { loginAccount } from "../services/auth.services";
 

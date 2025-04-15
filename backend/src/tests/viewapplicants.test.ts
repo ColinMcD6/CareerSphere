@@ -1,6 +1,6 @@
 import UserModel from '../models/main/users.model';
 import * as db from './db'
-import ApplicationModel from '../models/many-to-many/application.model';
+import ApplicationModel from '../models/supportModels/application.model';
 import { getJobPostingApplicationsQuery } from '../services/jobPostings.services';
 
 describe("getJobPostingApplicationsQuery", () => {
@@ -33,17 +33,17 @@ describe("getJobPostingApplicationsQuery", () => {
 
         await ApplicationModel.create([
             {
-                job_id: "job1",
-                employer_id: "emp1",
-                candidate_id: mockUser1._id,
-                resume_id: "res1",
+                jobId: "job1",
+                employerId: "emp1",
+                candidateId: mockUser1._id,
+                resumeId: "res1",
                 status: "Pending",
             },
             {
-                job_id: "job2",
-                employer_id: "emp2",
-                candidate_id: mockUser2._id,
-                resume_id: "res2",
+                jobId: "job2",
+                employerId: "emp2",
+                candidateId: mockUser2._id,
+                resumeId: "res2",
                 status: "Accepted",
             }
         ]);
@@ -70,17 +70,17 @@ describe("getJobPostingApplicationsQuery", () => {
 
         await ApplicationModel.create([
             {
-                job_id: "job1",
-                employer_id: "emp1",
-                candidate_id: mockUser1._id,
-                resume_id: "res1",
+                jobId: "job1",
+                employerId: "emp1",
+                candidateId: mockUser1._id,
+                resumeId: "res1",
                 status: "Pending",
             },
             {
-                job_id: "job2",
-                employer_id: "emp2",
-                candidate_id: mockUser2._id,
-                resume_id: "res2",
+                jobId: "job2",
+                employerId: "emp2",
+                candidateId: mockUser2._id,
+                resumeId: "res2",
                 status: "Accepted",
             }
         ]);

@@ -9,7 +9,7 @@ import * as db from './db';
 import express from 'express';
 import request from 'supertest';
 import JobPostingsModel from '../models/main/jobPostings.model';
-import SaveJobPostingsModel from '../models/many-to-many/saveJobPostings.model';
+import SaveJobPostingsModel from '../models/supportModels/saveJobPostings.model';
 import UserModel from '../models/main/users.model';
 import supertest = require('supertest');
 
@@ -129,13 +129,13 @@ describe('Testing Saved Job Postings', () => {
 
 
         const saveJob = await SaveJobPostingsModel.create({
-            job_id: jobPosting._id,
-            candidate_id: newuser2._id
+            jobId: jobPosting._id,
+            candidateId: newuser2._id
         });
 
         const saveJob2 = await SaveJobPostingsModel.create({
-            job_id: jobPosting2._id,
-            candidate_id: newuser2._id
+            jobId: jobPosting2._id,
+            candidateId: newuser2._id
         });
 
         const response = await request(app).get("/job?saved_posting_candidate_id=" + newuser2._id).expect(200);
@@ -200,7 +200,7 @@ describe('Testing Saved Job Postings', () => {
 
         expect(findJob).not.toBeNull();
         if(findJob && jobPosting) {
-            expect((findJob.job_id as unknown as string).toString()).toBe((jobPosting._id as unknown as string).toString());
+            expect((findJob.jobId as unknown as string).toString()).toBe((jobPosting._id as unknown as string).toString());
         }
         
     })

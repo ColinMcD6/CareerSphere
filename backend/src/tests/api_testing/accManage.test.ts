@@ -3,7 +3,7 @@ import * as db from '../db'
 import app from "../..";
 import { CREATED, OK, UNAUTHORIZED } from "../../constants/http.constants";
 import UserModel from "../../models/main/users.model";
-import verificationModel from "../../models/one-to-many/verify.model";
+import verificationModel from "../../models/supportModels/verify.model";
 import verificationType from "../../constants/verificationTyes.constants";
 import { oneyearfromnow } from "../../utils/auth_helpers/calc";
 

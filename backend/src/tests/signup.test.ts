@@ -1,7 +1,7 @@
 import * as db from './db'
-import sessionModel from "../models/one-to-many/session.model";
+import sessionModel from "../models/supportModels/session.model";
 import UserModel from "../models/main/users.model";
-import verificationModel from "../models/one-to-many/verify.model";
+import verificationModel from "../models/supportModels/verify.model";
 import { signupAccount } from "../services/auth.services";
 import verificationType from '../constants/verificationTyes.constants';
 

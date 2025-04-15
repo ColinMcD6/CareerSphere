@@ -63,12 +63,12 @@ describe('Test adding resume', () => {
         // Check if the resume is in the database
         const resume = await ResumeModel.find().exec();
         expect(resume).toHaveLength(1);
-        expect(resume[0].pdf_name).toBe('test.pdf');
+        expect(resume[0].pdfName).toBe('test.pdf');
 
         expect(response.body.resume).toHaveProperty('pdf_name', 'test.pdf'); // Adjust the expected file name
         expect(response.body.resume).toHaveProperty('path', './resume/uploads/');
     
-        const uploadedFilePath = path.join(__dirname, '../../resume/uploads/', resume[0].file_name);
+        const uploadedFilePath = path.join(__dirname, '../../resume/uploads/', resume[0].fileName);
         const fileExists = fs.existsSync(uploadedFilePath);
         expect(fileExists).toBe(true);
         

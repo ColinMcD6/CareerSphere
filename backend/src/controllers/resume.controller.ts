@@ -9,8 +9,8 @@ import catchErrors from "../utils/catchErrors";
 
 
 const resumeSchema = z.object({
-    pdf_name: z.string(),
-    file_name: z.string(),
+    pdfName: z.string(),
+    fileName: z.string(),
     path: z.string(),
     dateUploaded: z.date(),
 })
@@ -26,13 +26,13 @@ const resumeSchema = z.object({
 export const addResumeHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     console.log("Adding resume");
     const resume = {
-        pdf_name: req.file?.originalname,
-        file_name: req.file?.filename,
+        pdfName: req.file?.originalname,
+        fileName: req.file?.filename,
         path: req.file?.destination, // Save the file path or any other relevant info
         dateUploaded: new Date(), // Set the current date
     };
     //check if file is pdf
-    if (!resume.pdf_name && !(resume.pdf_name as string).endsWith('.pdf')) {
+    if (!resume.pdfName && !(resume.pdfName as string).endsWith('.pdf')) {
         res.status(400).json({ message: "File is not a pdf" });
     }
     else{
@@ -53,8 +53,8 @@ export const addResumeHandler = catchErrors(async (req: Request, res: Response, 
 export const getResumeDownloadHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
         const id = req.params.id;
         const resume = await getResume(id);
-        const directory = 'resume\\uploads\\' + resume.file_name;
-        res.download(directory,resume.file_name, err => {
+        const directory = 'resume\\uploads\\' + resume.fileName;
+        res.download(directory,resume.fileName, err => {
             if (err) {
                 console.log(err);
             }

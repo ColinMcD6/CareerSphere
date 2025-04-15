@@ -19,15 +19,15 @@ import catchErrors from "../utils/catchErrors";
 import JobPostingValidation from "../utils/JobPostingValidation"
 
 const saveJobPostingModel = z.object({
-    job_id: z.string().min(1).max(225),
-    candidate_id: z.string().min(1).max(225)
+    jobId: z.string().min(1).max(225),
+    candidateId: z.string().min(1).max(225)
 })
   
 const jobApplicationModel = z.object({
-    job_id: z.string().min(1).max(225),
-    employer_id: z.string().min(1).max(225),
-    candidate_id: z.string().min(1).max(225),
-    resume_id: z.string().min(1).max(225),
+    jobId: z.string().min(1).max(225),
+    employerId: z.string().min(1).max(225),
+    candidateId: z.string().min(1).max(225),
+    resumeId: z.string().min(1).max(225),
     dateApplied: z.date(),
     status: z.enum(['Pending', 'Accepted', 'Rejected'])
 })
@@ -133,8 +133,8 @@ export const saveJobPostingHandler = catchErrors(async (req: Request, res: Respo
     console.log("Received a request to save a job posting");
     
     const saved_posting = {
-        job_id: req.body.job_id,
-        candidate_id: req.body.candidate_id,
+        jobId: req.body.job_id,
+        candidateId: req.body.candidate_id,
     }
     const request = saveJobPostingModel.parse(saved_posting);
     const savedJob = await saveJobPosting(request);
@@ -165,9 +165,9 @@ export const unsaveJobPostingHandler = catchErrors(async (req: Request, res: Res
  * * @throws {Error} - Throws an error if the saved job postings retrieval fails.
  */
 export const getSavedJobPostingsHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
-    const candidate_id = req.query.candidate_id;
-    const job_id = req.query.job_id;
-    const savedPostings = await getSavedJobPostings(candidate_id, job_id);
+    const candidateId = req.query.candidate_id;
+    const jobId = req.query.job_id;
+    const savedPostings = await getSavedJobPostings(candidateId, jobId);
     res.status(OK).json(savedPostings);
 })
 
@@ -184,10 +184,10 @@ export const getSavedJobPostingsHandler = catchErrors(async (req: Request, res: 
 export const addJobPostingApplicationHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     console.log("Received a request to create a new job application");
     const jobApplication = {
-        job_id: req.body.job_id,
-        employer_id: req.body.employer_id,
-        candidate_id: req.body.candidate_id,
-        resume_id: req.body.resume_id,
+        jobId: req.body.job_id,
+        employerId: req.body.employer_id,
+        candidateId: req.body.candidate_id,
+        resumeId: req.body.resume_id,
         dateApplied: new Date(),
         status: "Pending"
     }
