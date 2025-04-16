@@ -522,7 +522,7 @@ Below are the core features and how we plan to test them. More details will be a
    - _Steps_:
        1. Continue from the previous test or `Acceptance Test 1`.
        2. Delete the word “Back” from the search bar or ensure the search bar is empty.
-       3. Type “Incorrect” in the search bar ensuring that "Incorrect" phrase is not present in any job title, description or location.
+       3. Type “Incorrect” in the search bar ensuring that "Incorrect" phrase is not present in any job title, description, location, employer name or qualification.
    - _Expected Result_:
        - No job postings are displayed.
        - A message appears: “No available job that matches the search!".
