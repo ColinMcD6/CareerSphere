@@ -1,57 +1,53 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Container, Row, Col, Form, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { checklogIn } from "../lib/api.lib";
+import useUser from "../hooks/user.hooks"; // Import the useUser hook
 
 const LogIn = () => {
   const navigate = useNavigate();
+  const { user, isLoading } = useUser(); // Get user and loading state from the hook
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [error, setError] = useState<string | null>(null);
 
+  // Redirect to Welcome page if the user is already logged in
+  useEffect(() => {
+    if (!isLoading && user) {
+      navigate("/"); // Redirect to Welcome page
+    }
+  }, [isLoading, user, navigate]);
 
-  /*
-  Handler function for form submission
-  Updates the formData state with the user's input values.
-  This function is called whenever the user types in the input fields.
-  */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError(null); // Clear error when user starts typing
   };
 
-
-  /*
-  Handler function for form submission
-  This function prevents the default form submission behavior,
-  sets the loading state to true,
-  and calls the checklogIn function with the user's email and password.
-  If the login is successful, it navigates to the home page.
-  If there is an error, it sets the error state to display an error message.
-  */
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
       await checklogIn({ email: formData.email, password: formData.password });
-      navigate("/");
+      navigate("/"); // Navigate to Welcome page after successful login
     } catch (error: any) {
       setError("Invalid email or password. Please try again.");
     }
   };
 
-  // Email validation 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
   const isPasswordValid = formData.password.length >= 8;
   const isFormValid = isEmailValid && isPasswordValid;
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Show loading state while checking user
+  }
 
   return (
     <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
       <Row className="w-100">
         <Col xs={12} md={6} lg={4} className="mx-auto">
           <h3 className="text-center mb-4">Log In</h3>
-          {/* General error message */}
           {error && <Alert variant="danger" className="text-center">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="inputEmail">
