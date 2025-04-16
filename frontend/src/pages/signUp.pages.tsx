@@ -47,6 +47,7 @@ const SignUp = () => {
   };
 
   // Email validation
+  const isUsernameValid = formData.username.length > 5;
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
   const isPasswordValid = formData.password.length >= 8;
   const doPasswordsMatch = formData.password === formData.confirmPassword;
@@ -71,7 +72,11 @@ const SignUp = () => {
                 value={formData.username}
                 onChange={handleChange}
                 required
+                isInvalid={formData.username.length > 0 && !isUsernameValid}
               />
+              <Form.Control.Feedback type="invalid">
+                Username must be at least 5 characters long.
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3" controlId="inputEmail">
               <Form.Label>Email address</Form.Label>
