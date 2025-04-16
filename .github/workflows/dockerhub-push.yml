@@ -28,6 +28,8 @@ jobs:
           # Read the current version
           NEW_VERSION=$(cat version.txt)
 
+          echo "github.base.ref=${{ github.base.ref }}"
+          echo "github.ref=${{ github.ref }}"
 
           # Determine the tag based on the branch
           if [[ "${{ github.base.ref }}" == "refs/heads/development" ]]; then
@@ -35,7 +37,7 @@ jobs:
             LATEST_TAG="latest-dev"
             TARGET="development"
             VITE_API_URL="https://localhost:4004"
-          if [[ "${{ github.base.ref }}" == "refs/heads/docker-fix2" ]]; then
+          elif [[ "${{ github.base.ref }}" == "refs/heads/docker-fix2" ]]; then
             IMAGE_TAG="${NEW_VERSION}-dev"
             LATEST_TAG="latest-dev"
             TARGET="development"
@@ -48,6 +50,10 @@ jobs:
           fi
 
           # Output the tag
+          echo "IMAGE_TAG=$IMAGE_TAG"
+          echo "LATEST_TAG=$LATEST_TAG"
+          echo "TARGET=$TARGET"
+          echo "VITE_API_URL=$VITE_API_URL"
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
           echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
           echo "TARGET=$TARGET" >> $GITHUB_ENV
