@@ -152,7 +152,7 @@ export const getAllJobPostingsQueryWithSaved = async (
                     from: "savejobpostings",
                     let: { jobPostingId: "$_id" },
                     pipeline: [
-                        { $match: { $expr: { $eq: ["$candidateIdd", savedPostingCandidateId] } } },
+                        { $match: { $expr: { $eq: ["$candidateId", savedPostingCandidateId] } } },
                         { $match: { $expr: { $eq: [{ $toObjectId: "$jobId" }, "$$jobPostingId"] } } } // Ensure job_id is compared as ObjectId
                     ],
                     as: "savedPosting",
