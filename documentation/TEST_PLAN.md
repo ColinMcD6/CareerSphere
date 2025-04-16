@@ -507,13 +507,9 @@ Below are the core features and how we plan to test them. More details will be a
 2. **Real-Time Search Filtering**
    - _Objective_: Confirm that typing in the search bar filters job postings in real-time.
    - _Steps_:
-       1. Ensure you are logged in as a Candidate and on the Jobs page.
-       2. In the search bar, type the term “Back”.
-       3. Create another job posting titled "Test Job 3".
-       4. Log out.
-       5. Log in as a Candidate.
-       6. Navigate to the Jobs page.
-       7. Ensure the search bar is empty.
+       1. Continue from the previous test or `Acceptance Test 1`.
+       2. Ensure you are logged in as a Candidate and on the Jobs page.
+       3. In the search bar, type the term “Back”.
    - _Expected Result_:
        - Only the “Backend Developer” job posting remains visible.
        - All non-matching jobs are hidden immediately as you type.
