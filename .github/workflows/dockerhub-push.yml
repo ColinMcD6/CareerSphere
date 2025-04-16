@@ -37,7 +37,7 @@ jobs:
             LATEST_TAG="latest-dev"
             TARGET="development"
             VITE_API_URL="https://localhost:4004"
-          elif [[ "${{ github.base.ref }}" == "refs/heads/docker-fix2" ]]; then
+          elif [[ "${{ github.ref }}" == "refs/heads/docker-fix2" ]]; then
             IMAGE_TAG="${NEW_VERSION}-dev"
             LATEST_TAG="latest-dev"
             TARGET="development"
