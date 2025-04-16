@@ -19,15 +19,15 @@ import catchErrors from "../utils/catchErrors";
 import JobPostingValidation from "../utils/JobPostingValidation"
 
 const saveJobPostingModel = z.object({
-    job_id: z.string().min(1).max(225),
-    candidate_id: z.string().min(1).max(225)
+    jobId: z.string().min(1).max(225),
+    candidateId: z.string().min(1).max(225)
 })
   
 const jobApplicationModel = z.object({
-    job_id: z.string().min(1).max(225),
-    employer_id: z.string().min(1).max(225),
-    candidate_id: z.string().min(1).max(225),
-    resume_id: z.string().min(1).max(225),
+    jobId: z.string().min(1).max(225),
+    employerId: z.string().min(1).max(225),
+    candidateId: z.string().min(1).max(225),
+    resumeId: z.string().min(1).max(225),
     dateApplied: z.date(),
     status: z.enum(['Pending', 'Accepted', 'Rejected'])
 })
@@ -48,7 +48,7 @@ export const addJobPostingHandler = catchErrors(async (req: Request, res: Respon
         description: req.body.description,
         positionTitle: req.body.positionTitle,
         employer: req.userId, // This should probably be company name
-        employer_id: req.userId,
+        employerId: req.userId,
         location: req.body.location,
         compensationType: req.body.compensationType,
         salary: req.body.salary,
@@ -77,9 +77,9 @@ export const addJobPostingHandler = catchErrors(async (req: Request, res: Respon
  */
 export const getJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    const candidate_id = req.query.candidate_id
+    const candidateId = req.query.candidateId
 
-    const jobPosting = await getJobPostingAndApplication(id, candidate_id);
+    const jobPosting = await getJobPostingAndApplication(id, candidateId);
     res.status(OK).json(jobPosting);
 })
 
@@ -89,7 +89,7 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
     // Extract query fields from the request query but removes page and limit
     const query = queryFieldNames.reduce((acc, key) => {
 
-        if (key !== 'page' && key !== 'limit' && key !== 'saved_posting_candidate_id' && key !== 'user_id' && key !== 'search') {
+        if (key !== 'page' && key !== 'limit' && key !== 'savedPostingCandidateId' && key !== 'userId' && key !== 'search') {
             acc[key] = req.query[key];
         }
         return acc;
@@ -114,9 +114,9 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
     
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
-    const saved_posting_candidate_id = req.query.saved_posting_candidate_id ? req.query.saved_posting_candidate_id as string : null;
-    const user_id = req.query.user_id ? req.query.user_id as any: null;
-    const jobPostings = await getAllJobPostingsQueryWithSaved(query, page, limit, saved_posting_candidate_id, user_id);
+    const savedPostingCandidateId = req.query.savedPostingCandidateId ? req.query.savedPostingCandidateId as string : null;
+    const userId = req.query.userId ? req.query.userId as any: null;
+    const jobPostings = await getAllJobPostingsQueryWithSaved(query, page, limit, savedPostingCandidateId, userId);
     res.status(OK).json(jobPostings);
 })
 
@@ -132,11 +132,11 @@ export const getAllJobPostingsQueryHandler = catchErrors(async (req: Request, re
 export const saveJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     console.log("Received a request to save a job posting");
     
-    const saved_posting = {
-        job_id: req.body.job_id,
-        candidate_id: req.body.candidate_id,
+    const savedPosting = {
+        jobId: req.body.jobId,
+        candidateId: req.body.candidateId,
     }
-    const request = saveJobPostingModel.parse(saved_posting);
+    const request = saveJobPostingModel.parse(savedPosting);
     const savedJob = await saveJobPosting(request);
     res.status(CREATED).json(savedJob);
 });
@@ -151,8 +151,8 @@ export const saveJobPostingHandler = catchErrors(async (req: Request, res: Respo
 export const unsaveJobPostingHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     console.log("Received a request to unsave a job posting");
-    const saved_posting = await unsaveJobPosting(id);
-    res.status(OK).json(saved_posting);
+    const savedPosting = await unsaveJobPosting(id);
+    res.status(OK).json(savedPosting);
 })
 
 
@@ -165,9 +165,9 @@ export const unsaveJobPostingHandler = catchErrors(async (req: Request, res: Res
  * * @throws {Error} - Throws an error if the saved job postings retrieval fails.
  */
 export const getSavedJobPostingsHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
-    const candidate_id = req.query.candidate_id;
-    const job_id = req.query.job_id;
-    const savedPostings = await getSavedJobPostings(candidate_id, job_id);
+    const candidateId = req.query.candidateId;
+    const jobId = req.query.jobId;
+    const savedPostings = await getSavedJobPostings(candidateId, jobId);
     res.status(OK).json(savedPostings);
 })
 
@@ -184,10 +184,10 @@ export const getSavedJobPostingsHandler = catchErrors(async (req: Request, res: 
 export const addJobPostingApplicationHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     console.log("Received a request to create a new job application");
     const jobApplication = {
-        job_id: req.body.job_id,
-        employer_id: req.body.employer_id,
-        candidate_id: req.body.candidate_id,
-        resume_id: req.body.resume_id,
+        jobId: req.body.jobId,
+        employerId: req.body.employerId,
+        candidateId: req.body.candidateId,
+        resumeId: req.body.resumeId,
         dateApplied: new Date(),
         status: "Pending"
     }

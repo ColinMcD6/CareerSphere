@@ -1,5 +1,5 @@
 import * as db from './db'
-import sessionModel from "../models/one-to-many/session.model";
+import sessionModel from "../models/supportModels/session.model";
 import UserModel from "../models/main/users.model";
 import { loginAccount } from "../services/auth.services";
 
@@ -34,7 +34,7 @@ describe("Login Account", () => {
         const result = await loginAccount({
             email: "test_user@gmail.com",
             password: "test123456789",
-            user_role: "Candidate",
+            userRole: "Candidate",
         });
 
         const sessionRecord = await sessionModel.findOne({ userId: mockUser._id });
@@ -54,7 +54,7 @@ describe("Login Account", () => {
             loginAccount({
                 email: "test_user@gmail.com",
                 password: "test123456789",
-                user_role: "Candidate",
+                userRole: "Candidate",
             })
         ).rejects.toThrow("User Account does not exist !");
 
@@ -83,7 +83,7 @@ describe("Login Account", () => {
             loginAccount({
                 email: "test_user@gmail.com",
                 password: "test123456788",
-                user_role: "Candidate",
+                userRole: "Candidate",
             })
         ).rejects.toThrow("Invalid email or Password !");
 

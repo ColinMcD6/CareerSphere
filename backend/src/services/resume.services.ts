@@ -3,8 +3,8 @@ import appAssert from "../utils/appAssert";
 import resumeDAO from "../dao/resume.dao";
 
 export type CreateResumeParams = {
-    pdf_name: string,
-    file_name: string,
+    pdfName: string,
+    fileName: string,
     path: string,
     dateUploaded: Date
 };
@@ -19,8 +19,8 @@ export type CreateResumeParams = {
  */
 export const createResume = async (data: CreateResumeParams) => {
     const resume = await resumeDAO.create({
-        pdf_name: data.pdf_name,
-        file_name: data.file_name,
+        pdfName: data.pdfName,
+        fileName: data.fileName,
         path: data.path,
         dateUploaded: data.dateUploaded
     })

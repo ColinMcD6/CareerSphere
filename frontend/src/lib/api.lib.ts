@@ -39,9 +39,9 @@ export const checklogIn = async (data: { email: string, password: string }) =>
 export const registerUser = async (data: {
   email: string, 
   username: string, 
-  user_role: string, 
+  userRole: string, 
   password: string,
-  confirm_password: string
+  confirmPassword: string
 }) => 
   API.post("/auth/signup", data)
 
@@ -73,8 +73,8 @@ interface ResumeResponse {
 }
 
 interface ResumeResponse2 {
-  pdf_name: string;
-  file_name: string;
+  pdfName: string;
+  fileName: string;
 }
 
 interface ApplicationsResponse {
@@ -84,8 +84,8 @@ interface ApplicationsResponse {
 export const getAllJobPostings = async(query : string) : Promise<JobPostingResponse> => 
   API.get(`/job${query}`)
 
-export const getIndividualJobPosting = async( id : string, candidate_id: any ) : Promise<any> => 
-  API.get(`/job/${id}?candidate_id=${candidate_id}`)
+export const getIndividualJobPosting = async( id : string, candidateId: any ) : Promise<any> => 
+  API.get(`/job/${id}?candidateId=${candidateId}`)
 
 export const addResume = async(application: any) : Promise<ResumeResponse> =>
   API.post("/resume/add", application)
@@ -96,8 +96,8 @@ export const getResumeName = async(id: string) : Promise<ResumeResponse2> =>
 export const applyforJob = async(data: any) =>
   API.post("/job/applications/apply", data)
 
-export const checkwhoApplied = async(data: { emp_id: string, job_id: string}) : Promise <ApplicationsResponse>=> 
-  API.get(`/job/applications/all/query?employer_id=${data.emp_id}&job_id=${data.job_id}`)
+export const checkwhoApplied = async(data: { emp_id: string, jobId: string}) : Promise <ApplicationsResponse>=> 
+  API.get(`/job/applications/all/query?employerId=${data.emp_id}&jobId=${data.jobId}`)
 
 
 export const editJobApplicationStatus = async(data: { id: string, status: string}) =>
@@ -106,18 +106,18 @@ export const editJobApplicationStatus = async(data: { id: string, status: string
 
 interface SavedJobsResponse {
   _id: string;
-  job_id: string;
-  candidate_id: string;
+  jobId: string;
+  candidateId: string;
 }
 
-export const saveJob = async(data: { job_id: string, candidate_id: string}) : Promise<any> =>
+export const saveJob = async(data: { jobId: string, candidateId: string}) : Promise<any> =>
   API.post("/job/save", data)
 
 export const unsaveJob = async(id: string) =>
   API.delete(`/job/save/${id}`)
 
-export const getSavedJobs = async(candidate_id: string, job_id: string): Promise<SavedJobsResponse> => 
-  API.get(`/job/save/query?candidate_id=${candidate_id}&job_id=${job_id}`)
+export const getSavedJobs = async(candidateId: string, jobId: string): Promise<SavedJobsResponse> => 
+  API.get(`/job/save/query?candidateId=${candidateId}&jobId=${jobId}`)
 
 export const createQuizForJobPosting = async( data: { jobId: string, body: {}}) : Promise <any>=> 
   API.post(`job/${data.jobId}/quizzes`, data.body)

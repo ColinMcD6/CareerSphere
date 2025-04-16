@@ -45,9 +45,9 @@ class JobPostingsDAO {
         return await JobPostingsModel.countDocuments()
     }
 
-    async aggregate(aggregation_rules : any) : Promise<JobPostingsDocument[]> 
+    async aggregate(aggregationRules : any) : Promise<JobPostingsDocument[]> 
     {
-        return await JobPostingsModel.aggregate(aggregation_rules)
+        return await JobPostingsModel.aggregate(aggregationRules)
     }
 }
 

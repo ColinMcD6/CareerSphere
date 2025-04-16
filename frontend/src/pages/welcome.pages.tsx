@@ -58,9 +58,9 @@ const Welcome = () => {
         try {
           console.log("Contacting Express server to query jobs");
           let query =
-            user?.userRole === "Employer" ? `?employer_id=${user._id}` : "";
+            user?.userRole === "Employer" ? `?employerId=${user._id}` : "";
           if (query === "") {
-            query = `?user_id=${user._id}`;
+            query = `?userId=${user._id}`;
           }
           
           const response = await getAllJobPostings(query);

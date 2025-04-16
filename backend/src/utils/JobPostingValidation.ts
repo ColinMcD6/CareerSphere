@@ -47,7 +47,7 @@ export const JobPostingValidation = z.object({
   positionTitle: z.string().min(MIN_POSITION_LENGTH, `Position Title must have a minimum of ${MIN_POSITION_LENGTH} characters`).max(MAX_DESCRIPTION_LENGTH, `Position Title can have a maximum of ${MAX_POSITION_LENGTH} characters`),
   description: z.string().min(MIN_DESCRIPTION_LENGTH, `Description must have a minimum of ${MIN_DESCRIPTION_LENGTH} characters`).max(MAX_DESCRIPTION_LENGTH, `Description can have a maximum of ${MAX_DESCRIPTION_LENGTH} characters`),
   employer: z.string().min(1).max(225),
-  employer_id: z.string().min(1).max(225),
+  employerId: z.string().min(1).max(225),
   location: z.string().min(1, "Location must have at least 1 character").max(225),
   compensationType: z.enum(['do-not-disclose', 'hourly', 'salary']),
   category: z.number(),

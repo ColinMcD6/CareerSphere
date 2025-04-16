@@ -23,13 +23,13 @@ export const createJobPosting = async (data: any) => {
  * * Get Job Posting and Application
  * * @description - This function retrieves a job posting and its associated application for a specific candidate.
  * * @param {string} id - The ID of the job posting.
- * * @param {any} candidate_id - The ID of the candidate.
+ * * @param {any} candidateId - The ID of the candidate.
  * * @returns {Promise<{ jobPosting: JobPostingsDocument; application: any }>} - Returns a promise that resolves to an object containing the job posting and application.
  * * @throws {Error} - Throws an error if the job posting does not exist or if the application does not exist.
  */
-export const getJobPostingAndApplication = async (id: string, candidate_id: any) => {
+export const getJobPostingAndApplication = async (id: string, candidateId: any) => {
     const jobPosting = await getJobPosting(id);
-    const application = await getApplication(id, candidate_id);
+    const application = await getApplication(id, candidateId);
     return {
         jobPosting: jobPosting,
         application: application
@@ -99,16 +99,16 @@ export const getAllJobPostingsQuery = async (
  * * @param {any} query - The query object to filter job postings.
  * * @param {number} page - The page number for pagination.
  * * @param {number} limit - The number of job postings to retrieve per page.
- * * @param {any} saved_posting_candidate_id - The ID of the candidate who saved the job posting.
- * * @param {any} user_id - The ID of the user.
+ * * @param {any} savedPostingCandidateId - The ID of the candidate who saved the job posting.
+ * * @param {any} userId - The ID of the user.
  * * @returns {Promise<{ jobPostings: JobPostingsDocument[]; total: number; page: number; pages: number }>} - Returns a promise that resolves to an object containing the job postings and pagination information.
  */
 export const getAllJobPostingsQueryWithSaved = async (
     query: any,
     page: number,
     limit: number,
-    saved_posting_candidate_id: any,
-    user_id: any
+    savedPostingCandidateId: any,
+    userId: any
 ) => {
 
     //The default aggregation rules
@@ -125,7 +125,7 @@ export const getAllJobPostingsQueryWithSaved = async (
                     {
                         $match: {
                             $expr: {
-                                $eq: ["$$jobPostingId", { $toObjectId: "$job_id" }], // Convert job_id to ObjectId
+                                $eq: ["$$jobPostingId", { $toObjectId: "$jobId" }], // Convert job_id to ObjectId
                             },
                         },
                     },
@@ -145,23 +145,23 @@ export const getAllJobPostingsQueryWithSaved = async (
     ];
 
     //Checks if user wants to view all saved jobs
-    if(saved_posting_candidate_id){
+    if(savedPostingCandidateId){
         aggregation_rules.push(
             {
                 $lookup: {
                     from: "savejobpostings",
-                    let: { job_posting_id: "$_id" },
+                    let: { jobPostingId: "$_id" },
                     pipeline: [
-                        { $match: { $expr: { $eq: ["$candidate_id", saved_posting_candidate_id] } } },
-                        { $match: { $expr: { $eq: [{ $toObjectId: "$job_id" }, "$$job_posting_id"] } } } // Ensure job_id is compared as ObjectId
+                        { $match: { $expr: { $eq: ["$candidateId", savedPostingCandidateId] } } },
+                        { $match: { $expr: { $eq: [{ $toObjectId: "$jobId" }, "$$jobPostingId"] } } } // Ensure job_id is compared as ObjectId
                     ],
-                    as: "saved_posting",
+                    as: "savedPosting",
                 },
             },
             {
                 $addFields: {
                     isSaved: {
-                        $in: [saved_posting_candidate_id, "$saved_posting.candidate_id"],
+                        $in: [savedPostingCandidateId, "$savedPosting.candidateId"],
                     },
                 },
             },
@@ -175,9 +175,9 @@ export const getAllJobPostingsQueryWithSaved = async (
     let output: any[] = [];
 
     //organize
-    if(user_id)
+    if(userId)
     {
-        const user = await userDAO.findById(user_id)
+        const user = await userDAO.findById(userId)
         const preferences = user?.preferences;
         
         if(preferences)
@@ -266,17 +266,17 @@ export const unsaveJobPosting = async (id: any) => {
 /**
  * * Get Saved Job Postings
  * * @description - This function retrieves a saved job posting for a candidate.
- * * @param {any} candidate_id - The ID of the candidate.
- * * @param {any} job_id - The ID of the job posting.
+ * * @param {any} candidateId - The ID of the candidate.
+ * * @param {any} jobId - The ID of the job posting.
  * * @returns {Promise<any>} - Returns a promise that resolves to the saved job posting document.
  * * @throws {Error} - Throws an error if the job posting does not exist.
  */
-export const getSavedJobPostings = async (candidate_id: any, job_id: any) => {
-    console.log(candidate_id, job_id);
+export const getSavedJobPostings = async (candidateId: any, jobId: any) => {
+    console.log(candidateId, jobId);
     const savedJobPosting = await saveJobPostingDAO.findOne(
         { 
-            candidate_id: candidate_id,
-            job_id: job_id
+            candidateId: candidateId,
+            jobId: jobId
         });
     return savedJobPosting;
 }
@@ -334,14 +334,14 @@ export const deleteJobPostingApplication = async (id: any) => {
  * * Get Job Posting Application
  * * @description - This function retrieves a job posting application for a candidate.
  * * @param {string} id - The ID of the job posting.
- * * @param {any} candidate_id - The ID of the candidate.
+ * * @param {any} candidateId - The ID of the candidate.
  * * @returns {Promise<any>} - Returns a promise that resolves to the job application document.
  * * @throws {Error} - Throws an error if the job application does not exist.
  */
-export const getApplication = async (id: string, candidate_id: any) => {
+export const getApplication = async (id: string, candidateId: any) => {
     const application = await applicationDAO.findOne({
-        job_id: id,
-        candidate_id: candidate_id,
+        jobId: id,
+        candidateId: candidateId,
     });
     return application;
 }
@@ -384,7 +384,7 @@ export const getJobPostingApplicationsQuery = async (
     const applicationsWithUser = await Promise.all(
         applications.map(async (application) => {
             const user = await userDAO.findOne({
-                _id: application.candidate_id,
+                _id: application.candidateId,
             });
             return {
                 ...application.toObject(),
