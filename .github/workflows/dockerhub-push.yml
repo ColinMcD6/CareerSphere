@@ -27,8 +27,25 @@ jobs:
           # Read the current version
           NEW_VERSION=$(cat version.txt)
 
-          # Output the new version
-          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+          # Determine the tag based on the branch
+          if [[ "${{ github.ref }}" == "refs/heads/development" ]]; then
+            IMAGE_TAG="${NEW_VERSION}-dev"
+            LATEST_TAG="latest-dev"
+            TARGET="development"
+            VITE_API_URL="https://localhost:4004"
+          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            IMAGE_TAG="${NEW_VERSION}"
+            LATEST_TAG="latest"
+            TARGET="production"
+            VITE_API_URL="https://api.career-sphere.me"
+          fi
+
+          # Output the tag
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+          echo "TARGET=$TARGET" >> $GITHUB_ENV
+          echo "VITE_API_URL=$VITE_API_URL" >> $GITHUB_ENV
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -38,12 +55,35 @@ jobs:
 
       - name: Build and Push Frontend Image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ env.NEW_VERSION }} ./frontend
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ env.NEW_VERSION }}
-  
-      - name: Build and Push Backend Image
+          docker build \
+            --target ${{ env.TARGET }} \
+            --build-arg VITE_API_URL=${{ env.VITE_API_URL }} \
+            -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ env.IMAGE_TAG }} \
+            -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ env.LATEST_TAG }} ./frontend
+
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ env.IMAGE_TAG }}
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ env.LATEST_TAG }}
+
+      - name: Build and Push Backend Production Image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest -t ${{ secrets.DOCKER_HUB_USERNAME }}/backend:${{ env.NEW_VERSION }} ./backend
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/backend:${{ env.NEW_VERSION }}
+          docker build \
+            --target ${{ env.TARGET }} \
+            -t ${{ secrets.DOCKER_HUB_USERNAME }}/backend:${{ env.IMAGE_TAG }} \
+            -t ${{ secrets.DOCKER_HUB_USERNAME }}/backend:${{ env.LATEST_TAG }} ./backend
+
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/backend:${{ env.IMAGE_TAG }}
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/backend:${{ env.LATEST_TAG }}
+
+      - name: Deploy to DigitalOcean
+        if: github.ref == 'refs/heads/main'
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.DIGITAL_OCEAN_HOST }}
+          username: ${{ secrets.DIGITAL_OCEAN_USER }}
+          key: ${{ secrets.DIGITAL_OCEAN_SSH_KEY }}
+          port: 22
+          script: |
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest
+            docker compose -f ~/var/www/CareerSphere/compose.prod.yml down
+            docker compose -f ~/var/www/CareerSphere/compose.prod.yml up -d
