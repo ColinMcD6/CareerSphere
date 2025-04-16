@@ -10,10 +10,10 @@ import EmailVerify from "./pages/emailVerify.pages.tsx";
 import CreateJobPost from "./pages/createJobPost.pages.tsx"
 import ViewJobPosting from "./pages/viewJobPosting.pages.tsx"
 import ViewAllJobs from "./pages/viewAllJobs.pages.tsx"
-import { CareerSphereApp } from "./components/careersphereApp";
 import NavBar from "./pages/navigationBar.pages.tsx";
 import CreateQuiz from "./pages/createQuiz.pages.tsx";
 import TakeQuiz from "./pages/takeQuiz.pages.tsx";
+import { CareerSphereApp } from "./components/careersphereApp.components.tsx";
 
 
 function App() {
