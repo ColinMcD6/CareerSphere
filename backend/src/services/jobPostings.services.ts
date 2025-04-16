@@ -275,8 +275,8 @@ export const getSavedJobPostings = async (candidateId: any, jobId: any) => {
     console.log(candidateId, jobId);
     const savedJobPosting = await saveJobPostingDAO.findOne(
         { 
-            candidate_id: candidateId,
-            job_id: jobId
+            candidateId: candidateId,
+            jobId: jobId
         });
     return savedJobPosting;
 }
@@ -334,14 +334,14 @@ export const deleteJobPostingApplication = async (id: any) => {
  * * Get Job Posting Application
  * * @description - This function retrieves a job posting application for a candidate.
  * * @param {string} id - The ID of the job posting.
- * * @param {any} candidate_id - The ID of the candidate.
+ * * @param {any} candidateId - The ID of the candidate.
  * * @returns {Promise<any>} - Returns a promise that resolves to the job application document.
  * * @throws {Error} - Throws an error if the job application does not exist.
  */
-export const getApplication = async (id: string, candidate_id: any) => {
+export const getApplication = async (id: string, candidateId: any) => {
     const application = await applicationDAO.findOne({
-        job_id: id,
-        candidate_id: candidate_id,
+        jobId: id,
+        candidateId: candidateId,
     });
     return application;
 }

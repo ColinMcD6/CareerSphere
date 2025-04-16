@@ -6,7 +6,7 @@ export interface JobPostingsDocument extends mongoose.Document {
     positionTitle: string,
     description: string,
     employer: string,
-    employer_id: string,
+    employerId: string,
     location: string,
     salary: number,
     jobType: string,
@@ -46,7 +46,7 @@ const jobPostingsSchema = new mongoose.Schema<JobPostingsDocument>({
     description: { type: String, required: true },
     positionTitle: { type: String, required: true },
     employer: { type: String, required: true },
-    employer_id: { type: String, required: true },
+    employerId: { type: String, required: true },
     location: { type: String, required: true },
     compensationType: { type: String, enum: ["do-not-disclose", "salary", "hourly"], required: true }, // Require later
     salary: { type: Number }, // Changed to not required for now

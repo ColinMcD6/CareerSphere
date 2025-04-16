@@ -65,7 +65,7 @@ describe('Test adding resume', () => {
         expect(resume).toHaveLength(1);
         expect(resume[0].pdfName).toBe('test.pdf');
 
-        expect(response.body.resume).toHaveProperty('pdf_name', 'test.pdf'); // Adjust the expected file name
+        expect(response.body.resume).toHaveProperty('pdfName', 'test.pdf'); // Adjust the expected file name
         expect(response.body.resume).toHaveProperty('path', './resume/uploads/');
     
         const uploadedFilePath = path.join(__dirname, '../../resume/uploads/', resume[0].fileName);

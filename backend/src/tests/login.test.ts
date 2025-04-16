@@ -34,7 +34,7 @@ describe("Login Account", () => {
         const result = await loginAccount({
             email: "test_user@gmail.com",
             password: "test123456789",
-            user_role: "Candidate",
+            userRole: "Candidate",
         });
 
         const sessionRecord = await sessionModel.findOne({ userId: mockUser._id });
@@ -54,7 +54,7 @@ describe("Login Account", () => {
             loginAccount({
                 email: "test_user@gmail.com",
                 password: "test123456789",
-                user_role: "Candidate",
+                userRole: "Candidate",
             })
         ).rejects.toThrow("User Account does not exist !");
 
@@ -83,7 +83,7 @@ describe("Login Account", () => {
             loginAccount({
                 email: "test_user@gmail.com",
                 password: "test123456788",
-                user_role: "Candidate",
+                userRole: "Candidate",
             })
         ).rejects.toThrow("Invalid email or Password !");
 

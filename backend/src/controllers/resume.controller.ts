@@ -81,5 +81,5 @@ export const getResumeNameHandler = catchErrors(async (req: Request, res: Respon
 // export const downloadhandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
 //     const id = req.params.id;
 //     const resume = await getResume(id);
-//     res.download(resume.path, resume.pdf_name);
+//     res.download(resume.path, resume.pdfName);
 // })

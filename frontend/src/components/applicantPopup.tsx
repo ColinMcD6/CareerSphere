@@ -8,15 +8,15 @@ interface ApplicationPopupComponentProps {
     experience: string[];
     education: string[];
     skills: string[];
-    resume_id: string;
-    showResumeHandler: (resume_id: string) => void;
+    resumeId: string;
+    showResumeHandler: (resumeId: string) => void;
     editStatusApplicationHandler: (status:string) => void;
     onClose: () => void;
     
 }
 
 
-const ApplicationPopupComponent: React.FC<ApplicationPopupComponentProps> = ({show, username, email, experience, education, skills, resume_id, onClose, showResumeHandler, editStatusApplicationHandler}) => {
+const ApplicationPopupComponent: React.FC<ApplicationPopupComponentProps> = ({show, username, email, experience, education, skills, resumeId, onClose, showResumeHandler, editStatusApplicationHandler}) => {
   return (
     <Modal show={show} onHide={onClose}>
         
@@ -32,7 +32,7 @@ const ApplicationPopupComponent: React.FC<ApplicationPopupComponentProps> = ({sh
             <p>Experience: {experience.join(", ")}</p>
             <p>Education: {education.join(", ")}</p>
             <p>Skills: {skills.join(", ")}</p>
-            <Button onClick={() => showResumeHandler(resume_id)} variant="primary">View Resume</Button>
+            <Button onClick={() => showResumeHandler(resumeId)} variant="primary">View Resume</Button>
             </Modal.Body>
     
             <Modal.Footer className='d-flex justify-content-center align-items-center'>

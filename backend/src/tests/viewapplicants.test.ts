@@ -48,7 +48,7 @@ describe("getJobPostingApplicationsQuery", () => {
             }
         ]);
 
-        const result = await getJobPostingApplicationsQuery({ employer_id: "emp1", job_id: "job1" }, 1, 10);
+        const result = await getJobPostingApplicationsQuery({ employerId: "emp1", jobId: "job1" }, 1, 10);
 
         expect(result.applications.length).toBe(1);
         expect(result.applications[0]).toHaveProperty("username", "test_user");
@@ -85,7 +85,7 @@ describe("getJobPostingApplicationsQuery", () => {
             }
         ]);
 
-        const result = await getJobPostingApplicationsQuery({ employer_id: "emp2", job_id: "job2" }, 1, 10);
+        const result = await getJobPostingApplicationsQuery({ employerId: "emp2", jobId: "job2" }, 1, 10);
 
         expect(result.applications.length).toBe(1);
         expect(result.applications[0]).toHaveProperty("username", "test_user2");

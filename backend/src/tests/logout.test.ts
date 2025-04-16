@@ -26,13 +26,13 @@ describe("Logout Controller", () => {
             username: "test_user",
             email: "test_user@gmail.com",
             password: "test123456789",
-            user_role: "Candidate",
+            userRole: "Candidate",
         });
 
         const loginData = await loginAccount({
             email: "test_user@gmail.com",
             password: "test123456789",
-            user_role: "Candidate",
+            userRole: "Candidate",
         });
 
         // Extract accessToken & session ID

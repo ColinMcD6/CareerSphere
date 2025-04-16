@@ -27,8 +27,8 @@ describe("Signup Account", () => {
             username: "test_user",
             email: "test_user@gmail.com",
             password: "test123456789",
-            confirm_password: "test123456789",
-            user_role: "Candidate",
+            confirmPassword: "test123456789",
+            userRole: "Candidate",
         };
 
         const result = await signupAccount(mockData);
@@ -50,7 +50,7 @@ describe("Signup Account", () => {
         expect(result.accesstoken).toBeDefined();
         expect(result.refreshtoken).toBeDefined();
         expect(result.newuser.email).toBe(mockData.email);
-        expect(result.newuser.userRole).toBe(mockData.user_role);
+        expect(result.newuser.userRole).toBe(mockData.userRole);
     }, 10000);
 
     /* 
@@ -62,8 +62,8 @@ describe("Signup Account", () => {
             username: "test_user2",
             email: "test_user2@gmail.com",
             password: "test987654321",
-            confirm_password: "test987654321",
-            user_role: "Employer",
+            confirmPassword: "test987654321",
+            userRole: "Employer",
         };
 
         const result = await signupAccount(mockData);
@@ -84,7 +84,7 @@ describe("Signup Account", () => {
         expect(result.accesstoken).toBeDefined();
         expect(result.refreshtoken).toBeDefined();
         expect(result.newuser.email).toBe(mockData.email);
-        expect(result.newuser.userRole).toBe(mockData.user_role);
+        expect(result.newuser.userRole).toBe(mockData.userRole);
     }, 10000);
 
     /*

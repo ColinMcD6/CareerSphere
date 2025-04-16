@@ -16,8 +16,8 @@ describe("API Routes", () => {
       username: "test_user",
       email: "test_user@gmail.com",
       password: "12345678",
-      confirm_password: "12345678",
-      user_role: "Employer",
+      confirmPassword: "12345678",
+      userRole: "Employer",
     };
     // Signup
     const signupResponse = await request(app).post("/auth/signup").send(userData);
@@ -94,8 +94,8 @@ describe("API Routes", () => {
       username: "test_user",
       email: "test_user@gmail.com",
       password: "12345678",
-      confirm_password: "12345678",
-      user_role: "Employer",
+      confirmPassword: "12345678",
+      userRole: "Employer",
     };
     // Signup
     const signupResponse = await request(app).post("/auth/signup").send(userData);

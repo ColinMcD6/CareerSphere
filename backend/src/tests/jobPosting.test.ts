@@ -76,7 +76,7 @@ describe('Testing Saved Job Postings', () => {
             description: "We are looking for a software engineer",
             positionTitle: "Software Engineer",
             employer: "Google",
-            employer_id: newuser._id,
+            employerId: newuser._id,
             location: "Mountain View",
             compensationType: "salary",
             salary: 100000,
@@ -93,7 +93,7 @@ describe('Testing Saved Job Postings', () => {
             description: "We are looking for a civil engineer",
             positionTitle: "Civil Engineer",
             employer: "Google",
-            employer_id: newuser._id,
+            employerId: newuser._id,
             location: "Mountain View",
             compensationType: "salary",
             salary: 100000,
@@ -110,7 +110,7 @@ describe('Testing Saved Job Postings', () => {
             description: "We are looking for a pizza maker",
             positionTitle: "Pizza Maker",
             employer: "Google",
-            employer_id: newuser3._id,
+            employerId: newuser3._id,
             location: "Mountain View",
             compensationType: "salary",
             salary: 100000,
@@ -138,7 +138,7 @@ describe('Testing Saved Job Postings', () => {
             candidateId: newuser2._id
         });
 
-        const response = await request(app).get("/job?saved_posting_candidate_id=" + newuser2._id).expect(200);
+        const response = await request(app).get("/job?savedPostingCandidateId=" + newuser2._id).expect(200);
 
         expect(response.body.jobPostings.length).toBe(2);
 
@@ -171,7 +171,7 @@ describe('Testing Saved Job Postings', () => {
             description: "We are looking for a software engineer",
             positionTitle: "Software Engineer",
             employer: "Google",
-            employer_id: "32423423423",
+            employerId: "32423423423",
             location: "Mountain View",
             compensationType: "salary",
             salary: 100000,
@@ -186,8 +186,8 @@ describe('Testing Saved Job Postings', () => {
         const jobPosting = await JobPostingsModel.create(newJob);
 
         const body = {
-            job_id: (jobPosting._id as unknown as string).toString(),
-            candidate_id: (newuser._id as unknown as string).toString()
+            jobId: (jobPosting._id as unknown as string).toString(),
+            candidateId: (newuser._id as unknown as string).toString()
         }
 
         console.log(body);
@@ -221,7 +221,7 @@ describe('Testing Saved Job Postings', () => {
             description: "We are looking for a software engineer",
             positionTitle: "Software Engineer",
             employer: "Google",
-            employer_id: "32423423423",
+            employerId: "32423423423",
             location: "Mountain View",
             compensationType: "salary",
             salary: 100000,
@@ -236,8 +236,8 @@ describe('Testing Saved Job Postings', () => {
         const jobPosting = await JobPostingsModel.create(newJob);
 
         const body = {
-            job_id: (jobPosting._id as unknown as string).toString(),
-            candidate_id: (newuser._id as unknown as string).toString()
+            jobId: (jobPosting._id as unknown as string).toString(),
+            candidateId: (newuser._id as unknown as string).toString()
         }
 
         const saveJob = await SaveJobPostingsModel.create(body);
