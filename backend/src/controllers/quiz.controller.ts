@@ -5,6 +5,15 @@ import appAssert from "../utils/appAssert";
 import quizDAO from '../repositories/quiz.repository'
 import jobPostingsDAO from "../repositories/jobPosting.repository";
 import userDAO from "../repositories/user.repository";
+import {
+    addQuiz,
+    getQuiz,
+    getSpecificQuiz,
+    addQuizCandidateResponseService,
+    getQuizSubmissionsService
+
+}from "../services/quiz.services";
+import { get } from "mongoose";
 
 
 /* Example fo sending requesting from frontend to this is :
@@ -38,24 +47,7 @@ export const addQuizHandler = catchErrors(async (req: Request, res: Response, ne
         const jobId = req.params.id;
         const { quizName, questions } = req.body;
 
-        // Validate jobId
-        appAssert(jobPostingsDAO.isValidId(jobId), BAD_REQUEST, "Invalid data");
-
-        appAssert(quizName, BAD_REQUEST, "Invalid data")
-
-        appAssert(questions && Array.isArray(questions) && questions.length > 0, BAD_REQUEST, "Invalid data")
-
-        // Find the job posting
-        const jobPosting = await jobPostingsDAO.findById(jobId);
-        appAssert(jobPosting, NOT_FOUND, "Job not found!");
-
-        // Create a new quiz
-        const quizInput : any = {jobId, quizName, questions};
-        const createdQuiz = await quizDAO.create(quizInput);
-
-        // Link the new quiz to the job posting
-        jobPosting.quizzes.push(createdQuiz._id?.toString() || "");
-        await jobPostingsDAO.save(jobPosting);
+        const createdQuiz = await addQuiz(jobId, quizName, questions);
 
         res.status(CREATED).json({ message: "Quiz created successfully", quiz: createdQuiz });
     } catch (error) {
@@ -79,10 +71,7 @@ export const addQuizHandler = catchErrors(async (req: Request, res: Response, ne
 export const getQuizHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const jobId = req.params.id;
-      appAssert(jobPostingsDAO.isValidId(jobId),BAD_REQUEST, "Invalid Data")
-
-      const quizzes = await quizDAO.findByJobId(jobId);
-      appAssert(!(quizzes.length == 0), NOT_FOUND, "No quizzes found for this job")
+      const quizzes = await getQuiz(jobId);
   
       res.status(OK).json({ quizzes });
     } catch (error) {
@@ -107,10 +96,8 @@ export const getQuizHandler = catchErrors(async (req: Request, res: Response, ne
 export const getSpecificQuizHandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id: jobId, quizId } = req.params;
-      appAssert((jobPostingsDAO.isValidId(jobId) && jobPostingsDAO.isValidId(quizId)),BAD_REQUEST, "Invalid Data")
       
-      const quiz = await quizDAO.findQuizByQuizIdJobId( quizId, jobId );
-      appAssert(quiz, NOT_FOUND, "Quiz Not found")
+      const quiz = await getSpecificQuiz(jobId, quizId);
   
       res.status(OK).json({ quiz });
     } catch (error) {
@@ -145,32 +132,7 @@ export const addQuizCandidateResponse = catchErrors(async (req: Request, res: Re
 
     console.log(candidateId)
 
-    appAssert(quizDAO.isValidId(candidateId), BAD_REQUEST, "Invalid Data")
-
-    appAssert(quizDAO.isValidId(quizId), BAD_REQUEST, "Invalid Data")
-
-    appAssert(responses, BAD_REQUEST, "Invalid Data")
-
-    const user = await userDAO.findById(candidateId);
-    appAssert(user, NOT_FOUND, "Not Found")
-    
-    const candidateUsername = user?.username || "";
-    const quiz = await quizDAO.findByQuizId(quizId);
-    appAssert(quiz, NOT_FOUND, "Quiz not found")
-
-    // Check if the candidate has already submitted
-    const existingSubmission = quiz.submissions.find(sub => sub.candidateId === candidateId);
-    appAssert(!existingSubmission, CONFLICT, "Candidate has already submitted this quiz")
-
-    let score = 0;
-    quiz.questions.forEach((question, index) => {
-      if (responses[index] && responses[index] === question.correctAnswer) {
-        score += 1;
-      }
-    });
-
-    quiz.submissions.push({ candidateId, candidateUsername, score });
-    await quizDAO.save(quiz);
+    const {candidateUsername, score} = await addQuizCandidateResponseService(quizId, candidateId, responses);
 
     res.status(CREATED).json({ message: "Submission recorded successfully", candidateUsername, score });
   } catch (error) {
@@ -190,12 +152,9 @@ export const addQuizCandidateResponse = catchErrors(async (req: Request, res: Re
 export const getQuizSubmissions = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { quizId } = req.params;
-    appAssert(quizDAO.isValidId(quizId), BAD_REQUEST, "Invalid Data")
+    const submissions = await getQuizSubmissionsService(quizId);
 
-    const quiz = await quizDAO.findByQuizId(quizId);
-    appAssert(quiz, NOT_FOUND, "Quiz not found")
-
-    res.status(OK).json({ submissions: quiz.submissions });
+    res.status(OK).json({ submissions: submissions });
   } catch (error) {
     next(error);
   }
