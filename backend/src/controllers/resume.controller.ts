@@ -75,9 +75,6 @@ export const getResumeNameHandler = catchErrors(async (req: Request, res: Respon
     res.status(OK).json(resume);
 })
 
-
-
-
 // export const downloadhandler = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
 //     const id = req.params.id;
 //     const resume = await getResume(id);

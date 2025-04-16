@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import catchErrors from "../utils/catchErrors";
 import { BAD_REQUEST, CONFLICT, CREATED, NOT_FOUND, OK } from "../constants/http.constants";
 import appAssert from "../utils/appAssert";
-import quizDAO from '../dao/quiz.dao'
-import jobPostingsDAO from "../dao/jobPosting.dao";
-import userDAO from "../dao/user.dao";
+import quizDAO from '../repositories/quiz.repository'
+import jobPostingsDAO from "../repositories/jobPosting.repository";
+import userDAO from "../repositories/user.repository";
 
 
 /* Example fo sending requesting from frontend to this is :

@@ -7,9 +7,9 @@ import { afteronehour, DAY_LEFT, oneyearfromnow, weekfromnow } from "../utils/au
 import { getPasswordResetTemplate, getVerifyEmailTemplate } from "../utils/auth_helpers/emailTemplates";
 import { refeshTokenOption, RefTokenPayload, signingToken, verifyToken } from "../utils/auth_helpers/jwt";
 import { sendEmail } from "../utils/auth_helpers/sendEmail";
-import userDAO from "../dao/user.dao";
-import verificationDAO from "../dao/verification.dao";
-import sessionDAO from "../dao/session.dao"
+import userDAO from "../repositories/user.repository";
+import verificationDAO from "../repositories/verification.repository";
+import sessionDAO from "../repositories/session.repository"
 
 export type signupAccountFields = {
     username: string;
@@ -118,15 +118,13 @@ export const loginAccount = async ({email, password, userRole}: loginAccountFiel
         userId,
         userRole,
     })
-    const refreshtoken = signingToken(
-        {
+    const refreshtoken = signingToken({
             sessionId: session._id
         }, 
         refeshTokenOption
     );
 
-    const accesstoken = signingToken(
-        {
+    const accesstoken = signingToken({
             userId: existUser._id,
             sessionId: session._id
         }
@@ -165,8 +163,7 @@ export const refreshSessionToken = async (refreshToken: string) => {
     }
 
     const rerefreshToken = refreshsessionNow ? 
-        signingToken(
-            {
+        signingToken({
                 sessionId: session._id
             }, 
             refeshTokenOption
