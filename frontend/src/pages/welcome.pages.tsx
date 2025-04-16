@@ -60,7 +60,7 @@ const Welcome = () => {
           let query =
             user?.userRole === "Employer" ? `?employerId=${user._id}` : "";
           if (query === "") {
-            query = `?user_id=${user._id}`;
+            query = `?userId=${user._id}`;
           }
           
           const response = await getAllJobPostings(query);

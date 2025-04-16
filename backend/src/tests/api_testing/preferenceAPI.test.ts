@@ -53,7 +53,7 @@ describe('Test preference API', () => {
             category: 2
         });
         //const findUpdatedUser = await UserModel.findById(newuser._id);
-        const jobs = await request(app).get(`/job?user_id=${newuser._id}`);
+        const jobs = await request(app).get(`/job?userId=${newuser._id}`);
         expect(jobs.status).toBe(200);
         expect(jobs.body.jobPostings.length).toBe(1);
         expect(jobs.body.jobPostings[0].category).toBe(2);
@@ -129,7 +129,7 @@ describe('Test preference API', () => {
         // Check record is in database
         expect(user).not.toBeNull();
         const mReq: Partial<Request> = {
-            body: {user_id: newuser._id},
+            body: {userId: newuser._id},
             userId: newuser._id,
         };
         const mJson = jest.fn().mockImplementation(() => null)
@@ -139,7 +139,7 @@ describe('Test preference API', () => {
         };
         const mNext = jest.fn();
         //const findUpdatedUser = await UserModel.findById(newuser._id);
-        const jobs = await request(app).get(`/job?user_id=${newuser._id}`);
+        const jobs = await request(app).get(`/job?userId=${newuser._id}`);
         expect(jobs.status).toBe(200);
         expect(jobs.body.jobPostings.length).toBe(3);
         expect(jobs.body.jobPostings[0].category).toBe(2);
@@ -222,7 +222,7 @@ describe('Test preference API', () => {
             userId: newuser._id,
         };
         const mReq2: Partial<Request> = {
-            body: {user_id: newuser._id},
+            body: {userId: newuser._id},
             userId: newuser._id,
         };
         const mJson = jest.fn().mockImplementation(() => null)
@@ -233,7 +233,7 @@ describe('Test preference API', () => {
         const mNext = jest.fn();
         await updateUserDetails(mReq1 as Request, mRes as Response, mNext);
         //const findUpdatedUser = await UserModel.findById(newuser._id);
-        const jobs = await request(app).get(`/job?user_id=${newuser._id}`);
+        const jobs = await request(app).get(`/job?userId=${newuser._id}`);
         expect(jobs.status).toBe(200);
         expect(jobs.body.jobPostings.length).toBe(3);
         expect(jobs.body.jobPostings[0].category).toBe(4);
