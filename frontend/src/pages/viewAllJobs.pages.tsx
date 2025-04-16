@@ -46,7 +46,7 @@ const ViewAllJobs: React.FC = () => {
 
           query = `?userId=${user._id}`;
           query += showSavedJobs
-            ? `&SavedPostingCandidateId=${user._id}`
+            ? `&savedPostingCandidateId=${user._id}`
             : "";
         }
         
