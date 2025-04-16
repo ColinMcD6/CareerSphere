@@ -1,7 +1,7 @@
 import * as db from './db'
-import sessionModel from "../models/session.model";
-import UserModel from "../models/users.model";
-import { login_account } from "../services/auth.services";
+import sessionModel from "../models/supportModels/session.model";
+import UserModel from "../models/main/users.model";
+import { loginAccount } from "../services/auth.services";
 
 describe("Login Account", () => {
     beforeAll(async () => {
@@ -31,10 +31,10 @@ describe("Login Account", () => {
         mockUser.checkPassword = jest.fn().mockResolvedValue(true);
         await mockUser.save();
 
-        const result = await login_account({
+        const result = await loginAccount({
             email: "test_user@gmail.com",
             password: "test123456789",
-            user_role: "Candidate",
+            userRole: "Candidate",
         });
 
         const sessionRecord = await sessionModel.findOne({ userId: mockUser._id });
@@ -51,10 +51,10 @@ describe("Login Account", () => {
 
     test("Fails to log in if user does not exist", async () => {
         await expect(
-            login_account({
+            loginAccount({
                 email: "test_user@gmail.com",
                 password: "test123456789",
-                user_role: "Candidate",
+                userRole: "Candidate",
             })
         ).rejects.toThrow("User Account does not exist !");
 
@@ -80,10 +80,10 @@ describe("Login Account", () => {
         await mockUser.save();
 
         await expect(
-            login_account({
+            loginAccount({
                 email: "test_user@gmail.com",
                 password: "test123456788",
-                user_role: "Candidate",
+                userRole: "Candidate",
             })
         ).rejects.toThrow("Invalid email or Password !");
 

@@ -1,10 +1,10 @@
 import request from "supertest"
 import * as db from '../db'
 import app from "../..";
-import { CREATED, OK, UNAUTHORIZED } from "../../constants/http";
-import UserModel from "../../models/users.model";
-import verificationModel from "../../models/verify.model";
-import verificationType from "../../constants/verificationTyes";
+import { CREATED, OK, UNAUTHORIZED } from "../../constants/http.constants";
+import UserModel from "../../models/main/users.model";
+import verificationModel from "../../models/supportModels/verify.model";
+import verificationType from "../../constants/verificationTyes.constants";
 import { oneyearfromnow } from "../../utils/auth_helpers/calc";
 
 describe('API Routes', () => {
@@ -23,8 +23,8 @@ describe('API Routes', () => {
             username: "test_user",
             email: "test_user@gmail.com",
             password: "12345678",
-            confirm_password: "12345678",
-            user_role: "Candidate"
+            confirmPassword: "12345678",
+            userRole: "Candidate"
         };
     
         const signupResponse = await request(app).post('/auth/signup').send(userData);
@@ -59,8 +59,8 @@ describe('API Routes', () => {
             username: "test_user",
             email: "test_user@gmail.com",
             password: "12345678",
-            confirm_password: "12345678",
-            user_role: "Candidate"
+            confirmPassword: "12345678",
+            userRole: "Candidate"
         };
     
         const signupResponse = await request(app).post('/auth/signup').send(userData);
@@ -100,8 +100,8 @@ describe('API Routes', () => {
             username: "test_user",
             email: "test_user@gmail.com",
             password: "12345678",
-            confirm_password: "12345678",
-            user_role: "Candidate"
+            confirmPassword: "12345678",
+            userRole: "Candidate"
         };
     
         const signupResponse = await request(app).post('/auth/signup').send(userData);
@@ -136,8 +136,8 @@ describe('API Routes', () => {
             username: "test_user",
             email: "test_user@gmail.com",
             password: "12345678",
-            confirm_password: "12345678",
-            user_role: "Candidate"
+            confirmPassword: "12345678",
+            userRole: "Candidate"
         };
     
         const signupResponse = await request(app).post('/auth/signup').send(userData);
@@ -172,8 +172,8 @@ describe('API Routes', () => {
             username: "test_user",
             email: "test_user@gmail.com",
             password: "12345678",
-            confirm_password: "12345678",
-            user_role: "Candidate"
+            confirmPassword: "12345678",
+            userRole: "Candidate"
         };
     
         const signupResponse = await request(app).post('/auth/signup').send(userData);
@@ -214,8 +214,8 @@ describe('API Routes', () => {
             username: "test_user",
             email: "test_user@gmail.com",
             password: "12345678",
-            confirm_password: "12345678",
-            user_role: "Candidate"
+            confirmPassword: "12345678",
+            userRole: "Candidate"
         };
     
         const signupResponse = await request(app).post('/auth/signup').send(userData);

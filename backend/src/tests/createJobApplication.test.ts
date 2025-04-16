@@ -1,13 +1,13 @@
 import * as db from './db'
 import { getUserHandler, updateUserDetails } from '../controllers/user.controller';
 import { Request, Response } from 'express';
-import UserModel from '../models/users.model';
+import UserModel from '../models/main/users.model';
 import appAssert from '../utils/appAssert';
-import { CREATED, NOT_FOUND } from '../constants/http';
+import { CREATED, NOT_FOUND } from '../constants/http.constants';
 import mongoose from 'mongoose';
 import { addJobPostingHandler } from '../controllers/jobPostings.controller';
 import { ZodError } from 'zod';
-import JobPostingsModel from '../models/jobPostings.model';
+import JobPostingsModel from '../models/main/jobPostings.model';
 
 describe('Test candidate and employer portals', () => {
     beforeAll(async () => {
@@ -39,7 +39,7 @@ describe('Test candidate and employer portals', () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "" + employer._id,
-            employer_id: "" + employer._id,
+            employerId: "" + employer._id,
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -74,12 +74,17 @@ describe('Test candidate and employer portals', () => {
         };
         const mNext = jest.fn();
         await addJobPostingHandler(mReq as Request, mRes as Response, mNext);
+        jobs = await JobPostingsModel.find();
+        jobs[0]._id
+
+
         expect(mRes.status).toHaveBeenCalledWith(CREATED);
         // Test whether correct json response is received
-        expect(mJson).toHaveBeenCalledWith(jobPosting);
-        // Test whether job is in database
-        jobs = await JobPostingsModel.find();
         expect(jobs.length).toBe(1);
+        expect(mJson.mock.calls[0][0]._id).toBeDefined();
+        expect(mJson.mock.calls[0][0]._id.toString()).toEqual((jobs[0]._id as unknown as string).toString());
+        // Test whether job is in database
+        
 
     });
 
@@ -103,7 +108,7 @@ describe('Test candidate and employer portals', () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "" + employer._id,
-            employer_id: "" + employer._id,
+            employerId: "" + employer._id,
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -175,7 +180,7 @@ describe('Test candidate and employer portals', () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "" + employer._id,
-            employer_id: "" + employer._id,
+            employerId: "" + employer._id,
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -247,7 +252,7 @@ describe('Test candidate and employer portals', () => {
             location: "Winnipeg",
             compensationType: "Monthly",
             employer: "" + employer._id,
-            employer_id: "" + employer._id,
+            employerId: "" + employer._id,
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],

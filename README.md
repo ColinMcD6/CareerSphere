@@ -24,6 +24,16 @@ User Friendly Career Platform that connects job seekers and employers through fe
 
 * [Testing Plan](documentation/TEST_PLAN.md)
 
+### Load Test Plan
+
+* [Load Test Plan implemented using JMeter](https://github.com/ColinMcD6/CareerSphere/blob/5c10f333bf5973c08797ed8768d1d67badc32ccf/documentation/Load_Testing/CareerSphere_LoadTesting_TestPlan.jmx)
+
+* [Results 50 User](https://github.com/ColinMcD6/CareerSphere/blob/5c10f333bf5973c08797ed8768d1d67badc32ccf/documentation/Load_Testing/artifacts/resultTree_50.csv)
+
+* [Results 150 User](https://github.com/ColinMcD6/CareerSphere/blob/5c10f333bf5973c08797ed8768d1d67badc32ccf/documentation/Load_Testing/artifacts/resultTree_150.csv)
+
+* [Results 250 User](https://github.com/ColinMcD6/CareerSphere/blob/5c10f333bf5973c08797ed8768d1d67badc32ccf/documentation/Load_Testing/artifacts/resultTree_250.csv)
+
 ### Sequence Diagrams
 
 * [Sequence Diagrams](https://github.com/ColinMcD6/CareerSphere/wiki/Sequence-Diagrams)

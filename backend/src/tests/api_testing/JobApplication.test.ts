@@ -1,16 +1,17 @@
-import request from "supertest";
-import * as db from "../db";
-import app from "../..";
-import { CREATED, OK, UNAUTHORIZED } from "../../constants/http";
-import JobPostingsModel from "../../models/jobPostings.model";  
-import UserModel from "../../models/users.model";
-import path from "path";
 import fs from "fs";
-import e from "express";
-import { date } from "zod";
+import path from "path";
+import request from "supertest";
+import app from "../..";
+import { CREATED, OK } from "../../constants/http.constants";
+import JobPostingsModel from "../../models/main/jobPostings.model";
+import UserModel from "../../models/main/users.model";
+import * as db from "../db";
 
 let requestUserStuff: any;
 let accessToken: any;
+
+let requestUserStuff2: any;
+let accessToken2: any;
 describe("API Routes for Job Posting, Application, and Saving", () => {
   beforeAll(async () => {
     await db.connect();
@@ -18,14 +19,25 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         username: "test_user",
         email: "test_user@gmail.com",
         password: "12345678",
-        confirm_password: "12345678",
-        user_role: "Candidate",
+        confirmPassword: "12345678",
+        userRole: "Candidate",
     };
+    const userData2 = {
+        username: "test_emp",
+        email: "test_emp@gmail.com",
+        password: "12345678",
+        confirmPassword: "12345678",
+        userRole: "Employer",
+    };
+        
     // Signup
     const signupResponse = await request(app).post("/auth/signup").send(userData);
+    const signupResponse2 = await request(app).post("/auth/signup").send(userData2);
     // login
     const loginResponse = await request(app).post('/auth/login').send(userData);
+    const loginResponse2 = await request(app).post('/auth/login').send(userData2);
     expect(loginResponse.status).toBe(OK);
+    expect(loginResponse2.status).toBe(OK);
 
     // Get cookie
     const cookies = Array.isArray(loginResponse.headers["set-cookie"])
@@ -35,8 +47,16 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
     accessToken = cookies.find((cookie: string) =>cookie.startsWith("accessToken="));
     expect(accessToken).toBeDefined();
 
+    const cookies2 = Array.isArray(loginResponse2.headers["set-cookie"])
+    ? loginResponse2.headers["set-cookie"]
+    : [loginResponse2.headers["set-cookie"]];
+    expect(cookies2).toBeDefined();
+    accessToken2 = cookies2.find((cookie: string) =>cookie.startsWith("accessToken="));
+    expect(accessToken2).toBeDefined();
+
     // Get user information
     requestUserStuff = await request(app).get("/user").send(userData).set('Cookie', accessToken);
+    requestUserStuff2 = await request(app).get("/user").send(userData2).set('Cookie', accessToken2);
 
     const newJob1 = {
         title: "Job test 1",
@@ -89,9 +109,9 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         category: 3
     }   
     
-    const requestCreateJob1 = await request(app).post("/job/add").send({...newJob1}).set('Cookie', accessToken).expect(CREATED);
-    const requestCreateJob2 = await request(app).post("/job/add").send({...newJob2}).set('Cookie', accessToken).expect(CREATED);
-    const requestCreateJob3 = await request(app).post("/job/add").send({...newJob3}).set('Cookie', accessToken).expect(CREATED);
+    const requestCreateJob1 = await request(app).post("/job/add").send({...newJob1}).set('Cookie', accessToken2).expect(CREATED);
+    const requestCreateJob2 = await request(app).post("/job/add").send({...newJob2}).set('Cookie', accessToken2).expect(CREATED);
+    const requestCreateJob3 = await request(app).post("/job/add").send({...newJob3}).set('Cookie', accessToken2).expect(CREATED);
     
     const jobs = await JobPostingsModel.find().exec();
     expect(jobs).toHaveLength(3);
@@ -101,19 +121,19 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         (jobs[2]._id as unknown as string).toString()];
 
     const jobApplication1 = {
-        job_id: ids[0],
-        employer_id: "werwerwerfwerwerwer",
-        candidate_id: requestUserStuff.body._id,
+        jobId: ids[0],
+        employerId: "werwerwerfwerwerwer",
+        candidateId: requestUserStuff.body._id,
         status: "Applied",
-        resume_id: "dwqfqwefeqwfqwefqe",
+        resumeId: "dwqfqwefeqwfqwefqe",
         dateApplied: Date.now()
     }
 
     const jobApplication2 = {
-        job_id: jobs[1]._id,
-        employer_id: "werwerwerfwerwerwer",
-        candidate_id: requestUserStuff.body._id,
-        resume_id: "dwqfqwefeqwfqwefqe",
+        jobId: jobs[1]._id,
+        employerId: "werwerwerfwerwerwer",
+        candidateId: requestUserStuff.body._id,
+        resumeId: "dwqfqwefeqwfqwefqe",
         status: "Applied",
         dateApplied: Date.now()
     }
@@ -123,13 +143,13 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
 
 
     const savedJob1 = {
-        job_id: ids[0],
-        candidate_id: requestUserStuff.body._id
+        jobId: ids[0],
+        candidateId: requestUserStuff.body._id
     }
 
     const savedJob2 = {
-        job_id: ids[1],
-        candidate_id: requestUserStuff.body._id
+        jobId: ids[1],
+        candidateId: requestUserStuff.body._id
     }
 
     const requestSaveJob1 = await request(app).post("/job/save").send({...savedJob1}).set('Cookie', accessToken).expect(CREATED);
@@ -160,15 +180,15 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         expect(requestAllJobs.body.jobPostings[2].title).toEqual("Job test 3");
 
 
-        const requestAllSavedJobs = await request(app).get("/job/?saved_posting_candidate_id=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
+        const requestAllSavedJobs = await request(app).get("/job/?savedPostingCandidateId=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
         
 
         expect(requestAllSavedJobs.body.jobPostings.length).toEqual(2);
         expect(requestAllSavedJobs.body.jobPostings[0].title).toEqual("Job test 1");
         expect(requestAllSavedJobs.body.jobPostings[1].title).toEqual("Job test 2");
 
-        const saveJobRecord = await request(app).get("/job/save/query?candidate_id=" + requestUserStuff.body._id + "&job_id=" + requestAllJobs.body.jobPostings[0]._id).set('Cookie', accessToken).expect(OK);
-        const saveJobRecord2 = await request(app).get("/job/save/query?candidate_id=" + requestUserStuff.body._id + "&job_id=" + requestAllJobs.body.jobPostings[1]._id).set('Cookie', accessToken).expect(OK);
+        const saveJobRecord = await request(app).get("/job/save/query?candidateId=" + requestUserStuff.body._id + "&jobId=" + requestAllJobs.body.jobPostings[0]._id).set('Cookie', accessToken).expect(OK);
+        const saveJobRecord2 = await request(app).get("/job/save/query?candidateId=" + requestUserStuff.body._id + "&jobId=" + requestAllJobs.body.jobPostings[1]._id).set('Cookie', accessToken).expect(OK);
 
         expect(saveJobRecord.body._id).toBeDefined();
         expect(saveJobRecord2.body._id).toBeDefined();
@@ -177,25 +197,25 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
     });
 
     test("Unsave a Job Posting and query", async () => {
-        const requestAllSavedJobs = await request(app).get("/job/?saved_posting_candidate_id=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
+        const requestAllSavedJobs = await request(app).get("/job/?savedPostingCandidateId=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
         
         expect(requestAllSavedJobs.body.jobPostings.length).toEqual(2);
         expect(requestAllSavedJobs.body.jobPostings[0].title).toEqual("Job test 1");
         expect(requestAllSavedJobs.body.jobPostings[1].title).toEqual("Job test 2");
 
-        const savedJob = requestAllSavedJobs.body.jobPostings[0].saved_posting[0];
-        const savedJob2 = requestAllSavedJobs.body.jobPostings[1].saved_posting[0];
+        const savedJob = requestAllSavedJobs.body.jobPostings[0].savedPosting[0];
+        const savedJob2 = requestAllSavedJobs.body.jobPostings[1].savedPosting[0];
 
         const requestUnsaveJob = await request(app).delete("/job/save/" + savedJob._id).set('Cookie', accessToken).expect(OK);
 
-        const requestAllSavedJobs2 = await request(app).get("/job/?saved_posting_candidate_id=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
+        const requestAllSavedJobs2 = await request(app).get("/job/?savedPostingCandidateId=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
 
         expect(requestAllSavedJobs2.body.jobPostings.length).toEqual(1);
-        expect(requestAllSavedJobs2.body.jobPostings[0].saved_posting[0]._id).toEqual(savedJob2._id);
+        expect(requestAllSavedJobs2.body.jobPostings[0].savedPosting[0]._id).toEqual(savedJob2._id);
     });
 
     test("Save a Job Posting", async () => {
-        const requestAllSavedJobs = await request(app).get("/job/?saved_posting_candidate_id=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
+        const requestAllSavedJobs = await request(app).get("/job/?savedPostingCandidateId=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
 
         expect(requestAllSavedJobs.body.jobPostings.length).toEqual(1);
         
@@ -205,14 +225,14 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         expect(searchForJobTest3.body.jobPostings[0].title).toEqual("Job test 3");
 
         const savedJob = {
-            job_id: searchForJobTest3.body.jobPostings[0]._id,
-            candidate_id: requestUserStuff.body._id
+            jobId: searchForJobTest3.body.jobPostings[0]._id,
+            candidateId: requestUserStuff.body._id
         }
 
         const requestSaveJob = await request(app).post("/job/save").send(savedJob).set('Cookie', accessToken).expect(CREATED);
 
 
-        const requestAllSavedJobs2 = await request(app).get("/job/?saved_posting_candidate_id=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
+        const requestAllSavedJobs2 = await request(app).get("/job/?savedPostingCandidateId=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
 
         expect(requestAllSavedJobs2.body.jobPostings.length).toEqual(2);
 
@@ -236,7 +256,7 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
             category: 3
         }
 
-        const requestCreateJob3 = await request(app).post("/job/add").send({...newJob}).set('Cookie', accessToken).expect(CREATED);
+        const requestCreateJob3 = await request(app).post("/job/add").send({...newJob}).set('Cookie', accessToken2).expect(CREATED);
         const searchForJobTest3 = await request(app).get("/job/?search=Test 4").set('Cookie', accessToken).expect(OK);
         expect(searchForJobTest3.body.jobPostings.length).toEqual(1);
         expect(searchForJobTest3.body.jobPostings[0].title).toEqual("Job test 4");
@@ -245,27 +265,27 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
 
 
         const jobApplication1 = {
-            job_id: job._id,
-            employer_id: "werwerwerfwerwerwer",
-            candidate_id: requestUserStuff.body._id,
+            jobId: job._id,
+            employerId: "werwerwerfwerwerwer",
+            candidateId: requestUserStuff.body._id,
             status: "Applied",
-            resume_id: "dwqfqwefeqwfqwefqe",
+            resumeId: "dwqfqwefeqwfqwefqe",
             dateApplied: Date.now()
         }
     
         const jobApplication2 = {
-            job_id: job._id,
-            employer_id: "werwerwerfwerwerwer",
-            candidate_id: requestUserStuff.body._id,
-            resume_id: "dwqfqwefeqwfqwefqe",
+            jobId: job._id,
+            employerId: "werwerwerfwerwerwer",
+            candidateId: requestUserStuff.body._id,
+            resumeId: "dwqfqwefeqwfqwefqe",
             status: "Applied",
             dateApplied: Date.now()
         }
         const jobApplication3 = {
-            job_id: job._id,
-            employer_id: "werwerwerfwerwerwer",
-            candidate_id: requestUserStuff.body._id,
-            resume_id: "dwqfqwefeqwfqwefqe",
+            jobId: job._id,
+            employerId: "werwerwerfwerwerwer",
+            candidateId: requestUserStuff.body._id,
+            resumeId: "dwqfqwefeqwfqwefqe",
             status: "Applied",
             dateApplied: Date.now()
         }
@@ -274,7 +294,7 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         const createJobApplication2 = await request(app).post("/job/applications/apply/").send({...jobApplication2}).set('Cookie', accessToken).expect(CREATED);
         const createJobApplication3 = await request(app).post("/job/applications/apply/").send({...jobApplication3}).set('Cookie', accessToken).expect(CREATED);
 
-        const requestAllApplications = await request(app).get("/job/applications/all/query?job_id=" + job._id).set('Cookie', accessToken).expect(OK);
+        const requestAllApplications = await request(app).get("/job/applications/all/query?jobId=" + job._id).set('Cookie', accessToken2).expect(OK);
 
         expect(requestAllApplications.body.applications.length).toEqual(3);
 
@@ -282,10 +302,10 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         //delete Job Application
         for(let i = 0; i < requestAllApplications.body.applications.length; i++) {
             const application = requestAllApplications.body.applications[i];
-            const requestDeleteApplication = await request(app).delete("/job/applications/delete/" + application._id).set('Cookie', accessToken).expect(OK);
+            const requestDeleteApplication = await request(app).delete("/job/applications/delete/" + application._id).set('Cookie', accessToken2).expect(OK);
         }
 
-        const requestAllApplications2 = await request(app).get("/job/applications/all/query?job_id=" + job._id).set('Cookie', accessToken).expect(OK);
+        const requestAllApplications2 = await request(app).get("/job/applications/all/query?jobId=" + job._id).set('Cookie', accessToken2).expect(OK);
 
         expect(requestAllApplications2.body.applications.length).toEqual(0);
 
@@ -299,14 +319,14 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         const response = await request(app).post('/resume/add').attach('resume', filePath).set('Cookie', accessToken).expect(200);
         // Check if the resume is in the database
 
-        const resume = await request(app).get('/resume/' + response.body.resume._id).set('Cookie', accessToken).expect(OK);
+        const resume = await request(app).get('/resume/' + response.body.resume._id).set('Cookie', accessToken2).expect(OK);
 
-        expect(resume.body.pdf_name).toBe('test.pdf');
+        expect(resume.body.pdfName).toBe('test.pdf');
 
-        expect(response.body.resume).toHaveProperty('pdf_name', 'test.pdf'); // Adjust the expected file name
+        expect(response.body.resume).toHaveProperty('pdfName', 'test.pdf'); // Adjust the expected file name
         expect(response.body.resume).toHaveProperty('path', './resume/uploads/');
     
-        const uploadedFilePath = path.join(__dirname, '../../../resume/uploads/', resume.body.file_name);
+        const uploadedFilePath = path.join(__dirname, '../../../resume/uploads/', resume.body.fileName);
         const fileExists = fs.existsSync(uploadedFilePath);
         expect(fileExists).toBe(true);
 
@@ -325,28 +345,28 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
 
         const job = searchForJobTest1.body.jobPostings[0];
 
-        const requestAllApplications = await request(app).get("/job/" + job._id + "?candidate_id="+requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
+        const requestAllApplications = await request(app).get("/job/" + job._id + "?candidateId="+requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
 
         expect(requestAllApplications.body.application).toBeDefined();
 
         const application = requestAllApplications.body.application;
 
-        const requestEditApplication = await request(app).put("/job/applications/edit/" + application._id).send({status: "Rejected"}).set('Cookie', accessToken).expect(OK);
+        const requestEditApplication = await request(app).put("/job/applications/edit/" + application._id).send({status: "Rejected"}).set('Cookie', accessToken2).expect(OK);
 
-        const requestAllApplications2 = await request(app).get("/job/" + job._id + "?candidate_id="+requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
+        const requestAllApplications2 = await request(app).get("/job/" + job._id + "?candidateId="+requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
 
         expect(requestAllApplications2.body.application.status).toEqual("Rejected");
     });
 
     test("Unsave all Job Postings and check if query is empty", async () => {
-        const requestAllSavedJobs = await request(app).get("/job/?saved_posting_candidate_id=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
+        const requestAllSavedJobs = await request(app).get("/job/?savedPostingCandidateId=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
 
         for(let i = 0; i < requestAllSavedJobs.body.jobPostings.length; i++) {
-            const savedJob = requestAllSavedJobs.body.jobPostings[i].saved_posting[0];
+            const savedJob = requestAllSavedJobs.body.jobPostings[i].savedPosting[0];
             const requestUnsaveJob = await request(app).delete("/job/save/" + savedJob._id).set('Cookie', accessToken).expect(OK);
         }
 
-        const requestAllSavedJobs2 = await request(app).get("/job/?saved_posting_candidate_id=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
+        const requestAllSavedJobs2 = await request(app).get("/job/?savedPostingCandidateId=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
         const requestAllJobs = await request(app).get("/job/").set('Cookie', accessToken).expect(OK);
         expect(requestAllJobs.body.jobPostings.length).toEqual(3);
         expect(requestAllSavedJobs2.body.jobPostings.length).toEqual(0);
@@ -358,13 +378,13 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         for(let i = 0; i < requestAllJobs.body.jobPostings.length; i++) {
             const job = requestAllJobs.body.jobPostings[i];
             const savedJob = {
-                job_id: job._id,
-                candidate_id: requestUserStuff.body._id
+                jobId: job._id,
+                candidateId: requestUserStuff.body._id
             }
             const requestSaveJob = await request(app).post("/job/save").send(savedJob).set('Cookie', accessToken).expect(CREATED);
         }
 
-        const requestAllSavedJobs = await request(app).get("/job/?saved_posting_candidate_id=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
+        const requestAllSavedJobs = await request(app).get("/job/?savedPostingCandidateId=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
         expect(requestAllSavedJobs.body.jobPostings.length).toEqual(requestAllJobs.body.jobPostings.length);
     });
 
@@ -401,37 +421,37 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         ]
 
         const application1 = {
-            job_id: "60f3b1b3b3b3b3b3b3b3b3b3",
-            employer_id: "werwerwerfwerwerwer",
-            candidate_id: ids[0],
+            jobId: "60f3b1b3b3b3b3b3b3b3b3b3",
+            employerId: "werwerwerfwerwerwer",
+            candidateId: ids[0],
             status: "Applied",
-            resume_id: "dwqfqwefeqwfqwefqe",
+            resumeId: "dwqfqwefeqwfqwefqe",
             dateApplied: Date.now()
         }
         const application2 = {
-            job_id: "60f3b1b3b3b3b3b3b3b3b3",
-            employer_id: "OogaBooga",
-            candidate_id: requestUserStuff.body._id,
+            jobId: "60f3b1b3b3b3b3b3b3b3b3",
+            employerId: "OogaBooga",
+            candidateId: requestUserStuff.body._id,
             status: "Applied",
-            resume_id: "dwqfqwefeqwfqwefqe",
+            resumeId: "dwqfqwefeqwfqwefqe",
             dateApplied: Date.now()
         }
 
         const application3 = {
-            job_id: "60f3b1b3b3b3b3b3b3b3b3",
-            employer_id: "OogaBooga",
-            candidate_id: requestUserStuff.body._id,
+            jobId: "60f3b1b3b3b3b3b3b3b3b3",
+            employerId: "OogaBooga",
+            candidateId: requestUserStuff.body._id,
             status: "Applied",
-            resume_id: "dwqfqwefeqwfqwefqe",
+            resumeId: "dwqfqwefeqwfqwefqe",
             dateApplied: Date.now()
         }
 
         const application4 = {
-            job_id: "60f3b1b3b3b3b3b3b3b3b3",
-            employer_id: "werwerwerfwerwerwer",
-            candidate_id: ids[1],
+            jobId: "60f3b1b3b3b3b3b3b3b3b3",
+            employerId: "werwerwerfwerwerwer",
+            candidateId: ids[1],
             status: "Applied",
-            resume_id: "dwqfqwefeqwfqwefqe",
+            resumeId: "dwqfqwefeqwfqwefqe",
             dateApplied: Date.now()
         }
 
@@ -440,26 +460,26 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         const createApplication3 = await request(app).post("/job/applications/apply/").send({...application3}).set('Cookie', accessToken).expect(CREATED);
         const createApplication4 = await request(app).post("/job/applications/apply/").send({...application4}).set('Cookie', accessToken).expect(CREATED);
 
-        const requestAllApplications = await request(app).get("/job/applications/all/query").set('Cookie', accessToken).expect(OK);
+        const requestAllApplications = await request(app).get("/job/applications/all/query").set('Cookie', accessToken2).expect(OK);
 
         expect(requestAllApplications.body.applications.length).toEqual(6);
 
-        const requestAllApplications2 = await request(app).get("/job/applications/all/query?candidate_id="+requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
+        const requestAllApplications2 = await request(app).get("/job/applications/all/query?candidateId="+requestUserStuff.body._id).set('Cookie', accessToken2).expect(OK);
 
         expect(requestAllApplications2.body.applications.length).toEqual(4);
 
 
         //multiple queries
-        const requestAllApplications4 = await request(app).get("/job/applications/all/query?candidate_id="+requestUserStuff.body._id + "&employer_id=OogaBooga").set('Cookie', accessToken).expect(OK);
+        const requestAllApplications4 = await request(app).get("/job/applications/all/query?candidateId="+requestUserStuff.body._id + "&employerId=OogaBooga").set('Cookie', accessToken2).expect(OK);
 
 
         //delete Job Application
         for(let i = 0; i < requestAllApplications2.body.applications.length; i++) {
             const application = requestAllApplications2.body.applications[i];
-            const requestDeleteApplication = await request(app).delete("/job/applications/delete/" + application._id).set('Cookie', accessToken).expect(OK);
+            const requestDeleteApplication = await request(app).delete("/job/applications/delete/" + application._id).set('Cookie', accessToken2).expect(OK);
         }
 
-        const requestAllApplications3 = await request(app).get("/job/applications/all/query?candidate_id="+requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
+        const requestAllApplications3 = await request(app).get("/job/applications/all/query?candidateId="+requestUserStuff.body._id).set('Cookie', accessToken2).expect(OK);
         expect(requestAllApplications3.body.applications.length).toEqual(0);
 
 
@@ -472,8 +492,8 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
             username: "test_user",
             email: "test_user@gmail.com",
             password: "12345678",
-            confirm_password: "12345678",
-            user_role: "Candidate",
+            confirmPassword: "12345678",
+            userRole: "Candidate",
         };
         // Signup
         const signupResponse = await request(app).post("/auth/signup").send(userData);
@@ -492,7 +512,7 @@ describe("API Routes for Job Posting, Application, and Saving", () => {
         // Get user information
         requestUserStuff = await request(app).get("/user").send(userData).set('Cookie', accessToken);
 
-        const requestAllSavedJobs = await request(app).get("/job/?saved_posting_candidate_id=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
+        const requestAllSavedJobs = await request(app).get("/job/?savedPostingCandidateId=" + requestUserStuff.body._id).set('Cookie', accessToken).expect(OK);
         expect(requestAllSavedJobs.body.jobPostings.length).toEqual(0);
 
         const requestAllJobs = await request(app).get("/job/").set('Cookie', accessToken).expect(OK);

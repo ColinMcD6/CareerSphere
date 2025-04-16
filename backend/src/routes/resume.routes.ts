@@ -7,7 +7,14 @@ import {
 
 import fs from "fs";
 import multer from "multer";
+import { auth_verifyCandidate, auth_verifyEmployer } from "../middleware/authenticate.middleware";
 
+
+/**
+ * Configure multer storage options
+ * This will store the uploaded files in the 'uploads' directory under 'resume'
+ * and will rename the files to a unique name using the current timestamp and a random number.
+*/
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadPath = './resume/uploads/';
@@ -30,8 +37,8 @@ const upload = multer({ storage: storage });
 const resumeRoutes = Router();
 
 //prefix: /resume
-resumeRoutes.post("/add", upload.single('resume'), addResumeHandler);
-resumeRoutes.get("/download/:id", getResumeDownloadHandler);
-resumeRoutes.get("/:id", getResumeNameHandler);
+resumeRoutes.post("/add", auth_verifyCandidate, upload.single('resume'), addResumeHandler);
+resumeRoutes.get("/download/:id", auth_verifyEmployer, getResumeDownloadHandler);
+resumeRoutes.get("/:id", auth_verifyEmployer, getResumeNameHandler);
 
 export default resumeRoutes;

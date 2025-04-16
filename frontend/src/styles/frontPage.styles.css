@@ -1,0 +1,72 @@
+/* Global Styles */
+:root {
+  --primary-color: mediumblue;
+  --secondary-color: blueviolet;
+  --text-color-light: rgb(30, 30, 30);
+  --text-color-dark: aliceblue;
+  --background-light: white;
+  --background-dark: rgb(30, 30, 30);
+  --font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+
+  font-family: var(--font-family);
+  font-size: 16px;
+  text-align: center;
+  color: var(--text-color-dark);
+  background-color: var(--background-dark);
+}
+
+/* Root Container */
+#root {
+  color: var(--text-color-dark);
+  background-color: var(--background-dark);
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  font-style: italic;
+  text-align: right;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Buttons */
+button {
+  border: none;
+  padding: 10px 15px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+}
+
+.logButton {
+  color: white;
+  background-color: var(--secondary-color);
+}
+
+.accountButton {
+  color: var(--text-color-dark);
+  background-color: var(--primary-color);
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+/* Light Mode */
+@media (prefers-color-scheme: light) {
+  :root {
+    color: var(--text-color-light);
+    background-color: var(--background-light);
+  }
+  
+  #root {
+    color: var(--text-color-light);
+    background-color: var(--background-light);
+  }
+
+  .accountButton {
+    color: white;
+  }
+}

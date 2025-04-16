@@ -1,5 +1,5 @@
-import AppErrorCode from "../constants/APP_errorCode";
-import { HttpStatusCode } from "../constants/http";
+import AppErrorCode from "../constants/appErrorCode.constants";
+import { HttpStatusCode } from "../constants/http.constants";
 
 class AppError extends Error {
     constructor(

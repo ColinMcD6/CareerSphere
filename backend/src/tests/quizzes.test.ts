@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { BAD_REQUEST, NOT_FOUND, CREATED, OK, CONFLICT } from "../constants/http";
-import { addquizCandiateResponse, addquizHandler, getquizHandler, getquizSubmissions, getspecificquizHandler } from "../controllers/quiz.controller";
-import JobPostingsModel from "../models/jobPostings.model";
-import Quiz from "../models/quiz.model";
+import { BAD_REQUEST, NOT_FOUND, CREATED, OK, CONFLICT } from "../constants/http.constants";
+import { addQuizCandidateResponse, addQuizHandler, getQuizHandler, getQuizSubmissions, getSpecificQuizHandler } from "../controllers/quiz.controller";
+import JobPostingsModel from "../models/main/jobPostings.model";
+import Quiz from "../models/main/quiz.model";
 import * as db from './db'
-import UserModel from "../models/users.model";
+import UserModel from "../models/main/users.model";
 import mongoose from "mongoose";
 
 describe("Quizzes Unit Tests", () => {
@@ -29,7 +29,7 @@ describe("Quizzes Unit Tests", () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "test_employer",
-            employer_id: "test_employer_123",
+            employerId: "test_employer_123",
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -55,7 +55,7 @@ describe("Quizzes Unit Tests", () => {
         };
         const mNext = jest.fn();
 
-        await addquizHandler(mReq as Request, mRes as Response, mNext);
+        await addQuizHandler(mReq as Request, mRes as Response, mNext);
 
         // Verify response
         expect(mRes.status).toHaveBeenCalledWith(CREATED);
@@ -84,7 +84,7 @@ describe("Quizzes Unit Tests", () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "test_employer",
-            employer_id: "test_employer_123",
+            employerId: "test_employer_123",
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -110,7 +110,7 @@ describe("Quizzes Unit Tests", () => {
         };
         const mNext = jest.fn();
 
-        await addquizHandler(mReq as Request, mRes as Response, mNext);
+        await addQuizHandler(mReq as Request, mRes as Response, mNext);
 
         // Verify response
         let error: Error = mNext.mock.calls[0][0];
@@ -136,7 +136,7 @@ describe("Quizzes Unit Tests", () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "test_employer",
-            employer_id: "test_employer_123",
+            employerId: "test_employer_123",
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -161,7 +161,7 @@ describe("Quizzes Unit Tests", () => {
         };
         const mNext = jest.fn();
 
-        await addquizHandler(mReq as Request, mRes as Response, mNext);
+        await addQuizHandler(mReq as Request, mRes as Response, mNext);
 
         // Verify response
         let error: Error = mNext.mock.calls[0][0];
@@ -193,7 +193,7 @@ describe("Quizzes Unit Tests", () => {
         };
         const mNext = jest.fn();
 
-        await addquizHandler(mReq as Request, mRes as Response, mNext);
+        await addQuizHandler(mReq as Request, mRes as Response, mNext);
 
         // Verify response
         let error: Error = mNext.mock.calls[0][0];
@@ -209,7 +209,7 @@ describe("Quizzes Unit Tests", () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "test_employer",
-            employer_id: "test_employer_123",
+            employerId: "test_employer_123",
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -244,7 +244,7 @@ describe("Quizzes Unit Tests", () => {
         };
         const mNext = jest.fn();
 
-        await getquizHandler(mReq as Request, mRes as Response, mNext);
+        await getQuizHandler(mReq as Request, mRes as Response, mNext);
 
         // Verify response
         expect(mRes.status).toHaveBeenCalledWith(OK);
@@ -267,7 +267,7 @@ describe("Quizzes Unit Tests", () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "test_employer",
-            employer_id: "test_employer_123",
+            employerId: "test_employer_123",
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -289,7 +289,7 @@ describe("Quizzes Unit Tests", () => {
         };
         const mNext = jest.fn();
 
-        await getquizHandler(mReq as Request, mRes as Response, mNext);
+        await getQuizHandler(mReq as Request, mRes as Response, mNext);
 
         let error: Error = mNext.mock.calls[0][0];
         expect(error.message).toBe("No quizzes found for this job")
@@ -304,7 +304,7 @@ describe("Quizzes Unit Tests", () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "test_employer",
-            employer_id: "test_employer_123",
+            employerId: "test_employer_123",
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -333,7 +333,7 @@ describe("Quizzes Unit Tests", () => {
         };
         const mNext = jest.fn();
 
-        await getspecificquizHandler(mReq as Request, mRes as Response, mNext);
+        await getSpecificQuizHandler(mReq as Request, mRes as Response, mNext);
 
         // Verify response
         expect(mRes.status).toHaveBeenCalledWith(OK);
@@ -359,7 +359,7 @@ describe("Quizzes Unit Tests", () => {
         };
         const mNext = jest.fn();
 
-        await getspecificquizHandler(mReq as Request, mRes as Response, mNext);
+        await getSpecificQuizHandler(mReq as Request, mRes as Response, mNext);
 
         // Verify response
         let error: Error = mNext.mock.calls[0][0];
@@ -374,7 +374,7 @@ describe("Quizzes Unit Tests", () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "test_employer",
-            employer_id: "test_employer_123",
+            employerId: "test_employer_123",
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -418,7 +418,7 @@ describe("Quizzes Unit Tests", () => {
         };
         const mNext = jest.fn();
 
-        await addquizCandiateResponse(mReq as Request, mRes as Response, mNext);
+        await addQuizCandidateResponse(mReq as Request, mRes as Response, mNext);
 
         // Verify response
         expect(mRes.status).toHaveBeenCalledWith(CREATED);
@@ -441,7 +441,7 @@ describe("Quizzes Unit Tests", () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "test_employer",
-            employer_id: "test_employer_123",
+            employerId: "test_employer_123",
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -471,7 +471,7 @@ describe("Quizzes Unit Tests", () => {
         };
         const mNext = jest.fn();
 
-        await addquizCandiateResponse(mReq as Request, mRes as Response, mNext);
+        await addQuizCandidateResponse(mReq as Request, mRes as Response, mNext);
 
         // Verify response
         let error: Error = mNext.mock.calls[0][0];
@@ -486,7 +486,7 @@ describe("Quizzes Unit Tests", () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "test_employer",
-            employer_id: "test_employer_123",
+            employerId: "test_employer_123",
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -526,7 +526,7 @@ describe("Quizzes Unit Tests", () => {
         };
         const mNext = jest.fn();
 
-        await addquizCandiateResponse(mReq as Request, mRes as Response, mNext);
+        await addQuizCandidateResponse(mReq as Request, mRes as Response, mNext);
 
         // Verify response
         let error: Error = mNext.mock.calls[0][0];
@@ -541,7 +541,7 @@ describe("Quizzes Unit Tests", () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "test_employer",
-            employer_id: "test_employer_123",
+            employerId: "test_employer_123",
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -574,7 +574,7 @@ describe("Quizzes Unit Tests", () => {
         };
         const mNext = jest.fn();
 
-        await getquizSubmissions(mReq as Request, mRes as Response, mNext);
+        await getQuizSubmissions(mReq as Request, mRes as Response, mNext);
 
         // Verify response
         expect(mRes.status).toHaveBeenCalledWith(OK);
@@ -596,7 +596,7 @@ describe("Quizzes Unit Tests", () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "test_employer",
-            employer_id: "test_employer_123",
+            employerId: "test_employer_123",
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -626,7 +626,7 @@ describe("Quizzes Unit Tests", () => {
         };
         const mNext = jest.fn();
 
-        await getquizSubmissions(mReq as Request, mRes as Response, mNext);
+        await getQuizSubmissions(mReq as Request, mRes as Response, mNext);
 
         // Verify response
         expect(mRes.status).toHaveBeenCalledWith(OK);
@@ -649,7 +649,7 @@ describe("Quizzes Unit Tests", () => {
         };
         const mNext = jest.fn();
 
-        await getquizSubmissions(mReq as Request, mRes as Response, mNext);
+        await getQuizSubmissions(mReq as Request, mRes as Response, mNext);
 
         // Verify response
         let error: Error = mNext.mock.calls[0][0];

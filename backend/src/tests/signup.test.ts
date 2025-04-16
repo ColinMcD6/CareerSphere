@@ -1,9 +1,9 @@
 import * as db from './db'
-import sessionModel from "../models/session.model";
-import UserModel from "../models/users.model";
-import verificationModel from "../models/verify.model";
-import { signup_account } from "../services/auth.services";
-import verificationType from '../constants/verificationTyes';
+import sessionModel from "../models/supportModels/session.model";
+import UserModel from "../models/main/users.model";
+import verificationModel from "../models/supportModels/verify.model";
+import { signupAccount } from "../services/auth.services";
+import verificationType from '../constants/verificationTyes.constants';
 
 describe("Signup Account", () => {
     beforeAll(async () => {
@@ -27,11 +27,11 @@ describe("Signup Account", () => {
             username: "test_user",
             email: "test_user@gmail.com",
             password: "test123456789",
-            confirm_password: "test123456789",
-            user_role: "Candidate",
+            confirmPassword: "test123456789",
+            userRole: "Candidate",
         };
 
-        const result = await signup_account(mockData);
+        const result = await signupAccount(mockData);
 
         const createdUser = await UserModel.findOne({ email: mockData.email });
         expect(createdUser).not.toBeNull();
@@ -50,7 +50,7 @@ describe("Signup Account", () => {
         expect(result.accesstoken).toBeDefined();
         expect(result.refreshtoken).toBeDefined();
         expect(result.newuser.email).toBe(mockData.email);
-        expect(result.newuser.userRole).toBe(mockData.user_role);
+        expect(result.newuser.userRole).toBe(mockData.userRole);
     }, 10000);
 
     /* 
@@ -62,11 +62,11 @@ describe("Signup Account", () => {
             username: "test_user2",
             email: "test_user2@gmail.com",
             password: "test987654321",
-            confirm_password: "test987654321",
-            user_role: "Employer",
+            confirmPassword: "test987654321",
+            userRole: "Employer",
         };
 
-        const result = await signup_account(mockData);
+        const result = await signupAccount(mockData);
 
         const createdUser = await UserModel.findOne({ email: mockData.email });
         expect(createdUser).not.toBeNull();
@@ -84,7 +84,7 @@ describe("Signup Account", () => {
         expect(result.accesstoken).toBeDefined();
         expect(result.refreshtoken).toBeDefined();
         expect(result.newuser.email).toBe(mockData.email);
-        expect(result.newuser.userRole).toBe(mockData.user_role);
+        expect(result.newuser.userRole).toBe(mockData.userRole);
     }, 10000);
 
     /*
@@ -108,7 +108,7 @@ describe("Signup Account", () => {
           userRole: "Candidate",
         };
 
-        await expect(signup_account(mockData)).rejects.toThrow("Account already exists!");
+        await expect(signupAccount(mockData)).rejects.toThrow("Account already exists!");
 
         // duplicate accounts with same email not allowed
         const userCount = await UserModel.countDocuments({ email: "test_existUser@gmail.com" });

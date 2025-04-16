@@ -1,10 +1,10 @@
 import request from "supertest"
 import * as db from '../db'
 import app from "../..";
-import UserModel from "../../models/users.model";
-import { CREATED, OK } from "../../constants/http";
-import JobPostingsModel from "../../models/jobPostings.model";
-import Quiz from "../../models/quiz.model";
+import UserModel from "../../models/main/users.model";
+import { CREATED, OK } from "../../constants/http.constants";
+import JobPostingsModel from "../../models/main/jobPostings.model";
+import Quiz from "../../models/main/quiz.model";
 
 describe('API Routes', () => {
     beforeAll(async () => {
@@ -48,7 +48,7 @@ describe('API Routes', () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "" + employer._id,
-            employer_id: "" + employer._id,
+            employerId: "" + employer._id,
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -112,7 +112,7 @@ describe('API Routes', () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "" + employer._id,
-            employer_id: "" + employer._id,
+            employerId: "" + employer._id,
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -186,7 +186,7 @@ describe('API Routes', () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "" + employer._id,
-            employer_id: "" + employer._id,
+            employerId: "" + employer._id,
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -265,7 +265,7 @@ describe('API Routes', () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "" + employer._id,
-            employer_id: "" + employer._id,
+            employerId: "" + employer._id,
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -296,7 +296,7 @@ describe('API Routes', () => {
             questions: [{ questionText: "What is JSX?", options: ["A", "B"], correctAnswer: "A" }, { questionText: "What is React?", options: ["A", "B"], correctAnswer: "B" }]
         }
 
-        const quizcreateResponse = await request(app).post(`/job/${jobId}/quizzes`).send(quizData).set('Cookie', candaccessToken)
+        const quizcreateResponse = await request(app).post(`/job/${jobId}/quizzes`).send(quizData).set('Cookie', empaccessToken)
         expect(quizcreateResponse.status).toBe(CREATED)
         expect(quizcreateResponse.body).toHaveProperty('message', 'Quiz created successfully')
         
@@ -307,7 +307,6 @@ describe('API Routes', () => {
             responses: ["A", "A"],
         }
         const submitResponse = await request(app).post(`/job/${jobId}/quizzes/${specquizId}/submissions`).send(submissionData).set('Cookie', candaccessToken)
-        console.log(submitResponse.body)
         expect(submitResponse.status).toBe(CREATED)
         expect(submitResponse.body.candidateUsername).toBe(candidate.username)
         expect(submitResponse.body.score).toBe(1)
@@ -357,7 +356,7 @@ describe('API Routes', () => {
             location: "Winnipeg",
             compensationType: "hourly",
             employer: "" + employer._id,
-            employer_id: "" + employer._id,
+            employerId: "" + employer._id,
             salary: 100,
             jobType: "Full-time",
             experience: ["None"],
@@ -388,7 +387,7 @@ describe('API Routes', () => {
             questions: [{ questionText: "What is JSX?", options: ["A", "B"], correctAnswer: "A" }, { questionText: "What is React?", options: ["A", "B"], correctAnswer: "B" }]
         }
 
-        const quizcreateResponse = await request(app).post(`/job/${jobId}/quizzes`).send(quizData).set('Cookie', candaccessToken)
+        const quizcreateResponse = await request(app).post(`/job/${jobId}/quizzes`).send(quizData).set('Cookie', empaccessToken)
         expect(quizcreateResponse.status).toBe(CREATED)
         expect(quizcreateResponse.body).toHaveProperty('message', 'Quiz created successfully')
         
@@ -402,7 +401,6 @@ describe('API Routes', () => {
         expect(submitResponse.status).toBe(CREATED)
 
         const getsubmissionResponse = await request(app).get(`/job/${jobId}/quizzes/${specquizId}/submissions`).set('Cookie', empaccessToken)
-        console.log(getquizzesResponse)
         expect(getsubmissionResponse.status).toBe(OK)
     });
 });

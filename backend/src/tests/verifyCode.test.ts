@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-import UserModel from '../models/users.model';
-import verificationModel from '../models/verify.model';
+import UserModel from '../models/main/users.model';
+import verificationModel from '../models/supportModels/verify.model';
 import { verifyEmailCode } from '../services/auth.services';
 import { onedaylater, oneyearfromnow } from '../utils/auth_helpers/calc';
 import * as db from './db'
-import verificationType from '../constants/verificationTyes';
+import verificationType from '../constants/verificationTyes.constants';
 
 describe("Verify Email Code", () => {
     beforeAll(async () => {

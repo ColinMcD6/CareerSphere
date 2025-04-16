@@ -28,6 +28,7 @@ jobs:
           # Read the current version
           NEW_VERSION=$(cat version.txt)
 
+
           # Determine the tag based on the branch
           if [[ "${{ github.ref }}" == "refs/heads/development" ]]; then
             IMAGE_TAG="${NEW_VERSION}-dev"

@@ -1,48 +1,55 @@
 import { NextFunction, Request, Response } from "express";
 import catchErrors from "../utils/catchErrors";
-import { NOT_FOUND, OK, UNAUTHORIZED } from "../constants/http";
-import UserModel from "../models/users.model";
+import { NOT_FOUND, OK, UNAUTHORIZED } from "../constants/http.constants";
 import appAssert from "../utils/appAssert";
-import { Category } from "../models/jobPostings.model";
+import {
+    getUser,
+    updateUser
+} from "../services/user.services";
+import { get } from "mongoose";
 
+
+/**
+ * * Get User Details Controller
+ * * @description - This controller handles the process of retrieving user details by ID.
+ * * @param {Request} req - The request object containing the user's ID.
+ * * @param {Response} res - The response object to send the user details back to the client.
+ * * @throws {Error} - Throws an error if the user does not exist.
+ */
 export const getUserHandler = catchErrors(
     async (req: Request, res: Response, next: NextFunction) => {
-        const user = await UserModel.findById(req.userId);
-        appAssert(user, NOT_FOUND, "User account does not exist !")
-        res.status(OK).json(user.removePassword());
+        const { user, removePassword } = await getUser(req.userId);
+        
+        res.status(OK).json(removePassword);
     }
 );
 
+
+/**
+ * * Update User Details Controller
+ * * @description - This controller handles the process of updating user details.
+ * * @param {Request} req - The request object containing the user's ID and updated details.
+ * * @param {Response} res - The response object to send the success message back to the client.
+ * * @throws {Error} - Throws an error if the user does not exist.
+ */
 export const updateUserDetails = catchErrors(
     async (req: Request, res: Response, next: NextFunction) => {
         const { education, skills, experience, hiringDetails, companyDetails, preference, phoneNumber, userlink } = req.body;
-
-        // Find user by ID
-        const user = await UserModel.findById(req.userId);
-        appAssert(user, NOT_FOUND, "User account does not exist!");
-
-        if(phoneNumber) user.phoneNumber = phoneNumber;
-        if(userlink) user.userlink = userlink;
-
-        // Check user role
-        if (user.userRole === "Candidate") {
-            if (education) user.education = education;
-            if (skills) user.skills = skills;
-            if (experience) user.experience = experience;
-        } else if (user.userRole === "Employer") {
-            if (companyDetails) user.companyDetails = companyDetails;
-            if (hiringDetails) user.hiringDetails = hiringDetails;
+        const query = {
+            education,
+            skills,
+            experience,
+            hiringDetails,
+            companyDetails,
+            preference,
+            phoneNumber,
+            userlink
         }
 
-        let category = preference as number;
-        if(category >= 0 && category <= Category.Other)
-        {
-            user.preferences[preference] += 1;
-        }
-        // Save updated user details
-        await user.save();
+        const user = await updateUser(req.userId, query);
+
+        appAssert(user, NOT_FOUND, "User account does not exist !")
+        
         res.status(200).json({ message: "User details updated successfully", user });
     }
 );
-
-

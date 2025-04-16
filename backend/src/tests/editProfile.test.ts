@@ -1,9 +1,9 @@
 import * as db from './db'
 import { getUserHandler, updateUserDetails } from '../controllers/user.controller';
 import { Request, Response } from 'express';
-import UserModel from '../models/users.model';
+import UserModel from '../models/main/users.model';
 import appAssert from '../utils/appAssert';
-import { NOT_FOUND } from '../constants/http';
+import { NOT_FOUND } from '../constants/http.constants';
 import mongoose from 'mongoose';
 
 describe('Test candidate and employer portals', () => {

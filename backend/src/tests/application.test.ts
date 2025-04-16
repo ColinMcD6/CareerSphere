@@ -9,8 +9,8 @@ import {
 import * as db from './db';
 
 
-import ApplicationModel from "../models/application.model";
-import UserModel from '../models/users.model';
+import ApplicationModel from "../models/supportModels/application.model";
+import UserModel from '../models/main/users.model';
 
 describe('Test adding Application', () => {
     beforeAll(async () => {
@@ -25,10 +25,10 @@ describe('Test adding Application', () => {
 
     test('Adding a new application', async () => {
         const newApplication = {
-            job_id: "123",
-            employer_id: "123",
-            candidate_id: "123",
-            resume_id: "123",
+            jobId: "123",
+            employerId: "123",
+            candidateId: "123",
+            resumeId: "123",
             dateApplied: new Date(),
             status: "Pending",
         };
@@ -38,10 +38,10 @@ describe('Test adding Application', () => {
 
         const mReq: Partial<Request> = {
             body: {
-                job_id: newApplication.job_id,
-                employer_id: newApplication.employer_id,
-                candidate_id: newApplication.candidate_id,
-                resume_id: newApplication.resume_id,
+                jobId: newApplication.jobId,
+                employerId: newApplication.employerId,
+                candidateId: newApplication.candidateId,
+                resumeId: newApplication.resumeId,
             },
         };
         const mJson = jest.fn().mockImplementation(() => null)
@@ -64,10 +64,10 @@ describe('Test adding Application', () => {
 
     test('Getting a job application', async () => {
         const newApplication = {
-            job_id: "123",
-            employer_id: "123",
-            candidate_id: "123",
-            resume_id: "123",
+            jobId: "123",
+            employerId: "123",
+            candidateId: "123",
+            resumeId: "123",
             dateApplied: new Date(),
             status: "Pending",
         };
@@ -87,10 +87,10 @@ describe('Test adding Application', () => {
 
         const expected = {
             _id: application._id,
-            job_id: application.job_id,
-            employer_id: application.employer_id,
-            candidate_id: application.candidate_id,
-            resume_id: application.resume_id,
+            jobId: application.jobId,
+            employerId: application.employerId,
+            candidateId: application.candidateId,
+            resumeId: application.resumeId,
             dateApplied: application.dateApplied,
             status: application.status,
             __v: application.__v,
@@ -98,10 +98,10 @@ describe('Test adding Application', () => {
 
         const jsonResponse = {
             _id : mJson.mock.calls[0][0]._id,
-            job_id : mJson.mock.calls[0][0].job_id,
-            employer_id : mJson.mock.calls[0][0].employer_id,
-            candidate_id : mJson.mock.calls[0][0].candidate_id,
-            resume_id : mJson.mock.calls[0][0].resume_id,
+            jobId : mJson.mock.calls[0][0].jobId,
+            employerId : mJson.mock.calls[0][0].employerId,
+            candidateId : mJson.mock.calls[0][0].candidateId,
+            resumeId : mJson.mock.calls[0][0].resumeId,
             dateApplied : mJson.mock.calls[0][0].dateApplied,
             status : mJson.mock.calls[0][0].status,
             __v : mJson.mock.calls[0][0].__v
@@ -115,9 +115,9 @@ describe('Test adding Application', () => {
     // test('Getting a job application (Does not exist)', async () => {
     //     const newApplication = {
     //         job_id: "123",
-    //         employer_id: "123",
-    //         candidate_id: "123",
-    //         resume_id: "123",
+    //         employerId: "123",
+    //         candidateId: "123",
+    //         resumeId: "123",
     //         dateApplied: new Date(),
     //         status: "Pending",
     //     };
@@ -170,36 +170,36 @@ describe('Test adding Application', () => {
         });
 
         const newApplication = {     
-            job_id: job[0],
-            employer_id:employers[0],
-            candidate_id: newuser._id,
-            resume_id:"wegwergwegwe",
+            jobId: job[0],
+            employerId:employers[0],
+            candidateId: newuser._id,
+            resumeId:"wegwergwegwe",
             dateApplied: new Date(),
             status: "Pending"
         };
 
         const newApplication2 = {     
-            job_id:job[0],
-            employer_id:employers[0],
-            candidate_id: newuser2._id,
-            resume_id:"wegwergergergergwegwe",
+            jobId:job[0],
+            employerId:employers[0],
+            candidateId: newuser2._id,
+            resumeId:"wegwergergergergwegwe",
             dateApplied: new Date(),
             status: "Pending"
         };
 
         const newApplication3 = {     
-            job_id:job[1],
-            employer_id:employers[0],
-            candidate_id: newuser._id,
-            resume_id:"wegwwefgwehwrgwegwe",
+            jobId:job[1],
+            employerId:employers[0],
+            candidateId: newuser._id,
+            resumeId:"wegwwefgwehwrgwegwe",
             dateApplied: new Date(),
             status: "Pending"
         };
         const newApplication4 = {
-            job_id:job[2],
-            employer_id: employers[1],
-            candidate_id: newuser2._id,
-            resume_id:"wegwergerhhergherhwerhegwe",
+            jobId:job[2],
+            employerId: employers[1],
+            candidateId: newuser2._id,
+            resumeId:"wegwergerhhergherhwerhegwe",
             dateApplied: new Date(),
             status: "Pending"
         };
@@ -219,7 +219,7 @@ describe('Test adding Application', () => {
 
         const mReq: Partial<Request> = {
             query: {
-                job_id: job[0],
+                jobId: job[0],
             },
         };
         await getJobPostingApplicationsQueryHandler(mReq as Request, mRes as Response, mNext);
@@ -232,7 +232,7 @@ describe('Test adding Application', () => {
         });
 
         for (let i = 0; i < mJson.mock.calls[0][0].applications.length; i++) {
-            expect(mJson.mock.calls[0][0].applications[i].job_id).toBe(job[0]);
+            expect(mJson.mock.calls[0][0].applications[i].jobId).toBe(job[0]);
         }
 
 
@@ -267,36 +267,36 @@ describe('Test adding Application', () => {
         });
 
         const newApplication = {     
-            job_id: job[0],
-            employer_id:employers[0],
-            candidate_id: newuser._id,
-            resume_id:"wegwergwegwe",
+            jobId: job[0],
+            employerId:employers[0],
+            candidateId: newuser._id,
+            resumeId:"wegwergwegwe",
             dateApplied: new Date(),
             status: "Pending"
         };
 
         const newApplication2 = {     
-            job_id:job[0],
-            employer_id:employers[0],
-            candidate_id: newuser2._id,
-            resume_id:"wegwergergergergwegwe",
+            jobId:job[0],
+            employerId:employers[0],
+            candidateId: newuser2._id,
+            resumeId:"wegwergergergergwegwe",
             dateApplied: new Date(),
             status: "Pending"
         };
 
         const newApplication3 = {     
-            job_id:job[1],
-            employer_id:employers[0],
-            candidate_id: newuser._id,
-            resume_id:"wegwwefgwehwrgwegwe",
+            jobId:job[1],
+            employerId:employers[0],
+            candidateId: newuser._id,
+            resumeId:"wegwwefgwehwrgwegwe",
             dateApplied: new Date(),
             status: "Pending"
         };
         const newApplication4 = {
-            job_id:job[2],
-            employer_id: employers[1],
-            candidate_id: newuser2._id,
-            resume_id:"wegwergerhhergherhwerhegwe",
+            jobId:job[2],
+            employerId: employers[1],
+            candidateId: newuser2._id,
+            resumeId:"wegwergerhhergherhwerhegwe",
             dateApplied: new Date(),
             status: "Pending"
         };
@@ -315,8 +315,8 @@ describe('Test adding Application', () => {
 
         const mReq: Partial<Request> = {
             query: {
-                job_id: job[0],
-                employer_id: employers[0],
+                jobId: job[0],
+                employerId: employers[0],
                 page: "1",
                 limit: "1",
 
@@ -331,8 +331,8 @@ describe('Test adding Application', () => {
             pages: 2,
         });
         for (let i = 0; i < mJson.mock.calls[0][0].applications.length; i++) {
-            expect(mJson.mock.calls[0][0].applications[i].job_id).toBe(job[0]);
-            expect(mJson.mock.calls[0][0].applications[i].employer_id).toBe(employers[0]);
+            expect(mJson.mock.calls[0][0].applications[i].jobId).toBe(job[0]);
+            expect(mJson.mock.calls[0][0].applications[i].employerId).toBe(employers[0]);
         }
 
     });
@@ -366,36 +366,36 @@ describe('Test adding Application', () => {
         });
 
         const newApplication = {     
-            job_id: job[0],
-            employer_id:employers[0],
-            candidate_id: newuser._id,
-            resume_id:"wegwergwegwe",
+            jobId: job[0],
+            employerId:employers[0],
+            candidateId: newuser._id,
+            resumeId:"wegwergwegwe",
             dateApplied: new Date(),
             status: "Pending"
         };
 
         const newApplication2 = {     
-            job_id:job[0],
-            employer_id:employers[0],
-            candidate_id: newuser2._id,
-            resume_id:"wegwergergergergwegwe",
+            jobId:job[0],
+            employerId:employers[0],
+            candidateId: newuser2._id,
+            resumeId:"wegwergergergergwegwe",
             dateApplied: new Date(),
             status: "Pending"
         };
 
         const newApplication3 = {     
-            job_id:job[1],
-            employer_id:employers[0],
-            candidate_id: newuser._id,
-            resume_id:"wegwwefgwehwrgwegwe",
+            jobId:job[1],
+            employerId:employers[0],
+            candidateId: newuser._id,
+            resumeId:"wegwwefgwehwrgwegwe",
             dateApplied: new Date(),
             status: "Pending"
         };
         const newApplication4 = {
-            job_id:job[2],
-            employer_id: employers[1],
-            candidate_id: newuser2._id,
-            resume_id:"wegwergerhhergherhwerhegwe",
+            jobId:job[2],
+            employerId: employers[1],
+            candidateId: newuser2._id,
+            resumeId:"wegwergerhhergherhwerhegwe",
             dateApplied: new Date(),
             status: "Pending"
         };
@@ -432,10 +432,10 @@ describe('Test adding Application', () => {
 
     test('Deleting a job application', async () => {
         const newApplication = {
-            job_id: "123",
-            employer_id: "123",
-            candidate_id: "123",
-            resume_id: "123",
+            jobId: "123",
+            employerId: "123",
+            candidateId: "123",
+            resumeId: "123",
             dateApplied: new Date(),
             status: "Pending",
         };
@@ -467,10 +467,10 @@ describe('Test adding Application', () => {
 
     test('Edit Application Status', async () => {
         const newApplication = {
-            job_id: "123",
-            employer_id: "123",
-            candidate_id: "123",
-            resume_id: "123",
+            jobId: "123",
+            employerId: "123",
+            candidateId: "123",
+            resumeId: "123",
             dateApplied: new Date(),
             status: "Pending",
         };

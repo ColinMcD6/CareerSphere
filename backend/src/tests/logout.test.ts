@@ -1,9 +1,8 @@
 import * as db from "./db";
-import { logoutcontroller } from "../controllers/auth_controllers/logoutcontroller";
-import sessionModel from "../models/session.model";
+import { logoutController } from "../controllers/auth_controllers/logout.controller";
+import sessionModel from "../models/supportModels/session.model";
 import { NextFunction, Request, Response } from "express";
-import { signup_account, login_account } from "../services/auth.services";
-import { OK } from "../constants/http";
+import { signupAccount, loginAccount } from "../services/auth.services";
 
 describe("Logout Controller", () => {
     beforeAll(async () => {
@@ -23,17 +22,17 @@ describe("Logout Controller", () => {
         a session for user would still which was created after signup, check if the cookies are clear
     */
     test("Successfully logs out a user and deletes session", async () => {
-        const user = await signup_account({
+        const user = await signupAccount({
             username: "test_user",
             email: "test_user@gmail.com",
             password: "test123456789",
-            user_role: "Candidate",
+            userRole: "Candidate",
         });
 
-        const loginData = await login_account({
+        const loginData = await loginAccount({
             email: "test_user@gmail.com",
             password: "test123456789",
-            user_role: "Candidate",
+            userRole: "Candidate",
         });
 
         // Extract accessToken & session ID
@@ -54,7 +53,7 @@ describe("Logout Controller", () => {
 
         const mNext = jest.fn();
 
-        await logoutcontroller(mReq as Request, mRes as Response, mNext as NextFunction);
+        await logoutController(mReq as Request, mRes as Response, mNext as NextFunction);
 
         const session = await sessionModel.countDocuments({ _id: sessionId?._id });
         expect(session).toBe(1);
