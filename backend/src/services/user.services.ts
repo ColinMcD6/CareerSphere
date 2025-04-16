@@ -1,5 +1,5 @@
 import { CONFLICT, NOT_FOUND} from "../constants/http.constants";
-import userDAO from "../dao/user.dao";
+import userDAO from "../repositories/user.repository";
 import appAssert from "../utils/appAssert";
 import { Category } from "../models/main/jobPostings.model";
 

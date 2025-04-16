@@ -14,7 +14,7 @@ import {
 } from "../controllers/jobPostings.controller";
 
 import { addQuizCandidateResponse, addQuizHandler, getQuizHandler, getQuizSubmissions, getSpecificQuizHandler } from "../controllers/quiz.controller";
-import { auth_verifyCandidate, auth_verifyEmployer } from "../middleware/authenticate.middleware";
+import { auth_verifyCandidate, auth_verifyEmployer } from "../middlewares/authenticate.middleware";
 
 
 const jobPostingRoutes = Router();

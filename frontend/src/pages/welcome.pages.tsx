@@ -24,7 +24,7 @@ interface Job {
 const Welcome = () => {
 
   //
-  const { user, isLoading } = useUser();
+  const { user } = useUser();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
