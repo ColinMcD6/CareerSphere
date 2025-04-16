@@ -26,7 +26,12 @@ interface Question {
 const CreateQuiz: React.FC = () => {
   const [quizName, setQuizName] = useState<string>("");
   const [questions, setQuestions] = useState<Question[]>([
-    { questionText: "", options: ["", "", "", ""], correctAnswerIndex: null, correctAnswer: "" },
+    {
+      questionText: "",
+      options: ["", "", "", ""],
+      correctAnswerIndex: null,
+      correctAnswer: "",
+    },
   ]);
   const [quizNameError, setQuizNameError] = useState<string | null>(null);
   const [questionErrors, setQuestionErrors] = useState<string[]>([]);
@@ -52,9 +57,6 @@ const CreateQuiz: React.FC = () => {
     );
     setQuestionErrors(initialQuestionErrors);
 
-    const initialOptionErrors = questions.map(() => "");
-    setOptionErrors(initialOptionErrors);
-
     // Initialize validation errors for correct answers
     const initialCorrectAnswerErrors = questions.map((q) =>
       q.correctAnswerIndex !== null ? "" : "Please select a correct answer."
@@ -78,7 +80,11 @@ const CreateQuiz: React.FC = () => {
     setQuestionErrors(newErrors);
   };
 
-  const handleOptionChange = (qIndex: number, oIndex: number, value: string) => {
+  const handleOptionChange = (
+    qIndex: number,
+    oIndex: number,
+    value: string
+  ) => {
     const newQuestions = [...questions];
     newQuestions[qIndex].options[oIndex] = value;
     setQuestions(newQuestions);
@@ -89,19 +95,26 @@ const CreateQuiz: React.FC = () => {
   const handleCorrectAnswerChange = (qIndex: number, answerIndex: number) => {
     const newQuestions = [...questions];
     newQuestions[qIndex].correctAnswerIndex = answerIndex;
-    newQuestions[qIndex].correctAnswer = newQuestions[qIndex].options[answerIndex];
+    newQuestions[qIndex].correctAnswer =
+      newQuestions[qIndex].options[answerIndex];
     setQuestions(newQuestions);
 
     // Validate correct answer immediately
     const newCorrectAnswerErrors = [...correctAnswerErrors];
-    newCorrectAnswerErrors[qIndex] = answerIndex !== null ? "" : "Please select a correct answer.";
+    newCorrectAnswerErrors[qIndex] =
+      answerIndex !== null ? "" : "Please select a correct answer.";
     setCorrectAnswerErrors(newCorrectAnswerErrors);
   };
 
   const handleAddQuestion = () => {
     setQuestions([
       ...questions,
-      { questionText: "", options: ["", "", "", ""], correctAnswerIndex: null, correctAnswer: "" },
+      {
+        questionText: "",
+        options: ["", "", "", ""],
+        correctAnswerIndex: null,
+        correctAnswer: "",
+      },
     ]);
   };
 
@@ -125,7 +138,12 @@ const CreateQuiz: React.FC = () => {
     e.preventDefault();
     setDisableInput(true);
 
-    if (quizNameError || questionErrors.some((err) => err) || optionErrors.some((err) => err) || correctAnswerErrors.some((err) => err)) {
+    if (
+      quizNameError ||
+      questionErrors.some((err) => err) ||
+      optionErrors.some((err) => err) ||
+      correctAnswerErrors.some((err) => err)
+    ) {
       setDisableInput(false);
       return;
     }
@@ -159,44 +177,56 @@ const CreateQuiz: React.FC = () => {
           <h2 className="card-title text-center mb-4">
             <i className="bi bi-pencil-square me-2"></i>
           </h2>
-
-          {/* Quiz Name Error */}
-          <ErrorMessage message={quizNameError} />
-
           <form onSubmit={handleSubmit}>
             {/* Quiz Name Input */}
             <div className="mb-4">
               <input
                 type="text"
-                className={`form-control form-control-lg text-center ${quizNameError ? "is-invalid" : ""}`}
+                className={`form-control form-control-lg text-center ${
+                  quizNameError ? "is-invalid" : ""
+                }`}
                 placeholder="Enter Quiz Name"
                 value={quizName}
                 onChange={handleQuizNameChange}
                 disabled={disableInput}
               />
+              {/* Quiz Name Error */}
+              <div className="invalid-feedback">{quizNameError}</div>
             </div>
 
             {/* Questions */}
             {questions.map((questionData, questionIndex) => (
               <div key={questionIndex} className="card mb-4 border-0 shadow-sm">
                 <div className="card-body">
-                  <div className="d-flex justify-content-between align-items-center mb-3">
+                  <div className="d-flex justify-content-between mb-3">
                     <h5 className="mb-0">
                       <i className="bi bi-question-circle me-2"></i>
                     </h5>
-                    <input
-                      type="text"
-                      className={`form-control ${questionErrors[questionIndex] ? "is-invalid" : ""}`}
-                      placeholder={`Enter Question ${questionIndex + 1}`}
-                      value={questionData.questionText}
-                      onChange={(e) => handleQuestionChange(questionIndex, e.target.value)}
-                      disabled={disableInput}
-                    />
-                    <ErrorMessage message={questionErrors[questionIndex]} />
+                    <div className="flex-grow-1 mx-2">
+                      <input
+                        type="text"
+                        className={`form-control ${
+                          questionErrors[questionIndex] ? "is-invalid" : ""
+                        }`}
+                        placeholder={`Enter Question ${questionIndex + 1}`}
+                        value={questionData.questionText}
+                        onChange={(e) =>
+                          handleQuestionChange(questionIndex, e.target.value)
+                        }
+                        disabled={disableInput}
+                      />
+                      <div className="invalid-feedback d-block">
+                        {questionErrors[questionIndex]}
+                      </div>
+                    </div>
                     <button
                       type="button"
                       className="btn btn-outline-danger btn-sm"
-                      onClick={() => setQuestions(questions.filter((_, i) => i !== questionIndex))}
+                      onClick={() =>
+                        setQuestions(
+                          questions.filter((_, i) => i !== questionIndex)
+                        )
+                      }
                       disabled={disableInput}
                     >
                       <i className="bi bi-trash"></i>
@@ -213,16 +243,29 @@ const CreateQuiz: React.FC = () => {
                             className="form-control"
                             placeholder={`Answer ${answerIndex + 1}`}
                             value={option}
-                            onChange={(e) => handleOptionChange(questionIndex, answerIndex, e.target.value)}
-                            onBlur={() => validateOptions(questionIndex)} // Validate options on blur
+                            onChange={(e) =>
+                              handleOptionChange(
+                                questionIndex,
+                                answerIndex,
+                                e.target.value
+                              )
+                            }
+                            onBlur={() => validateOptions(questionIndex)}
                             disabled={disableInput}
                           />
                           <span className="input-group-text">
                             <input
                               type="radio"
                               name={`correct-answer-${questionIndex}`}
-                              checked={questionData.correctAnswerIndex === answerIndex}
-                              onChange={() => handleCorrectAnswerChange(questionIndex, answerIndex)}
+                              checked={
+                                questionData.correctAnswerIndex === answerIndex
+                              }
+                              onChange={() =>
+                                handleCorrectAnswerChange(
+                                  questionIndex,
+                                  answerIndex
+                                )
+                              }
                               disabled={disableInput}
                             />
                           </span>
@@ -231,7 +274,7 @@ const CreateQuiz: React.FC = () => {
                     ))}
                   </div>
                   <ErrorMessage message={optionErrors[questionIndex]} />
-                  <ErrorMessage message={correctAnswerErrors[questionIndex]} /> {/* Correct answer error */}
+                  <ErrorMessage message={correctAnswerErrors[questionIndex]} />
                 </div>
               </div>
             ))}
