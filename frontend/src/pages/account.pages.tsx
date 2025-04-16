@@ -6,6 +6,10 @@ import { updateUser } from "../lib/api.lib";
 import { IoAddCircle, IoTrashBin } from "react-icons/io5";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+// Validation functions
+const isValidPhoneNumber = (val: string) => /^[\d+\-() ]{7,15}$/.test(val); // Basic phone validation
+const isValidUserLink = (val: string) => /^(https?:\/\/)?([\w\d\-_]+\.+[A-Za-z]{2,})\/?.*/.test(val);
+
 const Account = () => {
   const navigate = useNavigate();
   const { user } = useUser();
@@ -124,7 +128,11 @@ const Account = () => {
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
             placeholder="Enter your phone number"
+            isInvalid={phoneNumber.length > 0 && !isValidPhoneNumber(phoneNumber)} // Validation check
           />
+          <Form.Control.Feedback type="invalid">
+            Invalid phone number format. Please use a valid format (e.g., +123456789).
+          </Form.Control.Feedback>
         </Card>
 
         {/* User Profile / Website Link */}
@@ -135,7 +143,11 @@ const Account = () => {
             value={userLink}
             onChange={(e) => setUserLink(e.target.value)}
             placeholder="Enter your profile or website URL"
+            isInvalid={userLink.length > 0 && !isValidUserLink(userLink)} // Validation check
           />
+          <Form.Control.Feedback type="invalid">
+            Invalid URL format. Please use a valid URL (e.g., https://example.com).
+          </Form.Control.Feedback>
         </Card>
 
         {user?.userRole === "Candidate" && (
