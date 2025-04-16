@@ -11,7 +11,7 @@ import request from 'supertest';
 import JobPostingsModel from '../models/main/jobPostings.model';
 import SaveJobPostingsModel from '../models/supportModels/saveJobPostings.model';
 import UserModel from '../models/main/users.model';
-import supertest = require('supertest');
+
 
 
 const app = express();

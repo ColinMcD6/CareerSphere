@@ -1,9 +1,12 @@
 import { CONFLICT } from "../constants/http.constants";
 import appAssert from "../utils/appAssert";
-import jobPostingsDAO from "../dao/jobPosting.dao";
-import userDAO from "../dao/user.dao";
-import saveJobPostingDAO from "../dao/saveJobPosting.dao"; 
-import applicationDAO from "../dao/application.dao";
+import jobPostingsDAO from "../repositories/jobPosting.repository";
+import userDAO from "../repositories/user.repository";
+import saveJobPostingDAO from "../repositories/saveJobPosting.repository"; 
+import applicationDAO from "../repositories/application.repository";
+import { 
+    getAllJobPostingsAggregationRules 
+} from "../repositories/customAggregateRules/customJobPostingRules.aggregate";
 
 
 /** * Job Postings Service
@@ -111,77 +114,24 @@ export const getAllJobPostingsQueryWithSaved = async (
     userId: any
 ) => {
 
-    //The default aggregation rules
-    const aggregation_rules: any[] = [
-        {$match: query},
-        {$skip: (page - 1) * limit},
+    
 
-        {$limit: limit},
-        {
-            $lookup: {
-                from: "applications",
-                let: { jobPostingId: "$_id" }, // Reference the _id field from jobPostings
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: {
-                                $eq: ["$$jobPostingId", { $toObjectId: "$jobId" }], // Convert job_id to ObjectId
-                            },
-                        },
-                    },
-                ],
-                as: "applications",
-            },
-        },
-        {
-            $addFields: {
-                applicationCount: { $size: "$applications" }, // Count the number of applications
-            },
-        },
-        {
-            $unset: "applications", // Remove the applications array
-        },
-        
-    ];
+    const jobPostings = await getAllJobPostingsAggregationRules(
+        query,
+        page,
+        limit,
+        savedPostingCandidateId
+    );
 
-    //Checks if user wants to view all saved jobs
-    if(savedPostingCandidateId){
-        aggregation_rules.push(
-            {
-                $lookup: {
-                    from: "savejobpostings",
-                    let: { jobPostingId: "$_id" },
-                    pipeline: [
-                        { $match: { $expr: { $eq: ["$candidateId", savedPostingCandidateId] } } },
-                        { $match: { $expr: { $eq: [{ $toObjectId: "$jobId" }, "$$jobPostingId"] } } } // Ensure job_id is compared as ObjectId
-                    ],
-                    as: "savedPosting",
-                },
-            },
-            {
-                $addFields: {
-                    isSaved: {
-                        $in: [savedPostingCandidateId, "$savedPosting.candidateId"],
-                    },
-                },
-            },
-            {
-                $match: {isSaved: true}
-            }
-        )
-    }
 
-    const jobPostings = await jobPostingsDAO.aggregate(aggregation_rules);
     let output: any[] = [];
 
     //organize
-    if(userId)
-    {
+    if(userId){
         const user = await userDAO.findById(userId)
         const preferences = user?.preferences;
         
-        if(preferences)
-        {
+        if(preferences){
             let jobDisplay: any[][] = [];
             let order = Array.from(preferences.keys()).sort((a, b) => preferences[b]- preferences[a]);
             
@@ -203,22 +153,18 @@ export const getAllJobPostingsQueryWithSaved = async (
             }
 
             //push the job postings into the output array in the order of the preferences
-            for(var i = 0; i < order.length; i++)
-            {
-                for(var j = 0; j < jobDisplay[order[i]].length; j++)
-                {
+            for(var i = 0; i < order.length; i++){
+                for(var j = 0; j < jobDisplay[order[i]].length; j++){
                     output.push(jobDisplay[order[i]][j]);
                 }
                 
             }
         }
-        else
-        {
+        else{
             output = jobPostings;
         }
     }
-    else
-    {
+    else{
         output = jobPostings;
     }
     

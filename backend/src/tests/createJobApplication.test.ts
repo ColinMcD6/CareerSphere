@@ -1,10 +1,7 @@
 import * as db from './db'
-import { getUserHandler, updateUserDetails } from '../controllers/user.controller';
 import { Request, Response } from 'express';
 import UserModel from '../models/main/users.model';
-import appAssert from '../utils/appAssert';
 import { CREATED, NOT_FOUND } from '../constants/http.constants';
-import mongoose from 'mongoose';
 import { addJobPostingHandler } from '../controllers/jobPostings.controller';
 import { ZodError } from 'zod';
 import JobPostingsModel from '../models/main/jobPostings.model';

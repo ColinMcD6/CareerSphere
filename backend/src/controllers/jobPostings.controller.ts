@@ -242,7 +242,6 @@ export const getJobPostingApplicationsHandler = catchErrors(async (req: Request,
 })
 
 
-
 /**
  * * Get Job Posting Applications Query Handler
  * * @description - This handler retrieves applications for a specific job posting based on query parameters.

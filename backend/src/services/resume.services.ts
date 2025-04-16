@@ -1,6 +1,6 @@
 import { CONFLICT, NOT_FOUND } from "../constants/http.constants";
 import appAssert from "../utils/appAssert";
-import resumeDAO from "../dao/resume.dao";
+import resumeDAO from "../repositories/resume.repository";
 
 export type CreateResumeParams = {
     pdfName: string,
