@@ -57,11 +57,11 @@ Below are the core features and how we plan to test them. More details will be a
    - _Steps_:
        1. On the login page, click on “Need to create Account?”
        2. On the sign-up page, enter:
-           - Username: test1
-           - Email Address: test1@gmail.com
-           - Password: test1234
-           - Confirm Password: test1234
-       3. Ensure the "Registering As" role is set to Candidate (default selected).
+           - Username: `test1`
+           - Email Address: `test1@gmail.com`
+           - Password: `test1234`
+           - Confirm Password: `test1234`
+       3. Ensure the "Registering As" role is set to `Candidate` (default selected).
        4. Click on the Sign Up button.
    - _Expected Result_:
        - User sees a confirmation message for successful registration.
@@ -69,15 +69,15 @@ Below are the core features and how we plan to test them. More details will be a
 2. **Duplicate Account Prevention**
    - _Objective_: Ensure the system prevents duplicate registrations with the same email.
    - _Steps_:
-       1. Perform Acceptance Test 1 to register with test1@gmail.com.
-       2. Repeat the sign-up steps using the same email address test1@gmail.com.
+       1. Perform Acceptance Test 1 to register with `test1@gmail.com`.
+       2. Repeat the sign-up steps using the same email address `test1@gmail.com`.
    - _Expected Result_:
        - The user sees the error message: "Registration failed. Please try again."
        - Registration fails and the user remains on the sign-up page.
 3. **Password Strength Feedback**
    - _Objective_: Ensure that users receive real-time feedback on weak passwords.
    - _Steps_:
-       1. On the sign-up page, enter a password shorter than 8 characters (e.g., test).
+       1. On the sign-up page, enter a password shorter than 8 characters (e.g., `test`).
        2. Attempt to submit the form.
    - _Expected Result_:
        - The Sign Up button remains disabled.
@@ -87,8 +87,8 @@ Below are the core features and how we plan to test them. More details will be a
    - _Steps_:
        1. Complete Acceptance Test 1.
        2. On the login screen, enter:
-           - Email Address: test1@gmail.com
-           - Password: test1234
+           - Email Address: `test1@gmail.com`
+           - Password: `test1234`
        3. Click on the Log In button.
    - _Expected Result_:
        - User is redirected to the appropriate dashboard (Candidate or Employer).
@@ -97,8 +97,8 @@ Below are the core features and how we plan to test them. More details will be a
    - _Objective_: Ensure that login fails gracefully with incorrect credentials.
    - _Steps_:
        1. On the login page, enter:
-           - Email Address: wrong@gmail.com
-           - Password: test1234
+           - Email Address: `wrong@gmail.com`
+           - Password: `test1234`
        3. Click on the Log In button.
    - _Expected Result_:
        - The system displays: "Invalid email or password. Please try again."
@@ -125,7 +125,7 @@ Below are the core features and how we plan to test them. More details will be a
 8. **Security After Logout**
    - _Objective_: Ensure user cannot access restricted pages after logging out.
    - _Steps_:
-       1. Perform Acceptance Test 7.
+       1. Perform `Acceptance Test 7`.
        2. Use the browser's back button.
    - _Expected Result_:
        - User remains on the login screen.
@@ -154,28 +154,74 @@ Below are the core features and how we plan to test them. More details will be a
 2. Job posting API test. Create multiple jobs through API route /job/add using an Employer account. Query all jobs, and query individual jobs ( GET /job and job/:id)
 
 ##### Acceptance Tests
-1. Employer View
-    - A user can see “Edit Profile” option as an employer 
-
-    - Employers can create but not apply for jobs 
-Instructions: Open the website and click the button labeled "Need to Create Account?" enter the username "test2" to the "Username" field, the email address "test2@gmail.com" to the "Email Address" field, and the password "test1234" into both the "Password" and "Confirm Password" fields. Press the Dot next to the word "Employer" and ensure it is blue. Press the "Sign Up" button. You should be informed of a successful account creation and sent back to the previous screen, Enter the given email to the "Email" field and the password to the "Password" field. Press the "Log In" button and expect to be taken to the home screen. Near the top right of the screen you will see a briefcase and the word "Jobs", click on that. You will be taken to a new screen with the words "My Job Postings" at the top. You should also see a green button with a + symbol and a search bar with the words "Search jobs...". There should be no postings on this page. This concludes the test.
-
-
-2. Employer Profile Update 
-    - An Employer updates their company’s location to "New York."   
-    - The change is reflected on their company profile page. 
-Instructions: Open the website and click the button labeled "Need to Create Account?" enter the username "test2" to the "Username" field, the email address "test2@gmail.com" to the "Email Address" field, and the password "test1234" into both the "Password" and "Confirm Password" fields. Press the Dot next to the word "Employer" and ensure it is blue. Press the "Sign Up" button. You should be informed of a successful account creation and sent back to the previous screen, Enter the given email to the "Email" field and the password to the "Password" field. Press the "Log In" button and expect to be taken to the home screen. At the bottom left you will see a grey circle with the outline of a persons head and shoulders, click it. Click the words "Edit Profile" that appear above it and expect to be taken to a new screen with the information you entered at the top, followed by several fields. In the field labelled "Company Details" enter the words "Located in New York" and then click the blue "Confirm" button. Expect to be taken to the home screen. Repeat the process of moving to the edit profile screen and observe that the typed message remains in the "Company Details" field to conclude the test.
-
-3. Post a New Job 
-    - An Employer fills out a job form (title: "Frontend Developer," location: "Remote").   
-    - The job appears in the public "Job Listings" page.   
-
-Instructions: Perform the Employer View acceptance test, click the green "+" button and expect to be shown a form. Enter in order from top to bottom: "Frontend Developer", "title", "description satisfying requirement of 50 characters", nothing, nothing, nothing, "Remote", "skills", "education". Click the round button next to the word "Temporary", followed by the one next to "Technology". Click the "Create Job Posting" button at the bottom. Observe a message confirming that the job posting was created, and that there is now a job labeled "Frontend Developer" in the list of postings to conclude the test.
-
-4. Track Applicants 
-    - An Employer can see a list of Candidates who applied, with usernames below the specific job posting.   
-Instructions: Perform the Post a New Job acceptance test. Near the top right of the screen you will see a house symbol and the word "Home", click on it. You will be sent to a new screen with a grey circle containing the simplified outline of a person. Click on that, followed by the words "Log Out". Perform the Login Success acceptance test from feature 1. Click on the "Jobs" button with the briefcase again and expect to be shown the job named "title of job". Click on the blue "View" button and expect to be shown the job details you entered before. Now click on the blue "Apply" button. If you are willing and able to enter a PDF into the website, do so by clicking the "Browse..." button and selecting it. If you are not, end the test here. If you submitted the file, press the "Submit" button. Now press the "Home" button and then log out using the grey circle once again. Log In once more using the credentials from Employer View, and click on the "Jobs" button in the top right. Click on the "View" button and scroll downward. You should see that you have 1 applicant, along with a horizontal rectangle with the name "test1" and a blue button "View Details". Click on this button to show the details of the candidate you created and then the "View Resume" button in order to verify the file is correct and complete the test.
-
+1. **Employer Dashboard and Role Access**
+   - _Objective_: Ensure that Employers can access Employer-specific features and see “Edit Profile”.
+   - _Steps_:
+       1. Go to the login page and click “Need to create Account?”
+       2. Enter the following details:
+           - Username: `test2`
+           - Email Address: `test2@gmail.com`
+           - Password: `test1234`
+           - Confirm Password: `test1234`
+           - Set role: Employer (click the “Employer” radio button)
+       3. Click Sign Up.
+       4. On login page, log in with:
+           - Email: `test2@gmail.com`
+           - Password: `test1234`
+       5. On home page, click the briefcase icon labeled “Jobs”.
+   - _Expected Result_:
+       - “My Job Postings” page is shown.
+       - “+” button to create a job and search bar are visible.
+       - “Edit Profile” option is accessible via bottom-left profile dropdown.
+2. **Employer Profile Update**
+   - _Objective_: Ensure Employers can successfully update and persist changes to their company profile.
+   - _Steps_:
+       1. Log in as an Employer using `test2@gmail.com` and password `test1234`.
+       2. Click the profile icon in the bottom-left corner.
+       3. Click Edit Profile.
+       4. In the “Company Details” field, enter: `Located in New York`.
+       5. Click the Save button.
+       6. Return to the Edit Profile page.
+   - _Expected Result_:
+       - The updated company detail (`Located in New York`) appears in the field.
+       - The change is saved and persisted across sessions.
+3. **Post a New Job**
+   - _Objective_: Ensure Employers can create a new job and view it in “My Job Postings” and public listings.
+   - _Steps_:
+       1. Log in as Employer `test2@gmail.com`.
+       2. Click Jobs > “My Job Postings” page.
+       3. Click on the `+` icon to add a new job.
+       4. Fill in the job form fields:
+           - Title of Job: `Frontend Developer`
+           - Position Title: `Frontend Developer`
+           - Description: A valid description over 50 characters.
+           - Starting Date: Select a valid future date.
+           - Due Date: Select a valid future date.
+           - Compensation Type: `Salary`
+           - Location: `Remote`
+           - Education: e.g., `Bachelor’s Degree`
+           - Skills: e.g., `React, CSS`
+           - Employment Type: `Temporary`
+           - Category: `Technology`
+       5. Click Create Job Posting.
+   - _Expected Result_:
+       - A confirmation message indicates the job was successfully posted.
+       - “Frontend Developer” appears in the employer’s list under “My Job Postings”.
+4. **Track Applicants**
+   - _Objective_: Ensure Employers can view candidates who applied and their submitted resumes.
+   - _Steps_:
+       1. Complete `Acceptance Test 3` to create a job.
+       2. Log out and log in as a Candidate who will apply for the job.
+       3. Go to “All Job Postings”, click View for “Frontend Developer”.
+       4. Click Apply.
+       5. Upload a PDF resume file and click Submit.
+       6. Log out as Candidate and log back in as Employer `test2@gmail.com`.
+       7. Go to “My Job Postings” > click View on “Frontend Developer”.
+       8. Scroll to the Applicants section.
+   - _Expected Result_:
+       - Candidate test1 appears with application status as “Pending”.
+       - Clicking View Details opens a modal with candidate's information.
+       - Clicking View Resume opens or downloads the resume file.
 
 #### 3. Candidate Portal
 ##### Unit Tests
@@ -214,39 +260,73 @@ Instructions: Perform the Post a New Job acceptance test. Near the top right of 
 
 
 ##### Acceptance Tests
-1. Candidate View  
-    - A user can see “Edit Profile” option as a candidate 
-
-    - Candidates can apply for jobs and save jobs but not create them.  
-Instructions: Perform the Login Success acceptance test from feature 1. Near the top right of your screen you will see a suitcase symbol next to the word "Jobs", click on it. You should be taken to a new screen with the words "All Job Postings" in blue, along with a smaller button for "Show Saved Jobs" and a search bar reading "Search jobs...". This should be all that is there, concluding the test.
-
-
-2. Update Profile Details 
-    - A Candidate adds their "Software Engineering" skills and saves the profile.   
-Instructions: Perform the Login Success acceptance test from feature 1. at the bottom left of your screen you will see a grey circle with the simplified outline of a persons head and shoulders, click that. Now click the words "Edit Profile" that appear above it and expect to be taken to a new screen. This screen should list the information you entered when signing up, followed by several fields. In the field labelled "User Skills", there should be a button labelled "Add Skill". Click this button and enter the words "Software Engineering" into the section that is created. Press the "Confirm" button and expect to be taken back to the home screen. Repeat the steps for entering the edit profile screen and observe that the added skill is still there to conclude the test.
-
-*I reccomend the next four tests be done in one session, as each follows directly from the next*
-
-3. View Job Details
-    - A Candidate clicks on a job titled "Frontend Developer."   
-    - They see the full description, salary, and location.   
-
-Instructions: Complete the Track Applicants acceptance test from feature 2 up to and including the part where you click on the "View" button as a candidate. Observe the details are displayed as they were entered.
-
-
-4. Resume Upload Success   
-    - A Candidate uploads a PDF resume. 
-Instructions: Continue from View Job Details and press the "Apply" button. If you are willing and able to do so: upload a PDF file from your computer. Press the "Browse..." button to open your files, and then the "Submit" button to confirm.
-
-5. Apply for a Job 
-    - A Candidate clicks "Apply" on a job, uploads their resume, and submits. The apply button changes to applied. 
-
-Instructions: Continue from Resume Upload Success and observe that upon pressing submit, the "Apply" button changes to "Applied" and the "Save" button changes to "Unsave".
-
-
-6. View Application Status 
-    - A Candidate checks "My Applications" and sees their status: "Pending," "Accepted". 
-Instructions: Continue from Apply for a Job, look to the top left of the window containing the job information to see the word "Pending". This concludes these test.
+1. **Candidate Dashboard and Role Access**
+   - _Objective_: Ensure that Candidates can access Candidate-specific features and view job listings.
+   - _Steps_:
+       1. Go to the login page and click “Need to create Account?”.
+       2. Enter the following details:
+           - Username: `test1`
+           - Email Address: `test1@gmail.com`
+           - Password: `test1234`
+           - Confirm Password: `test1234`
+           - Leave role as `Candidate` (default selected).
+       3. Click Sign Up.
+       4. On login page, log in with:
+           - Email: `test1@gmail.com`
+           - Password: `test1234`
+       5. On home page, click the suitcase icon labeled Jobs.
+   - _Expected Result_:
+       - “All Job Postings” page is displayed.
+       - Search bar and “Show Saved Jobs” button are visible.
+       - “Edit Profile” option is accessible via bottom-left profile dropdown.
+2. **Update Candidate Profile Details**
+   - _Objective_: Ensure Candidates can add and persist new skills or other profile details.
+   - _Steps_:
+       1. Log in as Candidate `test1@gmail.com`.
+       2. Click the profile icon in the bottom-left corner.
+       3. Click Edit Profile.
+       4. In the User Skills section, click Add Skill.
+       5. Enter the skill: `Software Engineering`.
+       6. Click Save.
+       7. Return to Edit Profile.
+   - _Expected Result_:
+       - Skill `Software Engineering` is displayed.
+       - Profile update is saved and visible across sessions.
+3. **View Job Details**
+   - _Objective_: Ensure Candidates can open and view details of a specific job posting.
+   - _Steps_:
+       1. Log in as Candidate `test1@gmail.com`.
+       2. Click Jobs.
+       3. Click View beside the “Frontend Developer” job posting.
+   - _Expected Result_:
+       - Job details page opens.
+       - Title, description, salary, location, and application buttons are visible.
+4. **Resume Upload Success**
+   - _Objective_: Ensure Candidates can upload and attach their resume during application.
+   - _Steps_:
+       1. Continue from `Acceptance Test 3`.
+       2. Click Apply at the bottom of the job posting page.
+       3. Upload a PDF resume file.
+       4. Click Submit.
+   - _Expected Result_:
+       - Resume file is uploaded successfully.
+       - Application confirmation message is displayed.
+5. **Apply for a Job**
+   - _Objective_: Ensure the Candidate can apply for a job and UI reflects application state.
+   - _Steps_:
+       1. Complete `Acceptance Test 4`.
+   - _Expected Result_:
+       - "Apply" button becomes `Applied`.
+       - "Save" button changes to `Unsave` automatically.
+       - Application status beside job title displays "Pending".
+6. **View Application Status**
+   - _Objective_: Ensure Candidate can see the status of submitted applications.
+   - _Steps_:
+       1. Log in as Candidate `test1@gmail.com`.
+       2. Click Jobs, then click View on “Frontend Developer”.
+       3. Observe status label in top-left of job window.
+   - _Expected Result_:
+       - Application status is shown as “Pending”, “Accepted”, or “Rejected” based on employer's review.
 
 #### 4. Quizzing for Job Screening Process
 ##### Unit Tests
@@ -275,33 +355,69 @@ Instructions: Continue from Apply for a Job, look to the top left of the window 
 5. Create a job posting, create a quiz, get quizzes for the job, get a specific quiz, submit a response, and retrieve submissions: Validates that quiz submissions are stored and can be accessed by an employer.
 
 ##### Acceptance Tests
-
-*Once again I reccomend doing the next four tests in the same session*
-
-1. Quiz Creation and Association
-    - An employer creates a quiz for a job posting using the quiz creation form.
-    - The quiz is successfully linked to the job posting and a confirmation message is displayed.
-
-Instructions: Perform the Post a New Job acceptance test from feature 2. Click on the "View" button next to the title. Look to the middle lower section of the screen for a blue button labeled "Create New Quiz" and click on it. You will see a new window pop up. At the top is a field with a red error label "Quiz name is required." into which you will write "quiz". Underneath this is a fillable field labeled "Enter Question 1" into which you will write "question". There are 4 fields below this labelled as answers 1 through 4. Into answer 1, enter the word "correct". Into the other 3, enter the word "incorrect". Click the round button next to answer 1 labeled "Correct" such that it becomes blue. If you so desire, you can click the green "+" button below the answers and repeat the previous step. Click the blue button labeled "Create Quiz". You should be informed that the quiz was created successfully and added to the job posting. Click the "Jobs" button in the top right and then "View" on the job. Observe that "quiz" is now visible under "Existing Quizzes".
-
-
-2. Quiz Submission and Scoring
-    - A candidate submits their responses to a quiz.
-    - The system records the submission, calculates the score, and displays a success confirmation.
-
-Instructions: Continue from Quiz Creation and Association. Click on the home button in the top right, followed by the grey circle with the head and shoulders outline in the bottom left. Click "Log Out". Perform the Candidate View acceptance test from feature 3. Click on the "View" button next to the "Frontend Developer" job. Click on the "Take Quiz" button in the bottom right of the job window. Click on the round button near the top left answer so that it turns blue. Click on the "Submit Quiz Answers" button and be informed that you have taken the quiz successfully, and that your answer was recorded.
-
-
-3. Duplicate Submission Prevention
-    - A candidate attempts to submit responses for the same quiz more than once.
-    - The system prevents the duplicate submission and displays an error message.
-Instructions: Continue from Quiz Submission and Scoring and observe that the "Take Quiz" button is now grey and reads "Quiz Taken".
-
-4. Quiz Retrieval and Display
-    - When a valid job ID and quiz ID are provided, the correct quiz details and all associated submissions (with candidate names and scores) are retrieved and displayed.
-
-Instructions: Continue from Duplicate Submission Prevention. Click the "Home" button in the top right, followed by the grey circle with the head and shoulders outline in the bottom left. Click "Log Out". Perform the Employer View acceptance test from feature 2. Click on the "View" button next to the "Frontend Developer" job. Click on the green "View Results" button next to "quiz". Observe the paired results of "test1" and "1" under "Username" and "Score" respectively to conclude these tests.
-
+1. **Quiz Creation and Association**
+   - _Objective_: Ensure that employers can create and associate a quiz with a job posting.
+   - _Steps_:
+       1. Log in as an Employer.
+       2. On the home page, click the Jobs button.
+       3. Click the View button beside any job you created (e.g., “Frontend Developer”).
+       4. Scroll to the Quiz Management section.
+       5. Click Create New Quiz.
+       6. Enter `quiz` in the Quiz Name field.
+       7. Enter `question` in the Question 1 field.
+       8. Fill in four options uniquely: “correct”, “incorrect1”, “incorrect2”, “incorrect3”.
+       9. Select the radio button beside “correct” as the correct answer.
+       10. Click Create Quiz.
+   - _Expected Result_:
+       - Quiz creation is confirmed.
+       - Quiz appears under “Existing Quizzes” for the job.
+2. **Quiz Submission and Scoring**
+   - _Objective_: Ensure Candidates can take a quiz and receive an appropriate score.
+   - _Steps_:
+       1. Log out the Employer account.
+       2. Log in as a Candidate.
+       3. Go to Jobs > click View beside “Frontend Developer”.
+       4. Scroll to Available Quizzes.
+       5. Click Take Quiz beside the quiz.
+       6. Select one answer for each question.
+       7. Click Submit Quiz Answers.
+   - _Expected Result_:
+       - Quiz submission is successful.
+       - Score is displayed under quiz name.
+       - “Take Quiz” button becomes disabled or changes to “Quiz Taken”.
+3. **Duplicate Submission Prevention**
+   - _Objective_: Ensure that Candidates cannot retake the same quiz.
+   - _Steps_:
+       1. Complete `Acceptance Test 2`.
+       2. Return to the same job’s quiz section.
+   - _Expected Result_:
+       - The “Take Quiz” button is greyed out or changed to “Quiz Taken”.
+       - Candidate cannot resubmit the same quiz.
+4. **Quiz Retrieval and Result Display**
+   - _Objective_: Ensure Employers can view quiz submissions and see scores per Candidate.
+   - _Steps_:
+       1. Log out of Candidate account.
+       2. Log back in as Employer.
+       3. Go to Jobs, click View beside “Frontend Developer”.
+       4. In the Quiz Management section, locate the quiz.
+       5. Click View Results.
+   - _Expected Result_:
+       - A list of Candidates who attempted the quiz is shown.
+       - Each row shows Candidate username and score.
+5. **Duplicate Answers in Quiz Question**
+   - _Objective_: Ensure that all the multiple choice options to a quiz question are unique.
+   - _Steps_:
+       1. Log in as an Employer.
+       2. On the home page, click the Jobs button.
+       3. Click the View button beside any job you created (e.g., “Frontend Developer”).
+       4. Scroll to the Quiz Management section.
+       5. Click Create New Quiz.
+       6. Enter `quiz` in the Quiz Name field.
+       7. Enter `question` in the Question 1 field.
+       8. Fill in four options: “correct”, “incorrect1”, “incorrect1”, “incorrect3”.
+   - _Expected Result_:
+       - Shows a warning message "Options must be unique".
+       - Quiz creation is paused due to duplicate options to this quiz question.
 
 #### 5. Recommendation Engine
 ##### Unit Tests
@@ -323,28 +439,44 @@ Instructions: Continue from Duplicate Submission Prevention. Click the "Home" bu
 3. Check if jobs get sorted correctly based on existing preferences: creates multiple jobs and a single user with preference updates. Calls api to get all jobs and passes user id, ensures that the status is 200, the correct number of jobs are returned and that they are sorted according to the preferences of the user (which does not align with ascending category)
 
 ##### Acceptance Tests
-
-*I recommend doing these in one session*
-
-1. Neutral Recommendations Without Applications
-    - A candidate with no applications sees a standard, unbiased job listing order.
-    - The search results are not skewed toward any specific category in the absence of application data.
-Instructions: Perform the Post a New Job acceptance test from feature 2. Now repeat the process of creating the job with the only change being to change the title from "Frontend Developer" to "Test Job 2" and the category from "Technology" to "Engineering". Now click the "Home" button in the top right, and then the grey circle with the outline of a person in the bottom left. Click the words "Log Out". Perform the Candidate View acceptance test from feature 3. Observe that the jobs are displayed with "Frontend Developer" first and "Test Job 2" second.
-
-2. Increased Visibility of Preferred Job Types
-    - A candidate applies for a job in a specific category (for example, a job related to "business").
-    - Subsequent job searches show more postings from that category, making them more prominent in the search list.
-
-Instructions: Continue from Neutral Recommendations Without Applications. Using Apply for a Job from feature 3 as a guide, apply for "Test Job 2". Click on the "Jobs" button once more to observe that "Test Job 2" is now displayed above "Frontend Developer". Now click on the "Home" button and observe that the displayed jobs below the logo now have "Test Job 2" in the center.
-
-
-3. Dynamic Reordering Based on Application History
-    - The recommendations update consistently on each application, adjusting ordering depending on current habits
-    - The candidate observes that jobs from the frequently applied category appear at the top of the search results.
-Instructions: Contine from Increased Visibility of Preferred Job Types. Now apply for "Frontend Developer" as you did the other job. Click on the "Jobs" button to go back to viewing all jobs. Observe that the ordering has now flipped back to "Frontend Developer" being displayed above "Test Job 2" to conclude these tests.
-
-*Caveat: if you do these acceptance tests in the same session as feature 3, they will not function correctly, as you will have already applied to "Frontend Developer".*
-
+1. **Neutral Recommendations Without Applications**
+   - _Objective_: Verify that job listings are shown in their original order when the user has not submitted any applications.
+   - _Steps_:
+       1. Log in as an Employer.
+       2. Create a job posting titled "Frontend Developer II" with category set to "Technology".
+       3. Create another job posting titled "Test Job 2" with category set to "Engineering".
+       4. Log out.
+       5. Log in as a Candidate.
+       6. Navigate to the Jobs page.
+   - _Expected Result_:
+       - The job listings should display “Frontend Developer II” above “Test Job 2” since the user has no submitted applications.
+       - The order is neutral and unaffected by any preference logic.
+2. **Increased Visibility of Preferred Job Types**
+   - _Objective_: Ensure that applying to a job in a specific category increases its visibility in future searches.
+   - _Steps_:
+       1. Complete the previous test to confirm initial order.
+       2. Apply to "Test Job 2" (category: Engineering):
+           - Click View beside “Test Job 2”.
+           - Click Apply.
+           - Upload a resume (PDF or DOC file).
+           - Click Submit.
+       3. Return to the Jobs page.
+   - _Expected Result_:
+       - “Test Job 2” should now appear above “Frontend Developer II” in the listings.
+       - Home page recommendations should also reflect the Engineering category.
+3. **Dynamic Reordering Based on Application History**
+   - _Objective_: Ensure job recommendations adapt dynamically as more applications are submitted.
+   - _Steps_:
+       1. Continue from the previous test.
+       2. Apply to "Frontend Developer II":
+           - Click View beside “Frontend Developer II”.
+           - Click Apply.
+           - Upload a resume (PDF or DOC file).
+           - Click Submit.
+       3. Return to the Jobs page.
+   - _Expected Result_:
+       - Job order may revert or shift based on total applications across categories.
+       - The listing adapts to current application behavior, dynamically showing the most relevant jobs at the top.
 
 #### 6. Search Engine
 ##### Unit Tests
@@ -360,30 +492,57 @@ Instructions: Contine from Increased Visibility of Preferred Job Types. Now appl
 10. Confirm that any valid search query (e.g., "Data") returns a response with a status of OK.
 
 ##### Acceptance Tests
-
-*I recommend doing these tests in one session as well*
-
-1. Display All Job Postings
-    - When the job listings page is loaded with an empty search field, all available job postings are displayed.
-Instructions: Perform the Post a New Job acceptance test from feature 2. Now repeat the process of creating the job with the only change being to change the title from "Frontend Developer" to "Test Job 2". Observe that when the search bar (bar containg the words "Search jobs") is empty, both jobs appear visible.
-
-2. Real-Time Search Filtering
-    - As a candidate types a valid search term, the job listings update in real time to show only postings matching the term in the title, position, description, employer, location, or skills.
-Instructions: Continue from Display All Job Postings. type the word "Front" into the search bar and observe that only the "Frontend Developer" is visible.
-
-3. No Matching Results Message
-    - When a candidate enters a search term that does not match any postings, the message "No available job that matches the search" is displayed.
-
-Instructions: Continue from Real-Time Search Filtering. erase the word "Front" and replace it with the word "Incorrect". Notice that the jobs are gone and you are informed that there is "No available job that matches the search!".
-
-
-4. Case-Insensitive Search
-    - The candidate enters search queries in different cases (e.g., "tech corp" and "Tech Corp") and receives consistent results.
-Instructions: Continue from No Matching Results Message. Erase the word "Incorrect" and instead type "test job". Observe that the job titled "Test Job 2" shows up despite the case difference.
-
-5. Clearing the Search Input
-    - Clearing the search input restores the full list of job postings on the page.
-Instructions: Continue from Case-Insensitive Search. Erase the search bar and observe both jobs are visible once again to conclude these tests.
+1. **Display All Job Postings**
+   - _Objective_: Ensure that all job postings are displayed when the search field is empty.
+   - _Steps_:
+       1. Log in as an Employer.
+       2. Create a job posting titled "Backend Developer".
+       3. Create another job posting titled "Test Job 3".
+       4. Log out.
+       5. Log in as a Candidate.
+       6. Navigate to the Jobs page.
+       7. Ensure the search bar is empty.
+   - _Expected Result_:
+       - Both “Backend Developer” and “Test Job 3” job postings are visible in the listings.
+2. **Real-Time Search Filtering**
+   - _Objective_: Confirm that typing in the search bar filters job postings in real-time.
+   - _Steps_:
+       1. Ensure you are logged in as a Candidate and on the Jobs page.
+       2. In the search bar, type the term “Back”.
+       3. Create another job posting titled "Test Job 3".
+       4. Log out.
+       5. Log in as a Candidate.
+       6. Navigate to the Jobs page.
+       7. Ensure the search bar is empty.
+   - _Expected Result_:
+       - Only the “Backend Developer” job posting remains visible.
+       - All non-matching jobs are hidden immediately as you type.
+3. **No Matching Results Message**
+   - _Objective_: Verify that an appropriate message appears when no jobs match the search term.
+   - _Steps_:
+       1. Continue from the previous test or `Acceptance Test 1`.
+       2. Delete the word “Back” from the search bar or ensure the search bar is empty.
+       3. Type “Incorrect” in the search bar ensuring that "Incorrect" phrase is not present in any job title, description or location.
+   - _Expected Result_:
+       - No job postings are displayed.
+       - A message appears: “No available job that matches the search!".
+4. **Case-Insensitive Search**
+   - _Objective_: Confirm that the search is not case-sensitive.
+   - _Steps_:
+       1. Continue from the previous test or `Acceptance Test 1`.
+       2. Clear the search bar or ensure the search bar is empty.
+       3. Type “test job” (lowercase) into the search bar.
+   - _Expected Result_:
+       - “Test Job 3” is displayed in the results.
+       - The result is the same as if typed in proper case (e.g., “Test Job”).
+5. **Clearing the Search Input**
+   - _Objective_: Validate that clearing the search input restores the full job listing view.
+   - _Steps_:
+       1. Continue from the previous test or `Acceptance Test 1`.
+       2. After typing something, clear the search bar entirely.
+   - _Expected Result_:
+       - Both “Backend Developer” and “Test Job 3” are displayed again.
+       - The job list resets to its default, full state.
 
 ### Non-functional Feature
 - Implemented in later sprint (For load testing, when design the load, make sure at least twos request associated with
