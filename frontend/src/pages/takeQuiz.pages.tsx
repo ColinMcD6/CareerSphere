@@ -185,7 +185,7 @@ const TakeQuiz: React.FC = () => {
       <ToastContainer aria-label={undefined} />
       <div className="card shadow">
         <div className="card-body">
-          <h2 className="card-title mb-4">{quiz.quizName}</h2>
+          <h1 className="card-title mb-4">{quiz.quizName}</h1>
           <form onSubmit={handleSubmit}>
             {quiz.questions.map((questionData, questionIndex) => (
               <fieldset
@@ -203,7 +203,7 @@ const TakeQuiz: React.FC = () => {
                 )}
                 <div className="row">
                   {questionData.options.map((option, answerIndex) => (
-                    <div key={answerIndex} className="col-12 col-md-6 col-lg-4 mb-3">
+                    <div key={answerIndex} className="col-12 col-md-6 mb-3">
                       <div
                         className={`card ${
                           questionData.chosenAnswer === answerIndex ? "border-primary" : "border-secondary"
