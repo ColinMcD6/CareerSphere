@@ -1,7 +1,6 @@
 name: Build and Push Docker Images
 
 on:
-  push:
   pull_request:
     branches:
       - development
@@ -12,7 +11,7 @@ on:
 jobs:
   build-and-push:
     name: Build and Push Docker Images
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     env:
@@ -33,11 +32,6 @@ jobs:
 
           # Determine the tag based on the branch
           if [[ "${{ github.base.ref }}" == "refs/heads/development" ]]; then
-            IMAGE_TAG="${NEW_VERSION}-dev"
-            LATEST_TAG="latest-dev"
-            TARGET="development"
-            VITE_API_URL="https://localhost:4004"
-          elif [[ "${{ github.ref }}" == "refs/heads/docker-fix2" ]]; then
             IMAGE_TAG="${NEW_VERSION}-dev"
             LATEST_TAG="latest-dev"
             TARGET="development"
