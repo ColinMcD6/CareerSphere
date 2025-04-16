@@ -20,7 +20,7 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">5050</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
@@ -30,7 +30,7 @@
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
               <stringProp name="Header.name">Content-Type</stringProp>
@@ -54,7 +54,7 @@
           <boolProp name="CounterConfig.per_user">false</boolProp>
         </CounterConfig>
         <hashTree/>
-        <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="empCounter">
+        <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="empCounter" enabled="true">
           <stringProp name="CounterConfig.start">1</stringProp>
           <stringProp name="CounterConfig.end"></stringProp>
           <stringProp name="CounterConfig.incr">1</stringProp>
@@ -100,7 +100,7 @@
           <stringProp name="filename">artifacts/resultTree_EmpWorkload_150users.csv</stringProp>
         </ResultCollector>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Signup Employer - POST /auth/signup" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Signup Employer - POST /auth/signup">
           <stringProp name="HTTPSampler.path">/auth/signup</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -114,8 +114,8 @@
     &quot;username&quot;: &quot;testemployer${candCounterVar}&quot;,&#xd;
     &quot;email&quot;: &quot;testemployer${empCounterVar}@gmail.com&quot;,&#xd;
     &quot;password&quot;: &quot;12312345&quot;,&#xd;
-    &quot;confirm_password&quot;: &quot;12312345&quot;,&#xd;
-    &quot;user_role&quot;: &quot;Employer&quot;&#xd;
+    &quot;confirmPassword&quot;: &quot;12312345&quot;,&#xd;
+    &quot;userRole&quot;: &quot;Employer&quot;&#xd;
 }&#xd;
 </stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
@@ -137,7 +137,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Signup Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Signup Response Assertion">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49587">201</stringProp>
             </collectionProp>
@@ -148,7 +148,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Login Employer - POST /auth/login" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Login Employer - POST /auth/login">
           <stringProp name="HTTPSampler.path">/auth/login</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -213,7 +213,7 @@
     &quot;location&quot;: &quot;Winnipeg&quot;,&#xd;
     &quot;compensationType&quot;: &quot;hourly&quot;,&#xd;
     &quot;employer&quot;: &quot;${employerId}&quot;,&#xd;
-    &quot;employer_id&quot;: &quot;${employerId}&quot;,&#xd;
+    &quot;employerId&quot;: &quot;${employerId}&quot;,&#xd;
     &quot;salary&quot;: 100,&#xd;
     &quot;jobType&quot;: &quot;Full-time&quot;,&#xd;
     &quot;experience&quot;: [&quot;None&quot;],&#xd;
@@ -333,7 +333,7 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="QuizID - JSON Extractor" enabled="true">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="QuizID - JSON Extractor">
               <stringProp name="JSONPostProcessor.referenceNames">quizId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.[&quot;quiz&quot;].[&quot;_id&quot;]</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
@@ -386,7 +386,7 @@
         </hashTree>
         <RandomOrderController guiclass="RandomOrderControllerGui" testclass="RandomOrderController" testname="Random Order Controller" enabled="true"/>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Update User Details - PUT /user/update" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Update User Details - PUT /user/update">
             <stringProp name="HTTPSampler.path">/user/update</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <stringProp name="HTTPSampler.method">PUT</stringProp>
@@ -434,7 +434,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get User Details - GET /user" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get User Details - GET /user">
             <stringProp name="HTTPSampler.path">/user</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -472,7 +472,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Retrieve All Quizzes for Job - GET /job/:jobId/quizzes" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Retrieve All Quizzes for Job - GET /job/:jobId/quizzes">
             <stringProp name="HTTPSampler.path">/job/${jobId}/quizzes</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -517,7 +517,7 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">5050</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
@@ -542,7 +542,7 @@
           <boolProp name="CookieManager.controlledByThreadGroup">false</boolProp>
         </CookieManager>
         <hashTree/>
-        <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="candCounter">
+        <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="candCounter" enabled="true">
           <stringProp name="CounterConfig.start">1</stringProp>
           <stringProp name="CounterConfig.end"></stringProp>
           <stringProp name="CounterConfig.incr">1</stringProp>
@@ -602,8 +602,8 @@
     &quot;username&quot;: &quot;testcandidate${candCounterVar}&quot;,&#xd;
     &quot;email&quot;: &quot;testcandidate${candCounterVar}@gmail.com&quot;,&#xd;
     &quot;password&quot;: &quot;12312345&quot;,&#xd;
-    &quot;confirm_password&quot;: &quot;12312345&quot;,&#xd;
-    &quot;user_role&quot;: &quot;Candidate&quot;&#xd;
+    &quot;confirmPassword&quot;: &quot;12312345&quot;,&#xd;
+    &quot;userRole&quot;: &quot;Candidate&quot;&#xd;
 }&#xd;
 </stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
@@ -636,7 +636,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Login Candidate - POST /auth/login" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Login Candidate - POST /auth/login">
           <stringProp name="HTTPSampler.path">/auth/login</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -680,9 +680,9 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <RandomOrderController guiclass="RandomOrderControllerGui" testclass="RandomOrderController" testname="Random Order Controller"/>
+        <RandomOrderController guiclass="RandomOrderControllerGui" testclass="RandomOrderController" testname="Random Order Controller" enabled="true"/>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Update User Details - PUT /user/update" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Update User Details - PUT /user/update">
             <stringProp name="HTTPSampler.path">/user/update</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <stringProp name="HTTPSampler.method">PUT</stringProp>
@@ -730,7 +730,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get User Details - GET /user" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get User Details - GET /user">
             <stringProp name="HTTPSampler.path">/user</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -780,7 +780,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Accept" elementType="Header">
                 <stringProp name="Header.name">Accept</stringProp>
@@ -789,7 +789,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Get All Jobs Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Get All Jobs Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -799,7 +799,7 @@
             <intProp name="Assertion.test_type">2</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Get JobId JSON Extractor">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Get JobId JSON Extractor" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">jobId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.[&quot;jobPostings&quot;][0].[&quot;_id&quot;]</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
@@ -829,13 +829,13 @@
           <hashTree/>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="EmployerId - JSON Extractor">
             <stringProp name="JSONPostProcessor.referenceNames">employerId</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">$.[&quot;jobPosting&quot;].[&quot;employer_id&quot;]</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.[&quot;jobPosting&quot;].[&quot;employerId&quot;]</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
             <stringProp name="JSONPostProcessor.defaultValues">&lt;NO_EMPLOYER_ID&gt;</stringProp>
             <stringProp name="Sample.scope">all</stringProp>
           </JSONPostProcessor>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Job Title - JSON Extractor">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Job Title - JSON Extractor" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">jobName</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.[&quot;jobPosting&quot;].[&quot;title&quot;]</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
@@ -904,7 +904,7 @@
             <intProp name="Assertion.test_type">2</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Get QuizId JSON Extractor">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Get QuizId JSON Extractor" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">quizId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.[&quot;quizzes&quot;][*].[&quot;_id&quot;]</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
@@ -962,11 +962,11 @@
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-    &quot;job_id&quot;: &quot;${jobId}&quot;,&#xd;
-    &quot;employer_id&quot;: &quot;${employerId}&quot;,&#xd;
-    &quot;candidate_id&quot;: &quot;${candidateId}&quot;,&#xd;
+    &quot;jobId&quot;: &quot;${jobId}&quot;,&#xd;
+    &quot;employerId&quot;: &quot;${employerId}&quot;,&#xd;
+    &quot;candidateId&quot;: &quot;${candidateId}&quot;,&#xd;
     &quot;status&quot;: &quot;Applied&quot;,&#xd;
-    &quot;resume_id&quot;: &quot;${resumeId}&quot;,&#xd;
+    &quot;resumeId&quot;: &quot;${resumeId}&quot;,&#xd;
     &quot;dateApplied&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;HH:mm:ss)}&quot;&#xd;
 }&#xd;
 </stringProp>
@@ -996,7 +996,7 @@
             <stringProp name="JSONPostProcessor.defaultValues">&lt;NO_JOB_ID&gt;</stringProp>
           </JSONPostProcessor>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Apply Job Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Apply Job Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49587">201</stringProp>
             </collectionProp>
@@ -1056,7 +1056,7 @@
         </hashTree>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Career Sphere Load Testing Workload Employer2 - 150">
-        <intProp name="ThreadGroup.num_threads">150</intProp>
+        <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">5</intProp>
         <longProp name="ThreadGroup.duration">60</longProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -1077,7 +1077,7 @@
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
               <stringProp name="Header.name">Content-Type</stringProp>
@@ -1086,7 +1086,7 @@
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager">
+        <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
           <collectionProp name="CookieManager.cookies"/>
           <boolProp name="CookieManager.clearEachIteration">true</boolProp>
           <boolProp name="CookieManager.controlledByThreadGroup">false</boolProp>
@@ -1250,7 +1250,7 @@
             <intProp name="Assertion.test_type">2</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Get QuizId JSON Extractor">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Get QuizId JSON Extractor" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">quizId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.[&quot;quizzes&quot;][*].[&quot;_id&quot;]</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
@@ -1269,7 +1269,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Accept" elementType="Header">
                 <stringProp name="Header.name">Accept</stringProp>
@@ -1278,7 +1278,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Get Quiz Submission Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Get Quiz Submission Response Assertion">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -1289,7 +1289,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Retrieve Job Applications - GET HTTP Request">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Retrieve Job Applications - GET /job/applications/all/query">
           <stringProp name="HTTPSampler.path">/job/applications/all/query</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -1337,7 +1337,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Get Job Application Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Get Job Application Response Assertion">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -1349,14 +1349,14 @@
           <hashTree/>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Get CandidateId JSON Extractor">
             <stringProp name="JSONPostProcessor.referenceNames">candidateId</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">$.[&quot;candidate_id&quot;]</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.[&quot;candidateId&quot;]</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
             <stringProp name="JSONPostProcessor.defaultValues">&lt;NO_CANDIDATE_ID&gt;</stringProp>
           </JSONPostProcessor>
           <hashTree/>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Get ResumeId JSON Extractor">
             <stringProp name="JSONPostProcessor.referenceNames">resumeId</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">$.[&quot;resume_id&quot;]</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.[&quot;resumeId&quot;]</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
             <stringProp name="JSONPostProcessor.defaultValues">&lt;NO_RESUME_ID&gt;</stringProp>
           </JSONPostProcessor>
@@ -1381,7 +1381,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -1394,7 +1394,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Update Application Status Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Update Application Status Response Assertion">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -1406,7 +1406,7 @@
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Retrieve Candidate Application - GET /job/applications/all/query?">
-          <stringProp name="HTTPSampler.path">/job/applications/all/query?candidate_id=${candidateId}</stringProp>
+          <stringProp name="HTTPSampler.path">/job/applications/all/query?candidateId=${candidateId}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
