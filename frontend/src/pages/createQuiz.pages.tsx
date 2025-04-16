@@ -120,8 +120,15 @@ const CreateQuiz: React.FC = () => {
 
   const validateOptions = (questionIndex: number) => {
     const options = questions[questionIndex].options;
-    const uniqueOptions = new Set(options.filter((opt) => opt.trim())); // Ignore empty options
+    console.log(options)
+    const uniqueOptions = new Set(
+      options
+        .filter(opt => opt.trim())
+        .map(opt => opt.trim())
+    );// Ignore empty options
+
     const hasEmptyOption = options.some((opt) => !opt.trim());
+    console.log(uniqueOptions)
 
     const newOptionErrors = [...optionErrors];
     if (hasEmptyOption) {
