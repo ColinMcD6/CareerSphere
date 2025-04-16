@@ -52,43 +52,84 @@ Below are the core features and how we plan to test them. More details will be a
 9. Create an account, login, get JWT token, then update user information via /user/update route, then request user information via /user. Tests that user information can be updated via routes.
 
 ##### Acceptance Tests
-1. Successful Account Creation
-    - A new user fills in their name, email, password, and selects "Candidate" or "Employer."   
-    - After clicking "Sign Up," they are redirected back to the login screen.  
-Instructions: Open the website and click the button labeled "Need to Create Account?" enter the username "test1" to the "Username" field, the email address "test1@gmail.com" to the "Email Address" field, and the password "test1234" into both the "Password" and "Confirm Password" fields. Ensure the dot next to "Candidate" is blue and press the "Sign Up" button. You should be informed of a successful account creation and sent back to the previous screen, concluding the test.
-
-2. Duplicate Account Prevention   
-    - A user tries to sign up with an email already registered.   
-    - They see an error: "Account already exists!"  
-Instructions: Perform the Successful Account Creation acceptance test, and then click the "Need to Create Account?" button once more. Enter the same credentials into the same slots and expect to be informed that the account already exists, signalling a successful test.
-
-3. Password Strength Feedback 
-    - A user enters a password with less than 8 characters while signing up 
-    - They see: "Password must be at least 8 characters"   
-Instructions: Open the website and click the button labeled "Need to Create Account?" enter the username "test1", the email address "test1@gmail.com", and the password "test" into both the password and confirm password fields. Ensure the dot next to "Candidate" is blue and attempt to press the "Sign Up" button. You should be unable to click the button and can look underneath the password field to see in red that your password must be 8 characters long, signalling a successful test.
-
-4. Login Success 
-    - A user enters their email and password.   
-    - They are redirected to their role-specific dashboard (e.g., Employer Dashboard).   
-Instructions: Perform the Successful Account Creation acceptance test. In the field labelled "Email address" enter the email given in that test, and in the "Password" field enter the given password. Press the "Log In" button and expect to be taken to a home screen with the website label in the center, signalling a successful login.
-
-5. Login Error Handling 
-    - A user enters an incorrect password or invalid email.   
-    - They see: "Invalid email or password"   
-Instructions: Perform the Successful Account Creation acceptance test. In the field labelled "Email address" enter the email "wrong@gmail.com", and in the "Password" field enter the given password. Press the "Log In" button and expect to be informed "Invalid email or password. Please try again" above the email field.
-
-6. Session Persistence 
-    - After closing and reopening the browser, the user remains logged in.  
-Instructions: Perform the Login Success acceptance test. Now go the top of your screen, right below the tabs where it says "https://CareerSphere" and click on it. Now press    Ctrl+c or an equivalent method of copying the highlighted text. Press the X on the tab with the same name as the text you just copied. Open a new tab and press Ctrl+v or some equivalent method of pasting the copied text, press enter. You should be returned to the home screen that was there before, signalling a successful test.
-
-7. Logout Functionality  
-    - After clicking "Logout," the user is redirected to the login page.   
-    - The user sees “Logout Successful”  
-Instructions: Perform the Login Success acceptance test. On the bottom left of your screen you will see a symbol of a grey circle containing the simplified outline of a persons head and shoulders. Click this and then the words "Log Out" that appear above it. You should be taken back to the login screen signalling a successful test.
-
-8. Security 
-    - After logging out, a user cannot access `/dashboard` without logging in again.  
-Instructions: Perform the Logout Functionality acceptance test. Now go to the top left of your screen and click the arrow pointing left (back). You should remain on the login screen and not be shown the home screen at any point using the back arrow. This signifies a successful test.
+1. **Successful Account Creation**
+   - _Objective_: Verify that a new user can successfully register as a Candidate or Employer.
+   - _Steps_:
+       1. On the login page, click on “Need to create Account?”
+       2. On the sign-up page, enter:
+           - Username: test1
+           - Email Address: test1@gmail.com
+           - Password: test1234
+           - Confirm Password: test1234
+       3. Ensure the "Registering As" role is set to Candidate (default selected).
+       4. Click on the Sign Up button.
+   - _Expected Result_:
+       - User sees a confirmation message for successful registration.
+       - The interface redirects the user back to the login screen.
+2. **Duplicate Account Prevention**
+   - _Objective_: Ensure the system prevents duplicate registrations with the same email.
+   - _Steps_:
+       1. Perform Acceptance Test 1 to register with test1@gmail.com.
+       2. Repeat the sign-up steps using the same email address test1@gmail.com.
+   - _Expected Result_:
+       - The user sees the error message: "Registration failed. Please try again."
+       - Registration fails and the user remains on the sign-up page.
+3. **Password Strength Feedback**
+   - _Objective_: Ensure that users receive real-time feedback on weak passwords.
+   - _Steps_:
+       1. On the sign-up page, enter a password shorter than 8 characters (e.g., test).
+       2. Attempt to submit the form.
+   - _Expected Result_:
+       - The Sign Up button remains disabled.
+       - A warning appears below the password field: "Password must be at least 8 characters."
+4. **Login Success**
+   - _Objective_: Ensure users can log in with valid credentials.
+   - _Steps_:
+       1. Complete Acceptance Test 1.
+       2. On the login screen, enter:
+           - Email Address: test1@gmail.com
+           - Password: test1234
+       3. Click on the Log In button.
+   - _Expected Result_:
+       - User is redirected to the appropriate dashboard (Candidate or Employer).
+       - A home screen is displayed with the website header.
+5. **Login Error Handling**
+   - _Objective_: Ensure that login fails gracefully with incorrect credentials.
+   - _Steps_:
+       1. On the login page, enter:
+           - Email Address: wrong@gmail.com
+           - Password: test1234
+       3. Click on the Log In button.
+   - _Expected Result_:
+       - The system displays: "Invalid email or password. Please try again."
+       - User remains on the login screen.
+6. **Session Persistence**
+   - _Objective_: Ensure that user session remains active after reopening the browser.
+   - _Steps_:
+       1. Log in successfully.
+       2. Copy the site URL.
+       3. Close the browser tab.
+       4. Open a new tab and paste the copied URL.
+   - _Expected Result_:
+       - The system remembers the logged-in session.
+       - User lands back on the home screen without needing to log in again.
+7. **Logout Functionality**
+   - _Objective_: Ensure logout works and redirects the user back to the login page.
+   - _Steps_:
+       1. Log in successfully.
+       2. Click on the profile icon in the bottom left.
+       3. Click the Log Out button.
+   - _Expected Result_:
+       - User is redirected to the login page.
+       - A logout confirmation message is displayed.
+8. **Security After Logout**
+   - _Objective_: Ensure user cannot access restricted pages after logging out.
+   - _Steps_:
+       1. Perform Acceptance Test 7.
+       2. Use the browser's back button.
+   - _Expected Result_:
+       - User remains on the login screen.
+       - The home/dashboard page does not load without logging in again.
 
 #### 2. Employer Portal
 ##### Unit Tests
