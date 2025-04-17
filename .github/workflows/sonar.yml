@@ -13,16 +13,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0  # Ensures full history is available for analysis
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
-        continue-on-error: true  # Ensures that even if the quality gate is not met, the process completes
+        continue-on-error: true  # Allows the workflow to continue even if the quality gate fails
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.scanner.mode=full
+            -Dsonar.sources=.
             -Dsonar.exclusions=**/test/**,**/tests/**,**/*.test.js
             -Dsonar.qualitygate.wait=false
-            -Dsonar.analysis.force=true
-
+            -Dsonar.newCode.referenceBranch=main
