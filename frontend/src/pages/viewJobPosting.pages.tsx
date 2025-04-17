@@ -405,10 +405,6 @@ const ViewJobPosting = () => {
           )}
         </h2>
         <div className="card-body">
-          <section aria-label="Job Details">
-            <h2 className="text-dark">{data.title}</h2>
-            <p className="text-muted">{data.description}</p>
-          </section>
           <h5 className="card-subtitle mb-3 text-muted">
             Job Position: {data.positionTitle}
           </h5>
@@ -459,6 +455,20 @@ const ViewJobPosting = () => {
             <h6 className="text-dark">Education:</h6>
             <ul className="list-group">
               {data.education.map((edu, index) => (
+                <li
+                  key={index}
+                  className="list-group-item"
+                  style={{ backgroundColor: "#f8f9fa" }}
+                >
+                  {edu}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="mb-3">
+            <h6 className="text-dark">Skills:</h6>
+            <ul className="list-group">
+              {data.skills.map((edu, index) => (
                 <li
                   key={index}
                   className="list-group-item"
