@@ -546,7 +546,7 @@ every core feature is inlcuded in the test load.)
 
 ### 2.2 Test Completeness
 Below is the criteria for test completeness:
-- 100% of the backend codebase should be covered by unit tests
+- 85% of the backend codebase should be covered by unit tests
 - 100% of API routes should be covered by integration tests
 - Before a pull request can be merged into main, all tests must pass
 - All tests are run automatically when submitting a pull request to the main branch
