@@ -21,8 +21,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.scanner.mode=full
+            -Dsonar.sources=.
             -Dsonar.exclusions=**/test/**,**/tests/**,**/*.test.js
             -Dsonar.qualitygate.wait=false
-            -Dsonar.analysis.force=true
-
+            -Dsonar.newCode.referenceBranch=main
