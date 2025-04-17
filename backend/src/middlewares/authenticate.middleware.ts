@@ -3,7 +3,7 @@ import { UNAUTHORIZED } from "../constants/http.constants";
 import appAssert from "../utils/appAssert";
 import AppErrorCode from "../constants/appErrorCode.constants";
 import { verifyToken } from "../utils/auth_helpers/jwt";
-import userDAO from "../dao/user.dao";
+import userDAO from "../repositories/user.repository";
 
 /**
 * * Middleware to authenticate user based on JWT token

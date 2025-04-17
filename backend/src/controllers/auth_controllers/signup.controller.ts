@@ -8,11 +8,11 @@ const signupSchema = z.object({
     username: z.string().min(5).max(225),
     email: z.string().email().min(1).max(225),
     password: z.string().min(8).max(225),
-    confirm_password: z.string().min(8).max(225),
-    user_role: z.string(),
+    confirmPassword: z.string().min(8).max(225),
+    userRole: z.string(),
     userAgent: z.string().optional(),
 }).refine(
-    (data) => data.password === data.confirm_password, {
+    (data) => data.password === data.confirmPassword, {
         message: "Pasword and Confirm Password should match",
         path: ["confirmPassword"]
     }

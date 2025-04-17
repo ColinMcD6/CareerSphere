@@ -1,25 +1,21 @@
-# Use the official Node.js image as the base image
-FROM node:18
+# Development stage
+FROM node:18 AS development
 
-# Set the working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
 COPY . .
 
-ENV VITE_API_URL=http://localhost:4004
+ARG VITE_API_URL
 
-# Build the TypeScript code
-RUN npm run build
+RUN VITE_API_URL=${VITE_API_URL} npm run build
 
-# Install serve to serve the static files
-RUN npm install -g serve
+# Production
+FROM caddy:2-alpine AS production
 
-# Start the application
-CMD ["serve", "-s", "dist", "-l", "5173"]
+COPY Caddyfile /etc/caddy/Caddyfile
+
+COPY --from=development /app/dist /srv

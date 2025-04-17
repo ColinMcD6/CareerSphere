@@ -3,7 +3,7 @@ import request from 'supertest';
 import * as db from './db';
 import { getAllJobPostingsQueryHandler } from '../controllers/jobPostings.controller';
 import JobPostingsModel from '../models/main/jobPostings.model';
-import mongoose from 'mongoose';
+
 
 const app = express();
 app.use(express.json());
@@ -22,7 +22,7 @@ describe('Job Postings Search API', () => {
         positionTitle: 'Software Engineer',
         description: 'Develop high quality software solutions',
         employer: 'Tech Corp',
-        employer_id: 'employer1',
+        employerId: 'employer1',
         location: 'New York',
         compensationType: 'salary',
         salary: 120000,
@@ -40,7 +40,7 @@ describe('Job Postings Search API', () => {
         positionTitle: 'Developer',
         description: 'Work on small projects',
         employer: 'Innovative Solutions',
-        employer_id: 'employer2',
+        employerId: 'employer2',
         location: 'San Francisco',
         compensationType: 'hourly',
         salary: 40,
@@ -58,7 +58,7 @@ describe('Job Postings Search API', () => {
         positionTitle: 'Analyst',
         description: 'Analyze data and generate reports',
         employer: 'Data Insights',
-        employer_id: 'employer3',
+        employerId: 'employer3',
         location: 'Chicago',
         compensationType: 'salary',
         salary: 80000,

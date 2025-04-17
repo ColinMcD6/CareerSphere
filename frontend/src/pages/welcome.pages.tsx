@@ -24,14 +24,10 @@ interface Job {
 const Welcome = () => {
 
   //
-  const { user, isLoading } = useUser();
+  const { user } = useUser();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
-
-
-
-
   const navigate = useNavigate();
 
   const handleBack = async () => {
@@ -58,9 +54,9 @@ const Welcome = () => {
         try {
           console.log("Contacting Express server to query jobs");
           let query =
-            user?.userRole === "Employer" ? `?employer_id=${user._id}` : "";
+            user?.userRole === "Employer" ? `?employerId=${user._id}` : "";
           if (query === "") {
-            query = `?user_id=${user._id}`;
+            query = `?userId=${user._id}`;
           }
           
           const response = await getAllJobPostings(query);

@@ -1,0 +1,59 @@
+name: career-sphere
+
+services:
+  frontend:
+    image: colinmcd6/frontend:latest
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - app
+
+  backend:
+    image: colinmcd6/backend:latest
+    environment:
+      - NODE_ENV=production
+      - APP_ORIGIN=https://${DOMAIN_NAME}
+      - PORT=4004
+      - MONGO_URI=mongodb://mongo:27017/test_db
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - mongo
+    networks:
+      - app
+
+  mongo:
+    image: mongo:latest
+    volumes:
+      - mongo-data:/data/db
+    command: ["mongod", "--quiet", "--logpath", "/dev/null"]
+    networks:
+      - app
+
+  caddy:
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      DOMAIN_NAME: ${DOMAIN_NAME}
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - app
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  mongo-data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  app:
+    driver: bridge

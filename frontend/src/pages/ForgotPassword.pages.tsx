@@ -6,26 +6,19 @@ const ForgotPassword = () => {
   const [userInputEmail, setuserInputEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null); // State for error message
 
-
-  /*
-  Handler function for form submission
-  This function prevents the default form submission behavior, sets the loading state to true,
-  and calls the sendresetPassEmail function with the user's email.
-  If the email is sent successfully, it sets the submitted state to true.
-  If there is an error, it alerts the user.
-  Finally, it resets the loading state.
-  */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true); // Disable button while sending request
+    setLoading(true);
+    setError(null); // Clear any previous error
     try {
-      await sendresetPassEmail({email: userInputEmail});
+      await sendresetPassEmail({ email: userInputEmail });
       setSubmitted(true);
     } catch {
-      alert("Error sending reset email. Please try again.");
+      setError("Error sending reset email. Please try again."); // Set error message
     }
-    setLoading(false); // Re-enable button after request completes
+    setLoading(false);
   };
 
   return (
@@ -35,21 +28,24 @@ const ForgotPassword = () => {
         {submitted ? (
           <Alert variant="success">📩 A password reset link has been sent to your email!</Alert>
         ) : (
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="userInputEmail">
-              <Form.Label>Email Address</Form.Label>
-              <Form.Control
-                type="userInputEmail"
-                placeholder="Enter your email"
-                value={userInputEmail}
-                onChange={(e) => setuserInputEmail(e.target.value)}
-                required
-              />
-            </Form.Group>
-            <Button variant="primary" type="submit" className="w-100" disabled={loading}>
-              {loading ? "Sending..." : "Send Reset Link"}
-            </Button>
-          </Form>
+          <>
+            {error && <Alert variant="danger">{error}</Alert>} {/* Error component */}
+            <Form onSubmit={handleSubmit}>
+              <Form.Group className="mb-3" controlId="userInputEmail">
+                <Form.Label>Email Address</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter your email"
+                  value={userInputEmail}
+                  onChange={(e) => setuserInputEmail(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              <Button variant="primary" type="submit" className="w-100" disabled={loading}>
+                {loading ? "Sending..." : "Send Reset Link"}
+              </Button>
+            </Form>
+          </>
         )}
       </div>
     </Container>

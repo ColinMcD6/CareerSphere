@@ -1,6 +1,6 @@
 import * as db from "./db";
 import { logoutController } from "../controllers/auth_controllers/logout.controller";
-import sessionModel from "../models/one-to-many/session.model";
+import sessionModel from "../models/supportModels/session.model";
 import { NextFunction, Request, Response } from "express";
 import { signupAccount, loginAccount } from "../services/auth.services";
 
@@ -26,13 +26,13 @@ describe("Logout Controller", () => {
             username: "test_user",
             email: "test_user@gmail.com",
             password: "test123456789",
-            user_role: "Candidate",
+            userRole: "Candidate",
         });
 
         const loginData = await loginAccount({
             email: "test_user@gmail.com",
             password: "test123456789",
-            user_role: "Candidate",
+            userRole: "Candidate",
         });
 
         // Extract accessToken & session ID

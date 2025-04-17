@@ -16,8 +16,8 @@ describe("API Routes", () => {
       username: "test_user",
       email: "test_user@gmail.com",
       password: "12345678",
-      confirm_password: "12345678",
-      user_role: "Employer",
+      confirmPassword: "12345678",
+      userRole: "Employer",
     };
     // Signup
     const signupResponse = await request(app).post("/auth/signup").send(userData);
@@ -94,8 +94,8 @@ describe("API Routes", () => {
       username: "test_user",
       email: "test_user@gmail.com",
       password: "12345678",
-      confirm_password: "12345678",
-      user_role: "Employer",
+      confirmPassword: "12345678",
+      userRole: "Employer",
     };
     // Signup
     const signupResponse = await request(app).post("/auth/signup").send(userData);
@@ -132,8 +132,8 @@ describe("API Routes", () => {
         category: 2
     }
 
-  const requestCreateJob1 = await request(app).post("/job/add").send({...newJob1}).set('Cookie', accessToken);
-  expect(requestCreateJob1.status).toEqual(CREATED);
+    const requestCreateJob1 = await request(app).post("/job/add").send({...newJob1}).set('Cookie', accessToken);
+    expect(requestCreateJob1.status).toEqual(CREATED);
 
     // Now that jobs have been created, query jobs, and see if they show up.
     const requestGetAllJobs = await request(app).get("/job/").set('Cookie', accessToken);

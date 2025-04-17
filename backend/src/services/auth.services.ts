@@ -7,21 +7,21 @@ import { afteronehour, DAY_LEFT, oneyearfromnow, weekfromnow } from "../utils/au
 import { getPasswordResetTemplate, getVerifyEmailTemplate } from "../utils/auth_helpers/emailTemplates";
 import { refeshTokenOption, RefTokenPayload, signingToken, verifyToken } from "../utils/auth_helpers/jwt";
 import { sendEmail } from "../utils/auth_helpers/sendEmail";
-import userDAO from "../dao/user.dao";
-import verificationDAO from "../dao/verification.dao";
-import sessionDAO from "../dao/session.dao"
+import userDAO from "../repositories/user.repository";
+import verificationDAO from "../repositories/verification.repository";
+import sessionDAO from "../repositories/session.repository"
 
 export type signupAccountFields = {
     username: string;
     email: string;
     password: string;
-    user_role?: string;
+    userRole?: string;
 }
 
 export type loginAccountFields = {
     email: string;
     password: string;
-    user_role?: string;
+    userRole?: string;
 }
 
 /**
@@ -46,12 +46,12 @@ export const signupAccount = async (data: signupAccountFields) => {
         username: data.username, 
         email: data.email, 
         password: data.password, 
-        userRole: data.user_role,
-        education: data.user_role === "Candidate" ? [] : undefined,
-        skills: data.user_role === "Candidate" ? [] : undefined,
-        experience: data.user_role === "Candidate" ? [] : undefined,
-        companyDetails: data.user_role === "Employer" ? "" : undefined,
-        hiringDetails: data.user_role === "Employer" ? [] : undefined,
+        userRole: data.userRole,
+        education: data.userRole === "Candidate" ? [] : undefined,
+        skills: data.userRole === "Candidate" ? [] : undefined,
+        experience: data.userRole === "Candidate" ? [] : undefined,
+        companyDetails: data.userRole === "Employer" ? "" : undefined,
+        hiringDetails: data.userRole === "Employer" ? [] : undefined,
     });
     
     // create and send verification code to email
@@ -74,7 +74,7 @@ export const signupAccount = async (data: signupAccountFields) => {
     // create session and assign jwt token session (unit of time) is valid for 7days - use the access and refresh token for 7 days
     const newsession = await sessionDAO.create({
         userId: newuser._id,
-        userAgent: data.user_role,
+        userAgent: data.userRole,
     })
 
     const refreshtoken = signingToken(
@@ -105,7 +105,7 @@ export const signupAccount = async (data: signupAccountFields) => {
  * * @returns {Promise<{ newuser: any; accesstoken: string; refreshtoken: string; }>} - Returns the logged-in user, access token, and refresh token.
  * * @throws {Error} - Throws an error if the user does not exist or if the password is invalid.
  * */
-export const loginAccount = async ({email, password, user_role}: loginAccountFields) => {
+export const loginAccount = async ({email, password, userRole}: loginAccountFields) => {
     // get the user email and check if the user exists
     const existUser = await userDAO.findOne({ email });
     appAssert(existUser, UNAUTHORIZED, "User Account does not exist !")
@@ -116,17 +116,15 @@ export const loginAccount = async ({email, password, user_role}: loginAccountFie
     const userId = existUser._id;
     const session = await sessionDAO.create({
         userId,
-        user_role,
+        userRole,
     })
-    const refreshtoken = signingToken(
-        {
+    const refreshtoken = signingToken({
             sessionId: session._id
         }, 
         refeshTokenOption
     );
 
-    const accesstoken = signingToken(
-        {
+    const accesstoken = signingToken({
             userId: existUser._id,
             sessionId: session._id
         }
@@ -165,8 +163,7 @@ export const refreshSessionToken = async (refreshToken: string) => {
     }
 
     const rerefreshToken = refreshsessionNow ? 
-        signingToken(
-            {
+        signingToken({
                 sessionId: session._id
             }, 
             refeshTokenOption

@@ -1,5 +1,5 @@
 import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
-import { sessionDocument } from "../../models/one-to-many/session.model";
+import { sessionDocument } from "../../models/supportModels/session.model";
 import { UserDocument } from "../../models/main/users.model";
 import { JWT_SECRET, JWTREFRESH_SECRET } from "../../constants/env.constants";
 

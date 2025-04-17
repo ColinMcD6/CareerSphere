@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { Category } from "./createJobPost.pages";
-import ApplicationPopupComponent from "../components/applicantPopup";
+import ApplicationPopupComponent from "../components/applicantPopup.components";
 import FormModalPopupComponent from "../components/popup";
 import useUser from "../hooks/user.hooks";
 import {
@@ -44,14 +44,14 @@ const ViewJobPosting = () => {
 
   interface SingleApplication {
     _id: string;
-    candidate_id: string;
+    candidateId: string;
     username: string;
     status: string;
     email: string;
     experience: string[];
     education: string[];
     skills: string[];
-    resume_id: string;
+    resumeId: string;
   }
   interface JobPosting {
     _id: string;
@@ -59,7 +59,7 @@ const ViewJobPosting = () => {
     positionTitle: string;
     description: string;
     employer: string;
-    employer_id: string;
+    employerId: string;
     location: string;
     salary: number;
     jobType: string;
@@ -126,7 +126,7 @@ const ViewJobPosting = () => {
           console.log("Fetching job applications for employer");
           const response = await checkwhoApplied({
             emp_id: user._id,
-            job_id: jobId,
+            jobId: jobId,
           });
           console.log(response);
           setAppliedApplications(response.applications);
@@ -147,10 +147,10 @@ const ViewJobPosting = () => {
           if (!application || !data) return;
           try {
             console.log("SENDING FILE");
-            application.append("job_id", data._id);
-            application.append("employer_id", data.employer_id);
+            application.append("jobId", data._id);
+            application.append("employerId", data.employerId);
             application.append(
-              "candidate_id",
+              "candidateId",
               user?._id || "unknown_candidate"
             );
 
@@ -158,10 +158,10 @@ const ViewJobPosting = () => {
             console.log(resumeResponse.resume._id);
 
             const applicationResponse = await applyforJob({
-              job_id: data._id,
-              employer_id: data.employer_id,
-              candidate_id: user?._id || "unknown_candidate",
-              resume_id: resumeResponse.resume._id,
+              jobId: data._id,
+              employerId: data.employerId,
+              candidateId: user?._id || "unknown_candidate",
+              resumeId: resumeResponse.resume._id,
               status: "Pending",
             });
             console.log(applicationResponse.data);
@@ -235,8 +235,8 @@ const ViewJobPosting = () => {
     } else {
       if (user?._id && jobId) {
         saveJob({
-          job_id: jobId,
-          candidate_id: user._id,
+          jobId: jobId,
+          candidateId: user._id,
         });
         setIsSaved(true);
       }
@@ -262,14 +262,14 @@ const ViewJobPosting = () => {
     }
   };
 
-  const showResumeHandler = (resume_id: string) => {
+  const showResumeHandler = (resumeId: string) => {
     const showResume = async () => {
-      const response = await getResumeName(resume_id);
+      const response = await getResumeName(resumeId);
       console.log(response);
 
       if (response !== null) {
         window.open(
-          import.meta.env.VITE_API_URL + `/resume/uploads/${response.file_name}`
+          import.meta.env.VITE_API_URL + `/resume/uploads/${response.fileName}`
         );
       }
     };
@@ -638,7 +638,7 @@ const ViewJobPosting = () => {
           experience={appliedApplications[applicantIndex].experience}
           education={appliedApplications[applicantIndex].education}
           skills={appliedApplications[applicantIndex].skills}
-          resume_id={appliedApplications[applicantIndex].resume_id}
+          resumeId={appliedApplications[applicantIndex].resumeId}
           editStatusApplicationHandler={changeApplicantStatusHandler}
           onClose={() => setShowApplicantPopup(false)}
           showResumeHandler={showResumeHandler}

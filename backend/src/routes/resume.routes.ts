@@ -7,7 +7,7 @@ import {
 
 import fs from "fs";
 import multer from "multer";
-import { auth_verifyCandidate, auth_verifyEmployer } from "../middleware/authenticate.middleware";
+import { auth_verifyCandidate, auth_verifyEmployer } from "../middlewares/authenticate.middleware";
 
 
 /**

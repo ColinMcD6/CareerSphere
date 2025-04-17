@@ -12,7 +12,7 @@ const SignUp = () => {
     username: "",
     email: "",
     password: "",
-    confirm_password: "",
+    confirmPassword: "",
   });
 
   /*
@@ -38,7 +38,7 @@ const SignUp = () => {
     const userRole = candidate ? "Candidate" : "Employer";
 
     try {
-      await registerUser({ ...formData, user_role: userRole });
+      await registerUser({ ...formData, userRole: userRole });
       navigate("/login");
     } catch (error: any) {
       console.error("Error registering user:", error);
@@ -47,9 +47,10 @@ const SignUp = () => {
   };
 
   // Email validation
+  const isUsernameValid = formData.username.length > 5;
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
   const isPasswordValid = formData.password.length >= 8;
-  const doPasswordsMatch = formData.password === formData.confirm_password;
+  const doPasswordsMatch = formData.password === formData.confirmPassword;
   const isFormValid = isEmailValid && isPasswordValid && doPasswordsMatch;
 
   return (
@@ -71,7 +72,11 @@ const SignUp = () => {
                 value={formData.username}
                 onChange={handleChange}
                 required
+                isInvalid={formData.username.length > 0 && !isUsernameValid}
               />
+              <Form.Control.Feedback type="invalid">
+                Username must be at least 5 characters long.
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3" controlId="inputEmail">
               <Form.Label>Email address</Form.Label>
@@ -103,16 +108,16 @@ const SignUp = () => {
                 Password must be at least 8 characters long.
               </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="confirm_password">
+            <Form.Group className="mb-3" controlId="confirmPassword">
               <Form.Label>Confirm Password</Form.Label>
               <Form.Control
                 type="password"
-                name="confirm_password"
+                name="confirmPassword"
                 placeholder="Re-enter password"
-                value={formData.confirm_password}
+                value={formData.confirmPassword}
                 onChange={handleChange}
                 required
-                isInvalid={formData.confirm_password.length > 0 && !doPasswordsMatch}
+                isInvalid={formData.confirmPassword.length > 0 && !doPasswordsMatch}
               />
               <Form.Control.Feedback type="invalid">
                 Passwords do not match.
